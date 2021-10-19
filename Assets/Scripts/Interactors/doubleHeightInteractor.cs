@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class doubleHeightInteractor : ObjectInteractor
+{
+    // Start is called before the first frame update
+    public override void passiveInteractor(GameObject a_OtherInteractable)
+    {
+        IDoubleDimensions doubled = a_OtherInteractable.GetComponent<IDoubleDimensions>();
+        if (doubled != null)
+        {
+            doubled.doubleHeight();
+        }
+        else
+        {
+            Debug.Log("No passive Interaction present for this object");
+        }
+    }
+
+    public override bool canPassiveInteract(GameObject a_OtherInteractable)
+    {
+        IDoubleDimensions doubled = a_OtherInteractable.GetComponent<IDoubleDimensions>();
+        if (doubled != null)
+        {
+            return true;
+        }
+        else
+        {
+            Debug.Log("No passive Interaction present for this object");
+            return false;
+        }
+    }
+}

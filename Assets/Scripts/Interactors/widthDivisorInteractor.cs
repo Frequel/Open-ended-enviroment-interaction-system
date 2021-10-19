@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class widthDivisorInteractor : ObjectInteractor
+{
+    // Start is called before the first frame update
+    public override void passiveInteractor(GameObject a_OtherInteractable)
+    {
+        IDivisibleDimensions divisible = a_OtherInteractable.GetComponent<IDivisibleDimensions>();
+        if (divisible != null)
+        {
+            divisible.divideWidth();
+        }
+        else
+        {
+            Debug.Log("No passive Interaction present for this object");
+        }
+    }
+
+    public override bool canPassiveInteract(GameObject a_OtherInteractable)
+    {
+        IDivisibleDimensions divisible = a_OtherInteractable.GetComponent<IDivisibleDimensions>();
+        if (divisible != null)
+        {
+            return true;
+        }
+        else
+        {
+            Debug.Log("No passive Interaction present for this object");
+            return false;
+        }
+    }
+}

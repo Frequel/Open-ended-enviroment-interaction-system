@@ -36,7 +36,7 @@ public class interactableChecker : MonoBehaviour
         overlapBoxDimDito = new Vector3(1, 1, Camera.main.farClipPlane);
     }
 
-    public void getInteractible()
+    public void getInteractor()
     {
         myInteractable = GetComponent<IInteractor>();
     }

@@ -1,42 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DragObject : MonoBehaviour
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
-    Vector3 size;
-    Vector3 halfSize;
+    //Vector3 size;
+    //Vector3 halfSize;
 
     SpriteRenderer sprite;
     Collider coll;
 
-    float mZCoord; 
     protected float hww, hwh;
+    TextMeshPro bcText;
 
     GameManager gm;
     interactableChecker ic;
+
+    //test
+    Bounds bounds;
 
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.GetInstance;
-        
         sprite = GetComponent<SpriteRenderer>();
+
         sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
-       
+
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
         transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
-        
-        hww = gm.HalfWorldWidth;
+
+        hww = gm.HalfWorldWidth; 
         hwh = gm.HalfWorldHeight;
 
         coll = GetComponent<Collider>();
-        size = coll.bounds.size;
-        halfSize = size / 2;
+        //inutili dopo che mi salvo il collider e lo uso ogni volta. forse posso salvarmi i bounds direttamente? e usare quelli
+        //size = coll.bounds.size;
+        //halfSize = size / 2;
+        
+        //X Testo
+        bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
+        if(bcText!=null)
+            bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
 
         ic = GetComponent<interactableChecker>();
+
     }
 
     void OnMouseDown()
@@ -57,8 +68,11 @@ public class DragObject : MonoBehaviour
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
-            sprite.sortingOrder = Mathf.CeilToInt(32767);
-            //try to fix drag&drop overlapping logic
+            sprite.sortingOrder = Mathf.CeilToInt(32766);
+            //xTesto
+            if (bcText != null)
+                bcText.sortingOrder = Mathf.CeilToInt(32767);
+
             transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
 
             ic.checkPulse();
@@ -66,7 +80,7 @@ public class DragObject : MonoBehaviour
 
     }
 
-    void OnMouseUp()
+    private void OnMouseUp()
     {
         ic.checkInteraction();
 
@@ -74,14 +88,16 @@ public class DragObject : MonoBehaviour
 
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
         transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
-        
+
+        if (bcText != null)
+            bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
+
         gameObject.layer = 0;
     }
-    
+
     Vector3 GetMouseWorldPos()
     {
         objectDragPos = Input.mousePosition;
-
         return Camera.main.ScreenToWorldPoint(objectDragPos);
     }
 

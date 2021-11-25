@@ -24,11 +24,11 @@ public class InitializerEditor : Editor
     };
     private static string[] interactors;
 
-    private static readonly Type[] dragType = new Type[]
-    {
-        typeof(DragObject),
-        typeof(DragObjectWithText)
-    };
+    //private static readonly Type[] dragType = new Type[]
+    //{
+    //    typeof(DragObject),
+    //    typeof(DragObjectWithText)
+    //};
     //private static string[] drag;
 
     private string[] drag;
@@ -37,7 +37,7 @@ public class InitializerEditor : Editor
     private void OnEnable()
     {
         interactors = Array.ConvertAll(interactorsType, t => t.Name);
-        drag = Array.ConvertAll(dragType, t => t.Name);
+        //drag = Array.ConvertAll(dragType, t => t.Name);
     }
     public override void OnInspectorGUI()
     {
@@ -58,8 +58,11 @@ public class InitializerEditor : Editor
         DrawToggleComponent(script.gameObject, out specificBgColorable sbc, onAdd: mr => Debug.Log("specificBgColorable added"), onRemove: ma => Debug.Log("specificBgColorable removed"));
         DrawToggleComponent(script.gameObject, out penWritable pw, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
 
-        DrawComponentsPopup(script.gameObject, interactors, interactorsType, "Interacotr");
-        DrawComponentsPopup(script.gameObject, drag, dragType, "Drag Component");
+        //DrawToggleComponent(script.gameObject, out DragObjectWithText dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
+        DrawToggleComponent(script.gameObject, out DragObject dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
+
+        DrawComponentsPopup(script.gameObject, interactors, interactorsType, "Interactor");
+        //DrawComponentsPopup(script.gameObject, drag, dragType, "Drag Component");
 
         //cosa carina sarebbe eliminare il secondo Popup di sopra, per crearne uno solo quando è disponibile il testo (ideale sarebbe mostrando un popup con unica opzione) -> si può pure fare che il popup proprio non c'è e crei objectDrag direttamente (magari se si riesce a scriverlo da qualche parte come se fosse un field sarebbe bello)
 

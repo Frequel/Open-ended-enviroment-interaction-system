@@ -732,29 +732,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3050243826cc06d4898b112b895100f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &660638609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660638606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca71cf05a7ce9d740b6d45f520793f39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectDragPos: {x: 0, y: 0, z: 0}
-  objectDragOrigin: {x: 0, y: 0, z: 0}
-  size: {x: 0, y: 0, z: 0}
-  halfSize: {x: 0, y: 0, z: 0}
-  sprite: {fileID: 0}
-  coll: {fileID: 0}
-  hww: 0
-  hwh: 0
-  bcText: {fileID: 0}
-  gm: {fileID: 0}
-  ic: {fileID: 0}
 --- !u!114 &660638610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,34 +821,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86f26a85049e864498810ded6f30056a, type: 3}
---- !u!1 &834707447 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9176807207079897019, guid: 4bf1f5c03e3b0974187d962f459b2ed3, type: 3}
-  m_PrefabInstance: {fileID: 226666678}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &834707448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 834707447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca71cf05a7ce9d740b6d45f520793f39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectDragPos: {x: 0, y: 0, z: 0}
-  objectDragOrigin: {x: 0, y: 0, z: 0}
-  size: {x: 0, y: 0, z: 0}
-  halfSize: {x: 0, y: 0, z: 0}
-  sprite: {fileID: 0}
-  coll: {fileID: 0}
-  hww: 0
-  hwh: 0
-  bcText: {fileID: 0}
-  gm: {fileID: 0}
-  ic: {fileID: 0}
 --- !u!1001 &870316298
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1385,20 +1334,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1627813094}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca71cf05a7ce9d740b6d45f520793f39, type: 3}
+  m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectDragPos: {x: 0, y: 0, z: 0}
-  objectDragOrigin: {x: 0, y: 0, z: 0}
-  size: {x: 0, y: 0, z: 0}
-  halfSize: {x: 0, y: 0, z: 0}
-  sprite: {fileID: 0}
-  coll: {fileID: 0}
-  hww: 0
-  hwh: 0
-  bcText: {fileID: 0}
-  gm: {fileID: 0}
-  ic: {fileID: 0}
 --- !u!1 &1629557105 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9176807207079897019, guid: 4bf1f5c03e3b0974187d962f459b2ed3, type: 3}

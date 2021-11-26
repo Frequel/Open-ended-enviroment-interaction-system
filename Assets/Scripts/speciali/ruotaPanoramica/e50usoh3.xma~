@@ -211,7 +211,7 @@ public class CheckSequence : MonoBehaviour
         startRotation();
     }
 
-    public void checkSequenceTestList() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga
+    public void checkSequenceTestList() //funziona ed è generalizzato per dove inizia la sequenza
     {
         int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
         bool ok = true;// false;

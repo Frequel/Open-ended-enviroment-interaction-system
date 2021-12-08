@@ -213,7 +213,8 @@ public class CheckSequence : MonoBehaviour
 
     public void checkSequenceTestList() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga
     {
-        int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
+        //int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
+        int k;
         bool ok = true;// false;
         int check = numeroCabine / numeroSequenza; //8 //2
         //Transform[] childrens = GetComponentsInChildren<Transform>(); //questa cosa si potrebbe fare nello start e salvarseli una volta sola, tanto una volta fatta la scena rimangono quelli i figli, non sò se cambiandone posizione (ad es.) questi qua rimangono invariati.
@@ -270,7 +271,7 @@ public class CheckSequence : MonoBehaviour
 
     bool nonSoComeChiamarti(bool ok, int check, LinkedList<SpriteRenderer> childrens, BlueYellow by)
     {
-        int i = 0, j = 0, k = 0;
+        int i = 0, j = 0;//, k = 0;
         for (i = 0; i < numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento -> ora rimosso, quindi parto da 0
         {
             //if(childrens[i] == aspectedSeq[i]) //spriteArray

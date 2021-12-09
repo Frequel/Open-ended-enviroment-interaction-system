@@ -164,6 +164,8 @@ public class InitializerEditor : Editor
         EditorGUI.BeginChangeCheck();
         {
             int oldTypeIndex = GetExistingComponentIndex(targetObject, out Component component, types);
+            if (oldTypeIndex < 0)
+                oldTypeIndex = Array.IndexOf(types, typeof(ObjectInteractor));
             int typeIndex = EditorGUILayout.Popup(label, oldTypeIndex, options);
             if (EditorGUI.EndChangeCheck())
             {

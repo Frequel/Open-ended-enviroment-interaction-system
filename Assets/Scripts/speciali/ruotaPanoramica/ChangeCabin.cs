@@ -53,10 +53,11 @@ public class ChangeCabin : MonoBehaviour
             GetComponent<RotateCabin>().correctSequenceRotation();*/
 
         //per test del prefab faccio che se ho Blue_Yellow lancio una funzione altrimenti lascio quella vecchia
-        if (GetComponentInParent<BlueYellow>() != null)
-            //ckSeq.checkSequenceTest();
-            ckSeq.checkSequenceTestList();
-        else
-            ckSeq.checkSequence();
+        //if (GetComponentInParent<BlueYellow>() != null)
+        //    //ckSeq.checkSequenceTest();
+        //    ckSeq.checkSequenceTestList();
+        //else
+        //    ckSeq.checkSequence();
+        ckSeq.checkSequenceTestList();
     }
 }

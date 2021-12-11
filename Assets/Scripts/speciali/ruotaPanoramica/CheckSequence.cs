@@ -269,6 +269,8 @@ public class CheckSequence : MonoBehaviour
             startRotation();
     }
 
+    //numero sequenza da far arrivare da altre vie
+    //spriteSequence da reperire diversamente, da FerrisManager credo
     bool nonSoComeChiamarti(bool ok, int check, LinkedList<SpriteRenderer> childrens, BlueYellow by)
     {
         int i = 0, j = 0;//, k = 0;
@@ -304,5 +306,74 @@ public class CheckSequence : MonoBehaviour
 
         return true;
     }
-    
+
+
+    public void checkSequenceNew() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga
+    {
+        //int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
+        int k;
+        bool ok = true;// false;
+        FerrisWheelManager by = GetComponent<FerrisWheelManager>();
+        int check = by.numeroCabine / by.numeroSequenza; //8 //2
+        
+        LinkedList<SpriteRenderer> childrens = new LinkedList<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>());
+        
+
+        childrens.RemoveFirst(); //il primo era il padre stesso
+
+        //permette di iniziare la sequenza da qualsiasi punto
+        for (k = 0; k < by.numeroSequenza; k++)
+        {
+            ok = nonSoComeChiamartiNew(ok, check, childrens, by);
+
+            if (ok)
+                break;
+
+            SpriteRenderer tmp = childrens.ElementAt(0);
+            childrens.RemoveFirst();
+            childrens.AddLast(tmp);
+        }
+
+        Debug.Log("sono il metodo con le liste");
+        if (ok)
+            startRotation();
+    }
+
+    //numero sequenza da far arrivare da altre vie
+    //spriteSequence da reperire diversamente, da FerrisManager credo
+    bool nonSoComeChiamartiNew(bool ok, int check, LinkedList<SpriteRenderer> childrens, FerrisWheelManager by)
+    {
+        int i = 0, j = 0;//, k = 0;
+        for (i = 0; i < by.numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento -> ora rimosso, quindi parto da 0
+        {
+            //if(childrens[i] == aspectedSeq[i]) //spriteArray
+            if (childrens.ElementAt(i).sprite == by.spriteSequence[i]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
+                                                                       //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
+            {
+                for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
+                {
+                    /*if (transform[i] == transform[i + j * numeroSequenza])
+                        ok++;*/
+                    if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * by.numeroSequenza).sprite)
+                        return false;
+                    //{
+                    //    ok = false;
+                    //    break;
+                    //}
+                }
+
+                /* if (ok == (check - 1))
+                     seq++;*/
+            }
+            else
+            {
+                //ok = false;
+                //break;
+                return false;
+            }
+
+        }
+
+        return true;
+    }
 }

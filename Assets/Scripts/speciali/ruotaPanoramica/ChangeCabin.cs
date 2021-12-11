@@ -58,6 +58,6 @@ public class ChangeCabin : MonoBehaviour
         //    ckSeq.checkSequenceTestList();
         //else
         //    ckSeq.checkSequence();
-        ckSeq.checkSequenceTestList();
+        ckSeq.checkSequenceNew();
     }
 }

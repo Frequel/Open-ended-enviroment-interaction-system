@@ -44,6 +44,12 @@ public class InitializerEditor : Editor
         DrawDefaultInspector();
 
         Initializer script = (Initializer)target;
+        ///
+        ///////////////
+        //altra cosa da aggiungere potrebbe essere quella di costruire la ruota panoramica da 0, quindi mettere un toggle per ruota panoramica che disabiliti tutti gli altri toggle e viceversa quando usi uno degli altri toggle disabiliti la ruota panoramica
+        /////////////////
+        ///
+
 
         //TextMeshPro testo = script.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
         TextMeshPro testo = null;

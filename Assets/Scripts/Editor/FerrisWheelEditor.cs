@@ -36,7 +36,7 @@ public class FerrisWheelEditord : Editor
 
         ///fare le funzioni con begin e end change per sicurezza
 
-        EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
+        EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20)); //fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica)
 
         m_numeroSequenza.intValue = EditorGUILayout.IntSlider("Numero Sequenza", m_numeroSequenza.intValue, 1, m_numeroCabine.intValue);
 

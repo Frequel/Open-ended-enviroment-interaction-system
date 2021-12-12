@@ -17,19 +17,15 @@ public class CabinPositionerTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < 8; i++)
+        FerrisWheelManager by = GetComponent<FerrisWheelManager>();
+        for (int i = 0; i < by.numeroCabine; i++)
         {
             coll = GetComponent<Collider>();
             size = coll.bounds.size;
             halfSize = size / 2;
-            var myNewSmoke = Instantiate(myprefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(Mathf.PI * i / 4), transform.position.y+ ferrisWheelRadius * Mathf.Sin(Mathf.PI*i/4) - halfSize.y, transform.position.z), Quaternion.identity);
+            float angle = Mathf.PI * i / (by.numeroCabine / 2);
+            var myNewSmoke = Instantiate(myprefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle) - halfSize.y, transform.position.z), Quaternion.identity);
             myNewSmoke.transform.parent = gameObject.transform;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

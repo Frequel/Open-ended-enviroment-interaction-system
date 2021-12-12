@@ -11,15 +11,15 @@ public class CheckSequence : MonoBehaviour
 
     //per come vedo io il funzionamento della cabina, direi che per il centro, creerò tanti prefab quante le sprite delle sequenze da riprodurre e che il centro ogni volta che resetto switcha ad una randomica di queste prefab. ognuno dis ti rpefab è ad-hoc per quella sequenza di sprite e quindi setterà sti due paramentri qui serializzabili al loro interno e questo script recupererà quei parametri. questo script sarà attaccato a quei prefab o sarà sempre aggiunto qualora dall'èditor si selezioni la ruota panoramica
     //magari per rendere compatibile questo script con quelli dei prefab che settano tali paramentri, utilizzerò un'interfaccia perchè così generalizzo che componente devono avere e gli costringo ad avere certi metodi
-    [SerializeField]
-    int numeroCabine;
-    [SerializeField]
-    int numeroSequenza;
+    //[SerializeField]
+    //int numeroCabine;
+    //[SerializeField]
+    //int numeroSequenza;
 
     //ci vorrebbe un serialized field di enumerator che non ricordo come si fà.... -> così seleziono solo la sequenza, tipo rosso giallo verde, che sarebbe quella iniziale, in quanto poi la faccio random usando i numeri direttamente
-    [SerializeField]
-    [Range(0, 5)] //bib posso selezionare cose fuori range -> se aggiungo sprite disponibili => aumento il range a destra
-    int[] indiceSpritePerSequenza;// = new int[numeroSequenza]; //ci vorrebbe pure una maniera per farlo grande quanto numeroSequenza
+    //[SerializeField]
+    //[Range(0, 5)] //bib posso selezionare cose fuori range -> se aggiungo sprite disponibili => aumento il range a destra
+    //int[] indiceSpritePerSequenza;// = new int[numeroSequenza]; //ci vorrebbe pure una maniera per farlo grande quanto numeroSequenza
 
 
     void Start()
@@ -33,37 +33,6 @@ public class CheckSequence : MonoBehaviour
         int i = Random.Range(0, 5);
         m_SpriteRenderer.sprite = spriteArray[i];
         centralSprite = spriteArray[i];
-    }
-
-    // Update is called once per frame
-    public bool checking()//bool per chiamare la funzione di rotation dentro al figlio ma non và bene
-    {
-        int eqC = 0;
-        foreach (Transform child in transform)
-        {
-            //SpriteRenderer c_SpriteRenderer =  child.GetComponent<SpriteRenderer>();
-
-            //if (m_SpriteRenderer.color == c_SpriteRenderer.color)
-            if (centralSprite == child.GetComponent<SpriteRenderer>().sprite)
-                eqC++;
-        }
-        if (eqC == transform.childCount)
-        {
-            print("hai vinto!");
-            //lanciare animazione
-            //cambiare sprite
-            //cambiare sprite ad ogni figlio usando una funzione che sceglie randomicamente, all'interno dei figli sta la funzione
-            //GetComponent<RotateCabin>().correctSequenceRotation(); //-> ottimizare
-
-            /*foreach (Transform child in transform)
-            {
-                child.GetComponent<RotateCabin>().correctSequenceRotation();
-            }*/
-            startRotation();
-
-            return true;
-        }
-        return false;
     }
 
     void changeSprite(int i)
@@ -99,221 +68,11 @@ public class CheckSequence : MonoBehaviour
         }
     }
 
-    public void checkSequence() //funziona bisogna migliorare e fixare, sopratutto come settare le 
+    public void checkSequenceNew() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga -> testato, funziona -> da modificare per funzionare sia in senso orario che anti-orario
     {
-        int i = 0, j = 0;//, ok = 0, seq = 0;
-        int check = numeroCabine / numeroSequenza; //8 //2
-        //Transform[] childrens = GetComponentsInChildren<Transform>(); //questa cosa si potrebbe fare nello start e salvarseli una volta sola, tanto una volta fatta la scena rimangono quelli i figli, non sò se cambiandone posizione (ad es.) questi qua rimangono invariati.
-        SpriteRenderer[] childrens = GetComponentsInChildren<SpriteRenderer>(); //si salva anche se stesso (parent) non solo i figli
-        
-        for (i=1; i <= numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento 
-        {
-            //if(childrens[i] == aspectedSeq[i]) //spriteArray
-            if (childrens[i].sprite == spriteArray[indiceSpritePerSequenza[i-1]]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
-            //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
-            {
-                for (j = 1; j <= check-1; j++) //-1 perchè sè stesso già è comparato
-                {
-                    /*if (transform[i] == transform[i + j * numeroSequenza])
-                        ok++;*/
-                    if (childrens[i].sprite != childrens[i + j * numeroSequenza].sprite)
-                        return;
-                }
-
-               /* if (ok == (check - 1))
-                    seq++;*/
-            }
-            else
-            {
-                return;
-            }
-            
-        }
-
-        //if(seq == numeroSequenza)
-            startRotation();
-
-    }
-
-    /*public void checkSequenceTest()
-    {
-        int i = 0, j = 0;//, ok = 0, seq = 0;
-        int check = numeroCabine / numeroSequenza; //8 //2
-        //Transform[] childrens = GetComponentsInChildren<Transform>(); //questa cosa si potrebbe fare nello start e salvarseli una volta sola, tanto una volta fatta la scena rimangono quelli i figli, non sò se cambiandone posizione (ad es.) questi qua rimangono invariati.
-        //SpriteRenderer[] childrens = new SpriteRenderer[2];// = GetComponentsInChildren<SpriteRenderer>(); //si salva anche se stesso (parent) non solo i figli
-        BlueYellow by = GetComponent<BlueYellow>();
-        //si dovrebbe fare un for lungo spriteSequence e di conseguenza usarlo come numeroSequenza -> questo attualmente è super ad-hoc per quello script
-        *//*Sprite[] childrens = new Sprite[2]; //int questa maniera  ad-hoc, ho sbagliato tutto,  misà che meglio se vado a dormire...
-        childrens[0] = by.spriteSequence[0];
-        childrens[1] = by.spriteSequence[1];*//*
-
-        for (i = 1; i <= numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento 
-        {
-            //if(childrens[i] == aspectedSeq[i]) //spriteArray
-            if (childrens[i] == spriteArray[indiceSpritePerSequenza[i - 1]]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
-            //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
-            {
-                for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
-                {
-                    *//*if (transform[i] == transform[i + j * numeroSequenza])
-                        ok++;*//*
-                    if (childrens[i] != childrens[i + j * numeroSequenza])
-                        return;
-                }
-
-                *//* if (ok == (check - 1))
-                     seq++;*//*
-            }
-            else
-            {
-                return;
-            }
-
-        }
-
-        //if(seq == numeroSequenza)
-        startRotation();
-    }*/
-
-    public void checkSequenceTest() //funziona ma è da generalizzare
-    {
-        int i = 0, j = 0;//, ok = 0, seq = 0;
-        int check = numeroCabine / numeroSequenza; //8 //2
-        //Transform[] childrens = GetComponentsInChildren<Transform>(); //questa cosa si potrebbe fare nello start e salvarseli una volta sola, tanto una volta fatta la scena rimangono quelli i figli, non sò se cambiandone posizione (ad es.) questi qua rimangono invariati.
-        SpriteRenderer[] childrens = GetComponentsInChildren<SpriteRenderer>(); //si salva anche se stesso (parent) non solo i figli
-        BlueYellow by = GetComponent<BlueYellow>();
-
-        for (i = 1; i <= numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento 
-        {
-            //if(childrens[i] == aspectedSeq[i]) //spriteArray
-            if (childrens[i].sprite == by.spriteSequence[i-1]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
-            //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
-            {
-                for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
-                {
-                    /*if (transform[i] == transform[i + j * numeroSequenza])
-                        ok++;*/
-                    if (childrens[i].sprite != childrens[i + j * numeroSequenza].sprite)
-                        return;
-                }
-
-                /* if (ok == (check - 1))
-                     seq++;*/
-            }
-            else
-            {
-                return;
-            }
-
-        }
-
-        //if(seq == numeroSequenza)
-        startRotation();
-    }
-
-    public void checkSequenceTestList() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga
-    {
-        //int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
         int k;
         bool ok = true;// false;
-        int check = numeroCabine / numeroSequenza; //8 //2
-        //Transform[] childrens = GetComponentsInChildren<Transform>(); //questa cosa si potrebbe fare nello start e salvarseli una volta sola, tanto una volta fatta la scena rimangono quelli i figli, non sò se cambiandone posizione (ad es.) questi qua rimangono invariati.
-        //SpriteRenderer[] childrens = GetComponentsInChildren<SpriteRenderer>(); //si salva anche se stesso (parent) non solo i figli
-        LinkedList<SpriteRenderer> childrens = new LinkedList<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>());
-        BlueYellow by = GetComponent<BlueYellow>();
-
-        childrens.RemoveFirst(); //il primo era il padre stesso
-
-        //permette di iniziare la sequenza da qualsiasi punto
-        for (k=0; k<numeroSequenza; k++)
-        {
-            ok = nonSoComeChiamarti(ok,check, childrens, by);
-
-            if (ok)
-                break;
-
-            SpriteRenderer tmp = childrens.ElementAt(0);
-            childrens.RemoveFirst();
-            childrens.AddLast(tmp);
-        }
-
-        //se non si vogliono sprecare risorse e lasciare che la sequanza inizi sempre dallo stesso punto
-        //for (i = 0; i < numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento -> ora rimosso, quindi parto da 0
-        //{
-        //    //if(childrens[i] == aspectedSeq[i]) //spriteArray
-        //    if (childrens.ElementAt(i).sprite == by.spriteSequence[i]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
-        //    //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
-        //    {
-        //        for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
-        //        {
-        //            /*if (transform[i] == transform[i + j * numeroSequenza])
-        //                ok++;*/
-        //            if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * numeroSequenza).sprite)
-        //                //return;
-        //                break;//aggiungi un qualche flag da settare
-        //        }
-
-        //        /* if (ok == (check - 1))
-        //             seq++;*/
-        //    }
-        //    else
-        //    {
-        //        break;//aggiungi un qualche flag da settare
-        //    }
-
-        //}
-
-        Debug.Log("sono il metodo con le liste");
-        //if(seq == numeroSequenza)
-        if(ok)
-            startRotation();
-    }
-
-    //numero sequenza da far arrivare da altre vie
-    //spriteSequence da reperire diversamente, da FerrisManager credo
-    bool nonSoComeChiamarti(bool ok, int check, LinkedList<SpriteRenderer> childrens, BlueYellow by)
-    {
-        int i = 0, j = 0;//, k = 0;
-        for (i = 0; i < numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento -> ora rimosso, quindi parto da 0
-        {
-            //if(childrens[i] == aspectedSeq[i]) //spriteArray
-            if (childrens.ElementAt(i).sprite == by.spriteSequence[i]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
-                                                                       //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
-            {
-                for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
-                {
-                    /*if (transform[i] == transform[i + j * numeroSequenza])
-                        ok++;*/
-                    if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * numeroSequenza).sprite)
-                    return false;
-                    //{
-                    //    ok = false;
-                    //    break;
-                    //}
-                }
-
-                /* if (ok == (check - 1))
-                     seq++;*/
-            }
-            else
-            {
-                //ok = false;
-                //break;
-                return false;
-            }
-
-        }
-
-        return true;
-    }
-
-
-    public void checkSequenceNew() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga
-    {
-        //int i = 0, j = 0, k=0;//, ok = 0, seq = 0;
-        int k;
-        bool ok = true;// false;
-        FerrisWheelManager by = GetComponent<FerrisWheelManager>();
+        FerrisWheelManager by = GetComponent<FerrisWheelManager>(); //posso farlo anche solo allo start, no?
         int check = by.numeroCabine / by.numeroSequenza; //8 //2
         
         LinkedList<SpriteRenderer> childrens = new LinkedList<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>());
@@ -338,37 +97,22 @@ public class CheckSequence : MonoBehaviour
         if (ok)
             startRotation();
     }
-
-    //numero sequenza da far arrivare da altre vie
-    //spriteSequence da reperire diversamente, da FerrisManager credo
     bool nonSoComeChiamartiNew(bool ok, int check, LinkedList<SpriteRenderer> childrens, FerrisWheelManager by)
     {
         int i = 0, j = 0;//, k = 0;
         for (i = 0; i < by.numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perchè sta come primo elemento -> ora rimosso, quindi parto da 0
         {
-            //if(childrens[i] == aspectedSeq[i]) //spriteArray
             if (childrens.ElementAt(i).sprite == by.spriteSequence[i]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perchè sta come primo elemento  //aspectedSeq[i]) //spriteArray
                                                                        //in teoria, non sò secondo il giocatore qual è la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
             {
                 for (j = 1; j <= check - 1; j++) //-1 perchè sè stesso già è comparato
                 {
-                    /*if (transform[i] == transform[i + j * numeroSequenza])
-                        ok++;*/
                     if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * by.numeroSequenza).sprite)
                         return false;
-                    //{
-                    //    ok = false;
-                    //    break;
-                    //}
                 }
-
-                /* if (ok == (check - 1))
-                     seq++;*/
             }
             else
             {
-                //ok = false;
-                //break;
                 return false;
             }
 

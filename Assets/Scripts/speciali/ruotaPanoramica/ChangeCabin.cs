@@ -20,44 +20,10 @@ public class ChangeCabin : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //più che randomico mi serve circolare...
-        /*int i = Random.Range(1, 6);
-
-        switch (i)
-        {
-            case 1:
-                m_SpriteRenderer.color = Color.red;
-                break;
-            case 2:
-                m_SpriteRenderer.color = Color.blue;
-                break;
-            case 3:
-                m_SpriteRenderer.color = Color.cyan;
-                break;
-            case 4:
-                m_SpriteRenderer.color = Color.green;
-                break;
-            case 5:
-                m_SpriteRenderer.color = Color.magenta;
-                break;
-            case 6:
-                m_SpriteRenderer.color = Color.yellow;
-                break;
-        }*/
-
         i = (++i)%spriteArray.Count();
-        m_SpriteRenderer.sprite = spriteArray[i];
-        //bool rotate = ckSeq.checking();
-        //ckSeq.checkSequence();
-        /*if(rotate)
-            GetComponent<RotateCabin>().correctSequenceRotation();*/
 
-        //per test del prefab faccio che se ho Blue_Yellow lancio una funzione altrimenti lascio quella vecchia
-        //if (GetComponentInParent<BlueYellow>() != null)
-        //    //ckSeq.checkSequenceTest();
-        //    ckSeq.checkSequenceTestList();
-        //else
-        //    ckSeq.checkSequence();
+        m_SpriteRenderer.sprite = spriteArray[i];
+
         ckSeq.checkSequenceNew();
     }
 }

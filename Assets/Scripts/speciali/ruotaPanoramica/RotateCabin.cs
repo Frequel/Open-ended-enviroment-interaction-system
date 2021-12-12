@@ -13,27 +13,23 @@ public class RotateCabin : MonoBehaviour
     {
         target = gameObject.transform.parent.gameObject;
     }
-    void Update()
-    {
-        // Spin the object around the target at 20 degrees/second.
-        //correctSequenceRotation();
-        //correctSequenceRotation4Children();
-    }
+    //void Update()
+    //{
+    //    // Spin the object around the target at 20 degrees/second.
+    //    //correctSequenceRotation();
+    //    //correctSequenceRotation4Children();
+    //}
 
     public void correctSequenceRotation()
     {
-        /*float timer += Time.deltaTime;
-        print(timer + " " + Time.deltaTime);
-        while(Time.deltaTime-timer <=5) //sempre 0
-            transform.RotateAround(target.transform.position + Vector3.Scale(target.transform.localScale, Hx2), rotationVector, 20 * Time.deltaTime);*/
         StartCoroutine(startRotation());
     }
-    public void correctSequenceRotation4Children()
-    {
-        //GameObject parent = gameObject.transform.parent.gameObject;
+    //public void correctSequenceRotation4Children()
+    //{
+    //    //GameObject parent = gameObject.transform.parent.gameObject;
 
-        transform.RotateAround(target.transform.position + Vector3.Scale(target.transform.localScale, Hx2), rotationVector, 20 * Time.deltaTime);
-    }
+    //    transform.RotateAround(target.transform.position + Vector3.Scale(target.transform.localScale, Hx2), rotationVector, 20 * Time.deltaTime);
+    //}
 
     private IEnumerator startRotation() //in  questa funzione si potrebbe settare un paramentro che si usa in change cabin che flagga la possibilità di cambiare le cabine finchè non vengono resettate
     {

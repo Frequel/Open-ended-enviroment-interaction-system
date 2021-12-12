@@ -7,7 +7,7 @@ public class CabinPositionerTest : MonoBehaviour
     [SerializeField]
     GameObject myprefab;
     [SerializeField]
-    [Range(3,9)]
+    [Range(3,20)]
     int ferrisWheelRadius;
     //trying things..
     Vector3 Hx2 = new Vector3(0, 0.5f, 0);
@@ -17,6 +17,7 @@ public class CabinPositionerTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //da fixare perchè non funziona bene con tante cabine
         FerrisWheelManager by = GetComponent<FerrisWheelManager>();
         for (int i = 0; i < by.numeroCabine; i++)
         {

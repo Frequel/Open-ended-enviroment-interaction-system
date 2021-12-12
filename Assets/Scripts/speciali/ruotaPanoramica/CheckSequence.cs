@@ -68,6 +68,8 @@ public class CheckSequence : MonoBehaviour
         }
     }
 
+    //non funziona con 1 -> cioè tutte uguali -> da testare
+
     public void checkSequenceNew() //funziona ed è generalizzato per dove inizia la sequenza -> da testare con sequenza più lunga -> testato, funziona -> da modificare per funzionare sia in senso orario che anti-orario
     {
         int k;

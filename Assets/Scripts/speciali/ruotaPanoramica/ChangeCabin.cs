@@ -14,7 +14,7 @@ public class ChangeCabin : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         ckSeq = gameObject.GetComponentInParent<CheckSequence>();
         spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
-        i = Random.Range(0, 5);
+        i = Random.Range(0, spriteArray.Length-1);
         m_SpriteRenderer.sprite = spriteArray[i];
     }
 

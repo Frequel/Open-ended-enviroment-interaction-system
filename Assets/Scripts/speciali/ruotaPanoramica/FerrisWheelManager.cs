@@ -10,7 +10,7 @@ public class FerrisWheelManager : MonoBehaviour
     [HideInInspector]
     public int numeroCabine;
     [HideInInspector]
-    public int numeroSequenza = 1;
+    public int numeroSequenza = 1; //da fare in modo che il numero cabine sia divisibile per numero sequenza
 
     //posso fare un getter
     [System.NonSerialized] //senza di que sbarellava perhè dall'editor non mettevo nulla e diceva che andavo out of bound, giustamente
@@ -32,6 +32,8 @@ public class FerrisWheelManager : MonoBehaviour
     GameObject[] sequencesPrefabs;
     [System.NonSerialized] //posso fare un getter
     public int flagCoroutine = 0;
+
+    int prefabID = -1;
 
 
     public int FerrisWheelRadius
@@ -59,7 +61,13 @@ public class FerrisWheelManager : MonoBehaviour
             myNewSmoke.transform.parent = gameObject.transform;
         }
 
-        GameObject[] sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences");
+        sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences");
+
+        for(int i=0; i< sequencesPrefabs.Length; i++)
+        {
+            if (gameObject.name == sequencesPrefabs[i].name)
+                prefabID = i;
+        }
     }
 
     void startRotation() //aggiungere il fatto che si disabilita il change cabin finche non si ferma la ruota e si resetta tutto
@@ -103,9 +111,7 @@ public class FerrisWheelManager : MonoBehaviour
         if (ok)
         {
             startRotation();
-            //while (flagCoroutine != numeroCabine) ;// altra coroutine che fà yield return new WaitUntil(() => flagCoroutine != numeroCabine); e poi reset sequence
-            //ResetSequence();
-            StartCoroutine(waitRotation());
+            StartCoroutine(waitRotation()); //aspetta che le coroutine della rotazione delle cabine finiscano per far partire il reset
         }
     }
     bool nonSoComeChiamartiNew(bool ok, int check, LinkedList<SpriteRenderer> childrens) //check sequence part 2
@@ -145,5 +151,20 @@ public class FerrisWheelManager : MonoBehaviour
     {
         Debug.Log("è arrivato il momento di resettare");
         flagCoroutine = 0;
+        int i = 0;
+        do
+        {
+            i = Random.Range(0, sequencesPrefabs.Length);
+        }
+        while (i == prefabID);
+            
+        //m_SpriteRenderer.sprite = spriteArray[i];
+
+        GameObject fsCopy = Instantiate(sequencesPrefabs[0], transform.position, Quaternion.identity);
+        //fsCopy.GetComponent<SpriteRenderer>().color = gameObject.GetComponent<SpriteRenderer>().color;
+        //TextMeshPro bcText = fsCopy.GetComponentInChildren<TMPro.TextMeshPro>();
+        //bcText.color = pen.GetComponent<SpriteRenderer>().color;
+        //Destroy(pen);
+        Destroy(gameObject);
     }
 }

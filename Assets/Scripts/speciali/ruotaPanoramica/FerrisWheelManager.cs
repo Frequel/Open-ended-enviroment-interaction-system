@@ -117,7 +117,7 @@ public class FerrisWheelManager : MonoBehaviour
             
             if (listaPasseggeri.Length < numeroCabine)
             {
-                System.Array.Resize(ref listaPasseggeri, numeroCabine );
+                System.Array.Resize(ref listaPasseggeri, numeroCabine ); //dovrei farlo anche a ridurre, in teoria, ma il discorso su come gestire sta cosa è complesso
             }
             RestartPassengers();
 
@@ -228,6 +228,7 @@ public class FerrisWheelManager : MonoBehaviour
         //RestartPassengers(fsCopy); //sta cosa per come è strutturata la logica della ruota non và bene, a meno che tutte le ruote che poi respawnano abbiano lo stesso numero di cabine. In quel caso è ok (a parte il fattore sparentare o meno) ma se non fosse così, l'unica soluzione sarebbe predisporre una zona dove "scendono" i passegeri e metterli tutti lì
         //peggio ancora, la strategia di "farli scendere" è ancora più utile, in quanto, quando chiamo il Restart, ancora nonn è partito lo start, perchè devo ancora accedere al prossimo frame (immaginando che una start run-time parti leggermente prima di una successiva update) -> per continuare ad usare questa strategia, ci vorrebbe un flag che faccia fare tale reset nello start
         //a sparentarli puoi sparentarli sempre prima
+        //comunque non si rompe il gioco se uso questo metodo, piuttosto rimangono fluttuanti nel vuoto
 
         unParentPassengers(cFwm);
 

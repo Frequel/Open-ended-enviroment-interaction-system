@@ -230,7 +230,7 @@ public class FerrisWheelManager : MonoBehaviour
 
         unParentPassengers(cFwm);
 
-        cFwm.restartPassengers = true;
+        cFwm.restartPassengers = true; //sta cos di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
 
         Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
     }
@@ -239,7 +239,10 @@ public class FerrisWheelManager : MonoBehaviour
     void unParentPassengers(FerrisWheelManager cFwm)
     {
         foreach(GameObject passenger in cFwm.listaPasseggeri)
-            passenger.transform.parent = null;
+        {
+            if(passenger!=null)
+                passenger.transform.parent = null;
+        }
     }
     //void RestartPassengers(GameObject fsCopy)
     //{

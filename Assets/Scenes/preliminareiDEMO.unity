@@ -541,6 +541,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: numeroCabine
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: numeroSequenza
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: ferrisWheelRadius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[1]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[2]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[3]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[4]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795950390851128328, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
+      propertyPath: indiceSpritePerSequenza.Array.data[5]
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7986667644454829542, guid: e2340b96a94eb4a90aecb694cb79634b, type: 3}
       propertyPath: m_Name
       value: RedCyan4_Sequence2

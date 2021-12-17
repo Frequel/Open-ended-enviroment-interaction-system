@@ -7,8 +7,6 @@ public class interactableChecker : MonoBehaviour
 {
     Vector3 overlapBoxDim;
     Vector3 overlapBoxCen;
-    Vector3 size;
-    Vector3 center;
     Vector3 overlapBoxDimDito; 
     Vector3 overlapBoxCenDito;
 
@@ -18,17 +16,19 @@ public class interactableChecker : MonoBehaviour
         set { overlapBoxDim = value; ; }
     }
 
-    //[SerializeField]
-    //LayerMask m_LayerMask;
-    //dipende da dove lo lascio settare, per il momento lo mettiamo pubblico per testare delle cose
-    public LayerMask m_LayerMask;
+    LayerMask m_LayerMask;
+
+    public LayerMask M_LayerMask
+    {
+        get { return m_LayerMask; }
+        set { m_LayerMask = value; }
+    }
 
     IInteractor myInteractable;
 
     PulseEffect pe_old = null;
     PulseEffect pe_new = null;
 
-    // Start is called before the first frame update
     void Start()
     {
         overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
@@ -8,19 +9,27 @@ public class FerrisWheelManager : MonoBehaviour
 {
     [Tooltip("Indicare le Sprite nell'ordine della sequenza voluta")]
     [HideInInspector]
-    public int[] indiceSpritePerSequenza;
+    //public int[] indiceSpritePerSequenza;
+    [SerializeField]
+    int[] indiceSpritePerSequenza;
+
 
     [Tooltip("Indicare il numero di cabine presenti nella ruota panoramica")]
     [HideInInspector]
-    public int numeroCabine;
+    //public int numeroCabine;
+    [SerializeField]
+    int numeroCabine;
 
     [Tooltip("Indicare la lunghezza della sequenza da indovinare")]
     [HideInInspector]
-    public int numeroSequenza = 1; //da fare in modo che il numero cabine sia divisibile per numero sequenza
+    //public int numeroSequenza = 1; //da fare in modo che il numero cabine sia divisibile per numero sequenza
+    [SerializeField]
+    int numeroSequenza = 1;
 
     //posso fare un getter
-    [System.NonSerialized] //senza di que sbarellava perh? dall'editor non mettevo nulla e diceva che andavo out of bound, giustamente
-    public Sprite[] spriteSequence;// = new Sprite[2]; //pubbliche per test, ma ? tutto da rimettere in ordine per bene
+    //[System.NonSerialized] //senza di que sbarellava perhè dall'editor non mettevo nulla e diceva che andavo out of bound, giustamente
+    //public Sprite[] spriteSequence;
+    Sprite[] spriteSequence;
 
     //CabinSpawner
     [Tooltip("Seleziona Il prefab base delle cabine, la Sprite corretta verr? associata in Play")]
@@ -38,21 +47,34 @@ public class FerrisWheelManager : MonoBehaviour
 
     //reset sequence
     GameObject[] sequencesPrefabs;
-    [System.NonSerialized] //posso fare un getter
-    public int flagCoroutine = 0;
+    //[System.NonSerialized] //posso fare un getter
+    //public int flagCoroutine = 0;
+    int flagCoroutine = 0;
+
+    //memorizzare i personaggi sulla ruota per ripristinarli dopo il reset -> al reset si dovrebbero pure renderizzare al loro posto dov'erano, ma si potrebbe fare che allo start lo fai sempre.... -> forse non fattibile perchè dovrei smanettare nello start, in quanto creo tale array proprio lì
+    public GameObject[] listaPasseggeri;
+    bool restartPassengers = false;
+
+    public int FlagCoroutine
+    {
+        get { return flagCoroutine; }
+        set { flagCoroutine = value; }
+    }
 
     int prefabID = -1;
 
     //cabin rotation
     [Tooltip("Inserire la durata in secondi per fare un giro completo della ruota panoramica")]
     [HideInInspector]
-    public int rotationDuration = 15;
+    //public int rotationDuration = 15;
+    [SerializeField]
+    int rotationDuration = 15;
 
-    //[SerializeField]
-    //[Range(0, 1)]
-    //int num;
+    public int RotationDuration
+    {
+        get { return rotationDuration; }
+    }
 
-    //testing
     LinkedList<SpriteRenderer> kids;
 
     public int FerrisWheelRadius
@@ -60,7 +82,6 @@ public class FerrisWheelManager : MonoBehaviour
         get { return ferrisWheelRadius; }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         spriteSequence = new Sprite[numeroSequenza];
@@ -69,9 +90,7 @@ public class FerrisWheelManager : MonoBehaviour
         for (int i = 0; i < numeroSequenza; i++)
             spriteSequence[i] = spriteArray[indiceSpritePerSequenza[i]];
 
-        //testing
         kids = new LinkedList<SpriteRenderer>();
-
 
         for (int i = 0; i < numeroCabine; i++)
         {
@@ -79,14 +98,28 @@ public class FerrisWheelManager : MonoBehaviour
             size = coll.bounds.size;
             halfSize = size / 2;
             float angle = Mathf.PI * i / ((float)numeroCabine / 2);
-            //var myNewSmoke = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle) - halfSize.y, transform.position.z), Quaternion.identity);
             var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z), Quaternion.identity);
 
             myNewCab.name = "Cabina" + (i+1);
+            myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
             myNewCab.transform.parent = gameObject.transform;
 
-            //kids.AddAfter();
-            kids.AddLast(myNewCab.GetComponent< SpriteRenderer> ()); //provare sta cosa per sostituire la lista nel check sequence
+            kids.AddLast(myNewCab.GetComponent< SpriteRenderer> ());
+        }
+
+        if (!restartPassengers)
+            listaPasseggeri = new GameObject[numeroCabine];
+        else //if(restartPassengers)
+        {
+            Debug.Log("resettare i passengers");
+            //aggiungere nodi se lista passeggeri più lunga (anche se nel caso di diverse quantità di cabine cambia questa logica che non è fattibile, se il numero si riduce diventa un problema e dobbiamo utilizzare la "scesa" dei pg)
+            
+            if (listaPasseggeri.Length < numeroCabine)
+            {
+                System.Array.Resize(ref listaPasseggeri, numeroCabine );
+            }
+            RestartPassengers();
+
         }
 
         sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences");
@@ -96,19 +129,9 @@ public class FerrisWheelManager : MonoBehaviour
             if (gameObject.name == sequencesPrefabs[i].name)
                 prefabID = i;
         }
-
-        //Sequence run = DOTween.Sequence();
-        //Tween rot = this.transform.DORotate(new Vector3(0, 0, 360), 10, RotateMode.FastBeyond360).SetEase(Ease.Linear);
-        //run.Append(rot).SetLoops(-1);
-        //transform.DORotate(new Vector3(0, 0, 360), 10, RotateMode.LocalAxisAdd);
-
-        //if (num == 0)
-        //    transform.DORotate(new Vector3(0, 0, 360), 10, RotateMode.LocalAxisAdd);
-        //else if (num == 1)
-        //    startRotation();
     }
 
-    void startRotation() //aggiungere il fatto che si disabilita il change cabin finche non si ferma la ruota e si resetta tutto
+    void startRotation() 
     {
         foreach (Transform child in transform)
         {
@@ -117,24 +140,14 @@ public class FerrisWheelManager : MonoBehaviour
     }
 
     //check sequence part 1
-    public void checkSequenceNew() //funziona ed ? generalizzato per dove inizia la sequenza -> da testare con sequenza pi? lunga -> testato, funziona -> da modificare per funzionare sia in senso orario che anti-orario
+    public void checkSequenceNew() 
     {
         int k;
-        bool ok = true;// false;
-        int check = numeroCabine / numeroSequenza; //8 //2
+        bool ok = true;
+        int check = numeroCabine / numeroSequenza;
 
-        //LinkedList<SpriteRenderer> childrens = new LinkedList<SpriteRenderer>(GetComponentsInChildren<SpriteRenderer>()); //levarla e aggiungere le cabine man mano nella lista quando le creo
-
-        //testing
         LinkedList<SpriteRenderer> childrens = new LinkedList<SpriteRenderer>(kids);
-
-        //childrens = kids;
-
         LinkedList<SpriteRenderer> childrens_reverse = new LinkedList<SpriteRenderer>(childrens.Reverse());
-
-        //childrens.RemoveFirst(); //il primo era il padre stesso
-
-        //permette di iniziare la sequenza da qualsiasi punto
         for (k = 0; k < numeroSequenza; k++)
         {
             ok = nonSoComeChiamartiNew(ok, check, childrens);
@@ -152,36 +165,33 @@ public class FerrisWheelManager : MonoBehaviour
             childrens.AddLast(tmp);
         }
 
-        ////Debug.Log("sono il metodo con le liste");
-        //if (ok)
-        //    startRotation();
-
-
         if (ok)
         {
             startRotation();
             StartCoroutine(waitRotation()); //aspetta che le coroutine della rotazione delle cabine finiscano per far partire il reset
         }
     }
+
+    //check sequence part 2
     bool nonSoComeChiamartiNew(bool ok, int check, LinkedList<SpriteRenderer> childrens) //check sequence part 2
     {
         int i = 0, j = 0;//, k = 0;
-        for (i = 0; i < numeroSequenza; i++) //si salva anche se stesso (parent) non solo i figli per questo ci sta il +1, perch? sta come primo elemento -> ora rimosso, quindi parto da 0
+        for (i = 0; i < numeroSequenza; i++) 
         {
-            if (childrens.ElementAt(i).sprite == spriteSequence[i]) //si salva anche se stesso (parent) non solo i figli per questo o metto +1 al childrens o -1 alla sequenza, perch? sta come primo elemento  //aspectedSeq[i]) //spriteArray
-                                                                        //in teoria, non s? secondo il giocatore qual ? la cabina iniziale e quella finale, quindi potrebbe fare che i colori siano traslati in base al suo punto di vista, questo sarebbe complesso da trattare...
+            if (childrens.ElementAt(i).sprite == spriteSequence[i])
             {
-                for (j = 1; j <= check - 1; j++) //-1 perch? s? stesso gi? ? comparato
+                for (j = 1; j <= check - 1; j++) //-1 perchè se stesso già è comparato
                 {
                     if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * numeroSequenza).sprite)
                         return false;
                 }
             }
+
             else
+
             {
                 return false;
             }
-
         }
 
         return true;
@@ -201,11 +211,6 @@ public class FerrisWheelManager : MonoBehaviour
         Debug.Log(" è \x00E8 arrivato il momento di resettare");
         flagCoroutine = 0;
         int i = 0;
-        //do
-        //{
-        //    i = Random.Range(0, sequencesPrefabs.Length);
-        //}
-        //while (gameObject.name == sequencesPrefabs[i].name);
 
         do
         {
@@ -213,14 +218,64 @@ public class FerrisWheelManager : MonoBehaviour
         }
         while (prefabID == i);
 
-        //m_SpriteRenderer.sprite = spriteArray[i];
-
         GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
-        //fsCopy.GetComponent<SpriteRenderer>().color = gameObject.GetComponent<SpriteRenderer>().color;
-        //TextMeshPro bcText = fsCopy.GetComponentInChildren<TMPro.TextMeshPro>();
-        //bcText.color = pen.GetComponent<SpriteRenderer>().color;
-        //Destroy(pen);
-        Destroy(gameObject);
+
+        FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
+
+        cFwm.listaPasseggeri = listaPasseggeri; //forse sarebbe meglio prima sparentarli e dopo riparentarli, perchè rischio che distruggendo il "nonno" poi vengono distrutti e quindi anche se risetti le posizioni e i parent rischi che non siano istanziati
+        //foreach child bla bla bla aggiungi figliuolo come in cabInteractor
+        //RestartPassengers(fsCopy); //sta cosa per come è strutturata la logica della ruota non và bene, a meno che tutte le ruote che poi respawnano abbiano lo stesso numero di cabine. In quel caso è ok (a parte il fattore sparentare o meno) ma se non fosse così, l'unica soluzione sarebbe predisporre una zona dove "scendono" i passegeri e metterli tutti lì
+        //peggio ancora, la strategia di "farli scendere" è ancora più utile, in quanto, quando chiamo il Restart, ancora nonn è partito lo start, perchè devo ancora accedere al prossimo frame (immaginando che una start run-time parti leggermente prima di una successiva update) -> per continuare ad usare questa strategia, ci vorrebbe un flag che faccia fare tale reset nello start
+        //a sparentarli puoi sparentarli sempre prima
+
+        unParentPassengers(cFwm);
+
+        cFwm.restartPassengers = true;
+
+        Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
     }
 
+    //void unParentPassengers(GameObject fsCopy, FerrisWheelManager cFwm)
+    void unParentPassengers(FerrisWheelManager cFwm)
+    {
+        foreach(GameObject passenger in cFwm.listaPasseggeri)
+            passenger.transform.parent = null;
+    }
+    //void RestartPassengers(GameObject fsCopy)
+    //{
+    //    int i = 0;
+    //    foreach (Transform child in fsCopy.transform)
+    //    {
+    //        //si potrebbe evitare questa get usando direttamente il vettore di questo oggetto attuale -> da Testare
+    //        Transform passsenger = child.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[i].transform; //[pos];
+    //        //int pos = child.GetComponent<CabinManager>().OrderInWheel;
+
+    //        //settare il parent
+    //        passsenger.parent = child.transform;
+    //        passsenger.localPosition = Vector3.zero;
+
+    //        i++;
+    //    }
+    //}
+
+    void RestartPassengers()
+    {
+        int i = 0;
+        foreach (Transform child in transform)
+        {
+            if(listaPasseggeri[i] != null)
+            {
+                //si potrebbe evitare questa get usando direttamente il vettore di questo oggetto attuale -> da Testare
+                Transform passsenger = listaPasseggeri[i].transform; //[pos];
+                //int pos = child.GetComponent<CabinManager>().OrderInWheel;
+
+                //settare il parent
+                passsenger.parent = child.transform;
+                passsenger.localPosition = Vector3.zero;
+            }
+            
+
+            i++;
+        }
+    }
 }

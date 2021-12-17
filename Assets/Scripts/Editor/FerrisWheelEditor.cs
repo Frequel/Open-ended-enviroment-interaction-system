@@ -35,18 +35,13 @@ public class FerrisWheelEditord : Editor
 
         FerrisWheelManager script = (FerrisWheelManager)target;
 
-        ///fare le funzioni con begin e end change per sicurezza
-        
-        EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20)); //fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica)
-
-        //m_numeroSequenza.intValue = EditorGUILayout.IntSlider("Numero Sequenza", m_numeroSequenza.intValue, 1, m_numeroCabine.intValue);
-        //versione alternativa che resetta se non è divisibile
+        ///1. fare le funzioni con begin e end change per sicurezza
+        ///2. dovrei aggiungere il fatto che se cambio il numero, dovrei cambiare automaticamente anche numero sequenza -> fare punto 1 e in più implementare il numero di sequanza come le cose di geek5geek oppure lo setto semplicemente ad 1
+        ///3. /fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica) -> forse è meglio così, anzichè fare vari reset perchè ci sono anche i numeri primi in ballo
+        EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
 
         m_numeroSequenza.intValue = SetNumSeq(m_numeroSequenza.intValue, m_numeroCabine.intValue, "Numero Sequenza");
 
-
-        //fare in modo che m_numeroSequenza.intValue sia un divisore di m_numeroCabine.intValue, quindi vedere se sono divisibili e incrementare di conseguenza
-        //una cosa fattible sarebbe salvarsi il valore vecchio e risettare quello se il valore inserito non và bene -> usare begin e end change
         m_indiceSpritePerSequenza.arraySize = m_numeroSequenza.intValue;
 
         EditorGUILayout.PropertyField(m_rotationDuration, new GUIContent("Durata Giro completo"), GUILayout.Height(20));
@@ -55,7 +50,6 @@ public class FerrisWheelEditord : Editor
             DrawComponentsPopup(cabine, i, "Cabina " + (i+1));
 
         this.serializedObject.ApplyModifiedProperties();
-
     }
 
     private void DrawComponentsPopup(string[] options, int i, string label = "Cabina")
@@ -78,7 +72,7 @@ public class FerrisWheelEditord : Editor
             int nsq = EditorGUILayout.IntSlider("Numero Sequenza", lunghezzaSeq, 1, numCab);
             if (EditorGUI.EndChangeCheck())
             {
-                if (numCab % nsq == 0)
+                if (numCab % nsq == 0) //ti permette di non cambiare se la lunghezza di sequnza non divide il numero di cabine
                 {
                     lunghezzaSeq = nsq;
                 }

@@ -15,7 +15,7 @@ public class ObjectInteractor : MonoBehaviour, IInteractor
     void initializeInteractableObject()
     {
         interactableChecker ic = gameObject.AddComponent<interactableChecker>();
-        ic.m_LayerMask = ~8;//-1;
+        ic.M_LayerMask = ~8;
         ic.getInteractor();
     }
 

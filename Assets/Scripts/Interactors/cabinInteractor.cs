@@ -11,11 +11,12 @@ public class cabinInteractor : ObjectInteractor
         if (cabinPositionable != null)
         {
             a_OtherInteractable.transform.parent = transform;
-            //a_OtherInteractable.transform.position = Vector3.zero; //mette al centro del padre
-            //serve metterlo al centro della cabina, tipo con local position o qualcosa, se vedo instatiate dovrei arrivare ad una soluzione
-            //a_OtherInteractable.transform.position = transform.localPosition;
             a_OtherInteractable.transform.localPosition = Vector3.zero;
-
+            ///si potrebbe lanciare una funzione dell'interactable, che mette in un array del padre (padre della cabina = centro ruota)
+            ///non si può fare di là, si deve fare qua anche perchè più diretto, avevo confuso le idee, quindi:
+            ///aggiungere ad un array di ("sedute" / "pg seduti") l'oggetto che ha apena interagito (inizializzarlo con N cosi a null, così quando riparti, nel reset copio l'array precedente all'oggetto nuovo
+            int pos = GetComponent<CabinManager>().OrderInWheel;
+            gameObject.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[pos] = a_OtherInteractable;
         }
         else
         {
@@ -23,7 +24,6 @@ public class cabinInteractor : ObjectInteractor
         }
 
     }
-
 
     public override bool canPassiveInteract(GameObject a_OtherInteractable)
     {

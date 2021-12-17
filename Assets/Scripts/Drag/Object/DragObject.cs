@@ -7,8 +7,6 @@ public class DragObject : MonoBehaviour
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
-    //Vector3 size;
-    //Vector3 halfSize;
 
     SpriteRenderer sprite;
     Collider coll;
@@ -19,10 +17,6 @@ public class DragObject : MonoBehaviour
     GameManager gm;
     interactableChecker ic;
 
-    //test
-    Bounds bounds;
-
-    // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.GetInstance;
@@ -37,9 +31,6 @@ public class DragObject : MonoBehaviour
         hwh = gm.HalfWorldHeight;
 
         coll = GetComponent<Collider>();
-        //inutili dopo che mi salvo il collider e lo uso ogni volta. forse posso salvarmi i bounds direttamente? e usare quelli
-        //size = coll.bounds.size;
-        //halfSize = size / 2;
         
         //X Testo
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
@@ -104,7 +95,7 @@ public class DragObject : MonoBehaviour
     private Vector3 LimitObjectBound(Vector3 dragMovment)
     {
         CalculateObjectBounds(out float xMax, out float yMax, out float xMin, out float yMin);
-        //costretto a fare così perchè con local size e basta non và bene
+        //costretto a fare cos? perch? con local size e basta non v? bene
         Vector3 size = coll.bounds.size;
         Vector3 halfSize = size / 2;
 

@@ -66,7 +66,7 @@ public class CabinManager : MonoBehaviour
         float countDown = fwm.RotationDuration;
         isRotating = true; //paramentro che flagga la possibilità di cambiare le cabine finchè non vengono resettate
         Vector3 rotationAxis; //asse intorno a cui la ruota panoramica gira
-        rotationAxis = target.transform.position + Vector3.Scale(target.transform.localScale, Hx2);
+        rotationAxis = target.transform.position; //+ Vector3.Scale(target.transform.localScale, Hx2);
 
         for (int i = 0; i < 10000; i++)
         {

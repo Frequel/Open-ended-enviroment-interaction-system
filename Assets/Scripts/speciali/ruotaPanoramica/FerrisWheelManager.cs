@@ -52,6 +52,7 @@ public class FerrisWheelManager : MonoBehaviour
     int flagCoroutine = 0;
 
     //memorizzare i personaggi sulla ruota per ripristinarli dopo il reset -> al reset si dovrebbero pure renderizzare al loro posto dov'erano, ma si potrebbe fare che allo start lo fai sempre.... -> forse non fattibile perchè dovrei smanettare nello start, in quanto creo tale array proprio lì
+    [System.NonSerialized]
     public GameObject[] listaPasseggeri;
     bool restartPassengers = false;
 

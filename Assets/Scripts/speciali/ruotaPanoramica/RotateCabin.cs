@@ -31,9 +31,9 @@ public class RotateCabin : MonoBehaviour
     //    transform.RotateAround(target.transform.position + Vector3.Scale(target.transform.localScale, Hx2), rotationVector, 20 * Time.deltaTime);
     //}
 
-    private IEnumerator startRotation() //in  questa funzione si potrebbe settare un paramentro che si usa in change cabin che flagga la possibilità di cambiare le cabine finchè non vengono resettate
+    private IEnumerator startRotation() //in  questa funzione si potrebbe settare un paramentro che si usa in change cabin che flagga la possibilit? di cambiare le cabine finch? non vengono resettate
     {
-        //float countDown = 2 * Mathf.PI * 4 / (20 * Time.deltaTime) ; //->4 è perchè sò che lo metto a 4 ma deve esse automatico come valore //anche il time.deltatime è una cosa un po' scomoda perchè in realtà non è sempre uguale, se hai cali di frame sarà più lungo
+        //float countDown = 2 * Mathf.PI * 4 / (20 * Time.deltaTime) ; //->4 ? perch? s? che lo metto a 4 ma deve esse automatico come valore //anche il time.deltatime ? una cosa un po' scomoda perch? in realt? non ? sempre uguale, se hai cali di frame sar? pi? lungo
         //float countDown = 10f;
         /*float countDown = 2 * Mathf.PI * 4 / 20;*/
         float countDown = 360 / 20;
@@ -49,9 +49,3 @@ public class RotateCabin : MonoBehaviour
         }
     }
 }
-
-/*RotatePointAroundPivot(radiusGems[i].transform.position,pivotSquare.transform.position, Quaternion.Euler(0, 0, angle));
-public static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Quaternion angle)
-{
-    return angle * (point - pivot) + pivot;
-}*/

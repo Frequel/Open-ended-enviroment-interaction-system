@@ -11,12 +11,12 @@ public class Initializer : MonoBehaviour
 
         if (source == null)
         {
-#if UNITY_EDITOR
+            #if UNITY_EDITOR
             if (UnityEditor.EditorUtility.DisplayDialog("Choose a Component", "You are missing one of the required componets. Please choose one to add", "BoxCollider"))//, "SphereCollider"))
             {
                 gameObject.AddComponent<BoxCollider>();
             }
-#endif
+            #endif
         }
     }
 

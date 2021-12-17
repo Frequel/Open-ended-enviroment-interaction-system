@@ -17,9 +17,10 @@ public class InitializerEditor : Editor
         typeof(doubleWidthInteractor),
         typeof(widthDivisorInteractor),
         typeof(heightDivisorInteractor),
-        typeof(toColorText), //questo ? un test per fare un oggetto con azione specifica, per fare le cose per bene sarebbe daimpedire di coesistere con altri (ma credo che già con il Popup riesco nell'intento)
+        typeof(toColorText), //questo ? un test per fare un oggetto con azione specifica, per fare le cose per bene sarebbe daimpedire di coesistere con altri (ma credo che gi? con il Popup riesco nell'intento)
         typeof(toColorBackground),
         typeof(penInteractor),
+        typeof(cabinInteractor),
         typeof(ObjectInteractor)
     };
     private static string[] interactors;
@@ -50,6 +51,7 @@ public class InitializerEditor : Editor
         /////////////////
         ///
 
+        //una cosa carina sarebbe disabilitare gli interactable se si selezionasse cabinInteractor, perch? non interagisce con nessuno se non con il personaggio che ci metti dentro
 
         //TextMeshPro testo = script.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
         TextMeshPro testo = null;
@@ -67,6 +69,8 @@ public class InitializerEditor : Editor
         DrawToggleComponent(script.gameObject, out specificBgColorable sbc, onAdd: mr => Debug.Log("specificBgColorable added"), onRemove: ma => Debug.Log("specificBgColorable removed"));
         DrawToggleComponent(script.gameObject, out penWritable pw, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
 
+        DrawToggleComponent(script.gameObject, out CabinPositionable cp, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
+
         //DrawToggleComponent(script.gameObject, out DragObjectWithText dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
         DrawToggleComponent(script.gameObject, out DragObject dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
 
@@ -79,7 +83,7 @@ public class InitializerEditor : Editor
         DrawComponentsPopup(script.gameObject, interactors, interactorsType, "Interactor");
         //DrawComponentsPopup(script.gameObject, drag, dragType, "Drag Component");
 
-        //cosa carina sarebbe eliminare il secondo Popup di sopra, per crearne uno solo quando è disponibile il testo (ideale sarebbe mostrando un popup con unica opzione) -> si può pure fare che il popup proprio non c'è e crei objectDrag direttamente (magari se si riesce a scriverlo da qualche parte come se fosse un field sarebbe bello)
+        //cosa carina sarebbe eliminare il secondo Popup di sopra, per crearne uno solo quando ? disponibile il testo (ideale sarebbe mostrando un popup con unica opzione) -> si pu? pure fare che il popup proprio non c'? e crei objectDrag direttamente (magari se si riesce a scriverlo da qualche parte come se fosse un field sarebbe bello)
 
         //if (testo != null)
         //    DrawComponentsPopup(script.gameObject, drag, dragType, "Drag Component");
@@ -144,7 +148,7 @@ public class InitializerEditor : Editor
                     //component.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1);
                     //component.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1);
                     component.rectTransform.localScale = new Vector3(1, 1, 1);
-                    //component.autoSizeTextContainer = true; //non è per l'autosize del font! ma della dimensione del rect e quindi cazzi
+                    //component.autoSizeTextContainer = true; //non ? per l'autosize del font! ma della dimensione del rect e quindi cazzi
                     component.color = Color.black;
                     component.alignment = TextAlignmentOptions.Center;
                     component.enableAutoSizing = true;
@@ -158,7 +162,7 @@ public class InitializerEditor : Editor
                 {
                     //onRemove?.Invoke(component);
                     //DestroyImmediate(component); //implementare l'equivalente per il figlio
-                    DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora sò che ci sta solo sto figlio o che comunque come primo figlio avrò il testo (per come è adesso il codice) ma successivamente non lo sò, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html
+                    DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora s? che ci sta solo sto figlio o che comunque come primo figlio avr? il testo (per come ? adesso il codice) ma successivamente non lo s?, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html
                 }
             }
         }
@@ -176,7 +180,7 @@ public class InitializerEditor : Editor
             if (EditorGUI.EndChangeCheck())
             {
                 if (oldTypeIndex >= 0)
-                    DestroyImmediate(component);
+                    DestroyImmediate(component,true);
                 if (typeIndex >= 0)
                     targetObject.AddComponent(types[typeIndex]);
             }

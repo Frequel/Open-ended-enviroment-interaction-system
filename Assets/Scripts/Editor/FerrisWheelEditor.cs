@@ -33,11 +33,11 @@ public class FerrisWheelEditord : Editor
     {
         DrawDefaultInspector();
 
-        FerrisWheelManager script = (FerrisWheelManager)target;
+        //FerrisWheelManager script = (FerrisWheelManager)target;
 
         ///1. fare le funzioni con begin e end change per sicurezza
-        ///2. dovrei aggiungere il fatto che se cambio il numero, dovrei cambiare automaticamente anche numero sequenza -> fare punto 1 e in più implementare il numero di sequanza come le cose di geek5geek oppure lo setto semplicemente ad 1
-        ///3. /fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica) -> forse è meglio così, anzichè fare vari reset perchè ci sono anche i numeri primi in ballo
+        ///2. dovrei aggiungere il fatto che se cambio il numero, dovrei cambiare automaticamente anche numero sequenza -> fare punto 1 e in più implementare il numero di sequanza come le cose di geek4geek oppure lo setto semplicemente ad 1
+        ///3. fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica) -> forse è meglio così, anzichè fare vari reset perchè ci sono anche i numeri primi in ballo -> oppure sbattertene perchè tanto non faccio cambiare variabile per un numero che non divide per intero....
         EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
 
         m_numeroSequenza.intValue = SetNumSeq(m_numeroSequenza.intValue, m_numeroCabine.intValue, "Numero Sequenza");

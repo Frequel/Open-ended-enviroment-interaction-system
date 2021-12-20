@@ -59,9 +59,10 @@ public class CabinManager : MonoBehaviour
         StartCoroutine(startRotationRoutine());
     }
 
-    //con questo metodo faccio un giro completo nei secondi che indico dall'editor, ma non si ferma precisamente alla posizione di partenza, quindi pi? lo usi e pi? si sminchiano le posizioni, per? con il reset sta cosa dovrebbe essere risolta -> lo è, ma devo vedere come gestire la presenza di marmocchi a bordo
-    private IEnumerator startRotationRoutine() 
+    //con questo metodo faccio un giro completo nei secondi che indico dall'editor, ma non si ferma precisamente alla posizione di partenza, quindi più lo usi e più si sminchiano le posizioni, però con il reset sta cosa dovrebbe essere risolta -> lo è, ma devo vedere come gestire la presenza di marmocchi a bordo
+    private IEnumerator startRotationRoutine()
     {
+        Vector3 startRot = transform.position;
         rotationSpeed = 360 / fwm.RotationDuration;
         float countDown = fwm.RotationDuration;
         isRotating = true; //paramentro che flagga la possibilità di cambiare le cabine finchè non vengono resettate
@@ -78,13 +79,9 @@ public class CabinManager : MonoBehaviour
                 yield return null;
             }
         }
+
+        transform.position = startRot;
         isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
         fwm.FlagCoroutine++;
-    }
-
-    private void Update()
-    {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 360));
-        transform.localRotation = new Quaternion(0, 0, transform.rotation.z * -1, transform.rotation.w);
     }
 }

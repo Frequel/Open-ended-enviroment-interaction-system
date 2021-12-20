@@ -251,16 +251,11 @@ public class FerrisWheelManager : MonoBehaviour
 
         FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
 
-        cFwm.listaPasseggeri = listaPasseggeri; //forse sarebbe meglio prima sparentarli e dopo riparentarli, perchè rischio che distruggendo il "nonno" poi vengono distrutti e quindi anche se risetti le posizioni e i parent rischi che non siano istanziati
-        //foreach child bla bla bla aggiungi figliuolo come in cabInteractor
-        //RestartPassengers(fsCopy); //sta cosa per come è strutturata la logica della ruota non và bene, a meno che tutte le ruote che poi respawnano abbiano lo stesso numero di cabine. In quel caso è ok (a parte il fattore sparentare o meno) ma se non fosse così, l'unica soluzione sarebbe predisporre una zona dove "scendono" i passegeri e metterli tutti lì
-        //peggio ancora, la strategia di "farli scendere" è ancora più utile, in quanto, quando chiamo il Restart, ancora nonn è partito lo start, perchè devo ancora accedere al prossimo frame (immaginando che una start run-time parti leggermente prima di una successiva update) -> per continuare ad usare questa strategia, ci vorrebbe un flag che faccia fare tale reset nello start
-        //a sparentarli puoi sparentarli sempre prima
-        //comunque non si rompe il gioco se uso questo metodo, piuttosto rimangono fluttuanti nel vuoto
+        cFwm.listaPasseggeri = listaPasseggeri; 
 
         unParentPassengers(cFwm);
 
-        cFwm.restartPassengers = true; //sta cos di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
+        cFwm.restartPassengers = true; //sta cosa di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
 
         Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
     }
@@ -288,25 +283,6 @@ public class FerrisWheelManager : MonoBehaviour
 
         for (int j = 0; j < numeroSequenza; j++)
             spriteSequence[j] = spriteArray[fwm.indiceSpritePerSequenza[j]];
-
-        //GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
-
-        //FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
-
-        //cFwm.listaPasseggeri = listaPasseggeri; //forse sarebbe meglio prima sparentarli e dopo riparentarli, perchè rischio che distruggendo il "nonno" poi vengono distrutti e quindi anche se risetti le posizioni e i parent rischi che non siano istanziati
-        ////foreach child bla bla bla aggiungi figliuolo come in cabInteractor
-        ////RestartPassengers(fsCopy); //sta cosa per come è strutturata la logica della ruota non và bene, a meno che tutte le ruote che poi respawnano abbiano lo stesso numero di cabine. In quel caso è ok (a parte il fattore sparentare o meno) ma se non fosse così, l'unica soluzione sarebbe predisporre una zona dove "scendono" i passegeri e metterli tutti lì
-        ////peggio ancora, la strategia di "farli scendere" è ancora più utile, in quanto, quando chiamo il Restart, ancora nonn è partito lo start, perchè devo ancora accedere al prossimo frame (immaginando che una start run-time parti leggermente prima di una successiva update) -> per continuare ad usare questa strategia, ci vorrebbe un flag che faccia fare tale reset nello start
-        ////a sparentarli puoi sparentarli sempre prima
-        ////comunque non si rompe il gioco se uso questo metodo, piuttosto rimangono fluttuanti nel vuoto
-
-        //unParentPassengers(cFwm);
-
-        //cFwm.restartPassengers = true; //sta cos di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
-
-        //non mi serve più sparentare e riparentare e manco distruggere per cui manco mi serve poiù il controllo allo start per il restart passenger in quanto nello start non ci entro più 
-
-        //Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
     }
 
     //void unParentPassengers(GameObject fsCopy, FerrisWheelManager cFwm)

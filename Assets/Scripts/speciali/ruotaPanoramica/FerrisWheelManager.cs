@@ -123,12 +123,22 @@ public class FerrisWheelManager : MonoBehaviour
 
         }
 
-        sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences");
+        //old version of managing ferris wheel
+        //sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences"); //da moddare per adattare strategia suddivisione cartelle
 
-        for(int i=0; i< sequencesPrefabs.Length; i++)
+        //for(int i=0; i< sequencesPrefabs.Length; i++)
+        //{
+        //    if (gameObject.name == sequencesPrefabs[i].name)
+        //        prefabID = i;
+        //}
+
+        //new version
+        sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/" + numeroCabine); //da moddare per adattare strategia suddivisione cartelle
+
+        for (int i = 0; i < sequencesPrefabs.Length; i++)
         {
             if (gameObject.name == sequencesPrefabs[i].name)
-                prefabID = i;
+                prefabID = numeroCabine*100 + i;
         }
     }
 
@@ -217,7 +227,7 @@ public class FerrisWheelManager : MonoBehaviour
         {
             i = Random.Range(0, sequencesPrefabs.Length);
         }
-        while (prefabID == i);
+        while (prefabID == numeroCabine * 100 + i); //prima era solo i
 
         GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
 

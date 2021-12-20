@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System;
+using System.IO;
 using TMPro;
 
 [CustomEditor(typeof(FerrisWheelManager))]
@@ -18,6 +19,7 @@ public class FerrisWheelEditord : Editor
     Sprite[] spriteArray;
     private static string[] cabine;
 
+    string seqPath = "Assets/Resources/Prefab/FerrisWheelSequences/";
     private void OnEnable()
     {
         spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
@@ -33,7 +35,7 @@ public class FerrisWheelEditord : Editor
     {
         DrawDefaultInspector();
 
-        //FerrisWheelManager script = (FerrisWheelManager)target;
+        FerrisWheelManager script = (FerrisWheelManager)target;
 
         ///1. fare le funzioni con begin e end change per sicurezza
         ///2. dovrei aggiungere il fatto che se cambio il numero, dovrei cambiare automaticamente anche numero sequenza -> fare punto 1 e in più implementare il numero di sequanza come le cose di geek4geek oppure lo setto semplicemente ad 1
@@ -50,6 +52,14 @@ public class FerrisWheelEditord : Editor
             DrawComponentsPopup(cabine, i, "Cabina " + (i+1));
 
         this.serializedObject.ApplyModifiedProperties();
+
+
+        GUILayout.Space(20);
+
+        if (GUILayout.Button("Save Prefab"))
+        {
+            savePrefab(script);
+        }
     }
 
     private void DrawComponentsPopup(string[] options, int i, string label = "Cabina")
@@ -80,5 +90,25 @@ public class FerrisWheelEditord : Editor
         }
 
         return lunghezzaSeq;
+    }
+
+    void savePrefab(FerrisWheelManager script)
+    {
+        
+        string dirPath = seqPath + m_numeroCabine.intValue;
+
+        if (!Directory.Exists(dirPath))
+        {
+            //if it doesn't, create it
+            Directory.CreateDirectory(dirPath);
+        }
+
+        string localPath = dirPath + "/" + script.gameObject.name + ".prefab";
+
+        // Make sure the file name is unique, in case an existing Prefab has the same name.
+        localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
+
+        // Create the new Prefab.
+        PrefabUtility.SaveAsPrefabAssetAndConnect(script.gameObject, localPath, InteractionMode.UserAction);
     }
 }

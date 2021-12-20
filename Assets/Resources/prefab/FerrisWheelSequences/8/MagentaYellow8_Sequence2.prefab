@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8882377799368045446, guid: e5609509b160af941a60237228d6c04a, type: 3}
+      propertyPath: rotationDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8882377799368045446, guid: e5609509b160af941a60237228d6c04a, type: 3}
       propertyPath: indiceSpritePerSequenza.Array.data[1]
       value: 5
       objectReference: {fileID: 0}

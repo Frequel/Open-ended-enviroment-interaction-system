@@ -71,6 +71,13 @@ public class FerrisWheelManager : MonoBehaviour
     [SerializeField]
     int rotationDuration = 15;
 
+    //new Change Ferris Wheel
+    [SerializeField]
+    bool newMethod = true;
+    SpriteRenderer m_SpriteRenderer;
+    Sprite[] spriteArray;
+
+
     public int RotationDuration
     {
         get { return rotationDuration; }
@@ -85,8 +92,11 @@ public class FerrisWheelManager : MonoBehaviour
 
     void Start()
     {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>(); //new strategy to not destroy and instantiate
         spriteSequence = new Sprite[numeroSequenza];
-        Sprite[] spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
+        //old reset wheel
+        //Sprite[] spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine"); // me lo devo salvare globale per il nuovo metodo di reset wheel
+        spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine"); // me lo devo salvare globale per il nuovo metodo di reset wheel
 
         for (int i = 0; i < numeroSequenza; i++)
             spriteSequence[i] = spriteArray[indiceSpritePerSequenza[i]];
@@ -229,6 +239,14 @@ public class FerrisWheelManager : MonoBehaviour
         }
         while (prefabID == numeroCabine * 100 + i); //prima era solo i
 
+        if (!newMethod)
+            ChangeWheelOld(i);
+        else
+            ChangeWheelNew(i);
+    }
+
+    private void ChangeWheelOld(int i)
+    {
         GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
 
         FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
@@ -245,6 +263,50 @@ public class FerrisWheelManager : MonoBehaviour
         cFwm.restartPassengers = true; //sta cos di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
 
         Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
+    }
+
+    //sto metodo per funzionare richiede cose troppo precise, stesso raggio, stesso numero di cabine e così via, quello del numero di cabine era accettabile perchè risolveva un problema di passengeri, ma gli altri...
+    private void ChangeWheelNew(int i)
+    {
+        m_SpriteRenderer.sprite = sequencesPrefabs[i].GetComponent<SpriteRenderer>().sprite;
+        FerrisWheelManager fwm = sequencesPrefabs[i].GetComponent<FerrisWheelManager>();
+
+        //problema raggio
+        int k = 0;
+        ferrisWheelRadius = fwm.ferrisWheelRadius;
+        //funzione per randomizzare cabine -> ciò la cabina già lo fà allo start, si può sfruttare quello.
+        foreach (Transform child in transform)
+        {
+            ///problema raggio
+            float angle = Mathf.PI * k / ((float)numeroCabine / 2);
+            child.position = new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z);
+            k++;
+            ///
+
+            child.GetComponent<CabinManager>().RandomizeCabin(); 
+        }
+
+        for (int j = 0; j < numeroSequenza; j++)
+            spriteSequence[j] = spriteArray[fwm.indiceSpritePerSequenza[j]];
+
+        //GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
+
+        //FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
+
+        //cFwm.listaPasseggeri = listaPasseggeri; //forse sarebbe meglio prima sparentarli e dopo riparentarli, perchè rischio che distruggendo il "nonno" poi vengono distrutti e quindi anche se risetti le posizioni e i parent rischi che non siano istanziati
+        ////foreach child bla bla bla aggiungi figliuolo come in cabInteractor
+        ////RestartPassengers(fsCopy); //sta cosa per come è strutturata la logica della ruota non và bene, a meno che tutte le ruote che poi respawnano abbiano lo stesso numero di cabine. In quel caso è ok (a parte il fattore sparentare o meno) ma se non fosse così, l'unica soluzione sarebbe predisporre una zona dove "scendono" i passegeri e metterli tutti lì
+        ////peggio ancora, la strategia di "farli scendere" è ancora più utile, in quanto, quando chiamo il Restart, ancora nonn è partito lo start, perchè devo ancora accedere al prossimo frame (immaginando che una start run-time parti leggermente prima di una successiva update) -> per continuare ad usare questa strategia, ci vorrebbe un flag che faccia fare tale reset nello start
+        ////a sparentarli puoi sparentarli sempre prima
+        ////comunque non si rompe il gioco se uso questo metodo, piuttosto rimangono fluttuanti nel vuoto
+
+        //unParentPassengers(cFwm);
+
+        //cFwm.restartPassengers = true; //sta cos di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
+
+        //non mi serve più sparentare e riparentare e manco distruggere per cui manco mi serve poiù il controllo allo start per il restart passenger in quanto nello start non ci entro più 
+
+        //Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
     }
 
     //void unParentPassengers(GameObject fsCopy, FerrisWheelManager cFwm)

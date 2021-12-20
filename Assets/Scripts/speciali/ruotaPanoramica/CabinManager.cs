@@ -34,8 +34,13 @@ public class CabinManager : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         fwm = gameObject.GetComponentInParent<FerrisWheelManager>();
         spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
-        i = Random.Range(0, spriteArray.Length);
-        m_SpriteRenderer.sprite = spriteArray[i];
+
+        //old reset wheel
+        //i = Random.Range(0, spriteArray.Length);
+        //m_SpriteRenderer.sprite = spriteArray[i];
+
+        //new reset wheel
+        RandomizeCabin();
 
         //rotation
         target = gameObject.transform.parent.gameObject;
@@ -83,5 +88,12 @@ public class CabinManager : MonoBehaviour
         transform.position = startRot;
         isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
         fwm.FlagCoroutine++;
+    }
+
+    //new reset wheel
+   public void RandomizeCabin()
+    {
+        i = Random.Range(0, spriteArray.Length);
+        m_SpriteRenderer.sprite = spriteArray[i];
     }
 }

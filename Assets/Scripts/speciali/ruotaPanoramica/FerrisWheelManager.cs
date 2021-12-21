@@ -120,16 +120,7 @@ public class FerrisWheelManager : MonoBehaviour
             RestartPassengers();
         }
 
-        //old version of managing ferris wheel
-        //sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences"); //da moddare per adattare strategia suddivisione cartelle
-
-        //for(int i=0; i< sequencesPrefabs.Length; i++)
-        //{
-        //    if (gameObject.name == sequencesPrefabs[i].name)
-        //        prefabID = i;
-        //}
-
-        //new version
+        //new version -> utile per non avere troppo sbatti nel rimettere i passeggeri al loro posto
         sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/" + numeroCabine); //da moddare per adattare strategia suddivisione cartelle
 
         for (int i = 0; i < sequencesPrefabs.Length; i++)

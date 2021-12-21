@@ -34,11 +34,6 @@ public class CabinManager : MonoBehaviour
         fwm = gameObject.GetComponentInParent<FerrisWheelManager>();
         spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
 
-        //old reset wheel
-        //i = Random.Range(0, spriteArray.Length);
-        //m_SpriteRenderer.sprite = spriteArray[i];
-
-        //new reset wheel
         RandomizeCabin();
 
         //rotation
@@ -78,8 +73,7 @@ public class CabinManager : MonoBehaviour
             while (countDown >= 0)
             {
                 transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
-                //transform.localRotation = new Quaternion(0, 0, transform.rotation.z * -1, transform.rotation.w);
-                transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w); // non sò perchè quello sopra prima funzionava e ora no, rimangono storte le sprite..
+                transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w);
                 countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
                 yield return null;
             }

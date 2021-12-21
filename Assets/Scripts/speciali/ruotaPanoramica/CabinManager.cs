@@ -14,7 +14,6 @@ public class CabinManager : MonoBehaviour
     //rotation
     GameObject target;
     Vector3 rotationVector = new Vector3(0, 0, 1);
-    Vector3 Hx2 = new Vector3(0, 0.5f, 0);
 
     bool isRotating = false; //flag per bloccare interazione con cabine durante la rotazione
 
@@ -55,7 +54,7 @@ public class CabinManager : MonoBehaviour
 
             m_SpriteRenderer.sprite = spriteArray[i];
 
-            fwm.checkSequenceNew();
+            fwm.checkSequenceOuter();
         }
     }
 
@@ -72,14 +71,15 @@ public class CabinManager : MonoBehaviour
         float countDown = fwm.RotationDuration;
         isRotating = true; //paramentro che flagga la possibilità di cambiare le cabine finchè non vengono resettate
         Vector3 rotationAxis; //asse intorno a cui la ruota panoramica gira
-        rotationAxis = target.transform.position; //+ Vector3.Scale(target.transform.localScale, Hx2);
+        rotationAxis = target.transform.position;
 
         for (int i = 0; i < 10000; i++)
         {
             while (countDown >= 0)
             {
                 transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
-                transform.localRotation = new Quaternion(0, 0, transform.rotation.z * -1, transform.rotation.w);
+                //transform.localRotation = new Quaternion(0, 0, transform.rotation.z * -1, transform.rotation.w);
+                transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w); // non sò perchè quello sopra prima funzionava e ora no, rimangono storte le sprite..
                 countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
                 yield return null;
             }

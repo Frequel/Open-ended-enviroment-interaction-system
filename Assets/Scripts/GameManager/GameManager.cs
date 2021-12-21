@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float objectScrollViewSpeed = 0.2f;
 
-    [Header("Numeric value of speed factor")]
+    [Header("Numeric value of distance from screen board")]
     [Tooltip("A float using the Range attribute")]
     [Range(0f, 1f)]
     [SerializeField]

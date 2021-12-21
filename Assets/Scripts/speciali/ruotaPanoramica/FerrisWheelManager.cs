@@ -9,7 +9,6 @@ public class FerrisWheelManager : MonoBehaviour
 {
     [Tooltip("Indicare le Sprite nell'ordine della sequenza voluta")]
     [HideInInspector]
-    //public int[] indiceSpritePerSequenza;
     [SerializeField]
     int[] indiceSpritePerSequenza;
 
@@ -22,13 +21,9 @@ public class FerrisWheelManager : MonoBehaviour
 
     [Tooltip("Indicare la lunghezza della sequenza da indovinare")]
     [HideInInspector]
-    //public int numeroSequenza = 1; //da fare in modo che il numero cabine sia divisibile per numero sequenza
     [SerializeField]
     int numeroSequenza = 1;
 
-    //posso fare un getter
-    //[System.NonSerialized] //senza di que sbarellava perhè dall'editor non mettevo nulla e diceva che andavo out of bound, giustamente
-    //public Sprite[] spriteSequence;
     Sprite[] spriteSequence;
 
     //CabinSpawner
@@ -39,19 +34,12 @@ public class FerrisWheelManager : MonoBehaviour
     [SerializeField]
     [Range(3, 20)]
     int ferrisWheelRadius;
-    //trying things..
-    Vector3 Hx2 = new Vector3(0, 0.5f, 0);
-    Collider coll;
-    Vector3 size;
-    Vector3 halfSize;
 
     //reset sequence
     GameObject[] sequencesPrefabs;
-    //[System.NonSerialized] //posso fare un getter
-    //public int flagCoroutine = 0;
     int flagCoroutine = 0;
 
-    //memorizzare i personaggi sulla ruota per ripristinarli dopo il reset -> al reset si dovrebbero pure renderizzare al loro posto dov'erano, ma si potrebbe fare che allo start lo fai sempre.... -> forse non fattibile perchè dovrei smanettare nello start, in quanto creo tale array proprio lì
+    //ripristinare passeggeri
     [System.NonSerialized]
     public GameObject[] listaPasseggeri;
     bool restartPassengers = false;
@@ -67,7 +55,6 @@ public class FerrisWheelManager : MonoBehaviour
     //cabin rotation
     [Tooltip("Inserire la durata in secondi per fare un giro completo della ruota panoramica")]
     [HideInInspector]
-    //public int rotationDuration = 15;
     [SerializeField]
     int rotationDuration = 15;
 
@@ -105,9 +92,9 @@ public class FerrisWheelManager : MonoBehaviour
 
         for (int i = 0; i < numeroCabine; i++)
         {
-            coll = GetComponent<Collider>();
-            size = coll.bounds.size;
-            halfSize = size / 2;
+            //coll = GetComponent<Collider>();
+            //size = coll.bounds.size;
+            //halfSize = size / 2;
             float angle = Mathf.PI * i / ((float)numeroCabine / 2);
             var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z), Quaternion.identity);
 
@@ -123,14 +110,14 @@ public class FerrisWheelManager : MonoBehaviour
         else //if(restartPassengers)
         {
             Debug.Log("resettare i passengers");
+
             //aggiungere nodi se lista passeggeri più lunga (anche se nel caso di diverse quantità di cabine cambia questa logica che non è fattibile, se il numero si riduce diventa un problema e dobbiamo utilizzare la "scesa" dei pg)
-            
             if (listaPasseggeri.Length < numeroCabine)
             {
                 System.Array.Resize(ref listaPasseggeri, numeroCabine ); //dovrei farlo anche a ridurre, in teoria, ma il discorso su come gestire sta cosa è complesso
             }
-            RestartPassengers();
 
+            RestartPassengers();
         }
 
         //old version of managing ferris wheel
@@ -161,7 +148,7 @@ public class FerrisWheelManager : MonoBehaviour
     }
 
     //check sequence part 1
-    public void checkSequenceNew() 
+    public void checkSequenceOuter() 
     {
         int k;
         bool ok = true;
@@ -171,12 +158,12 @@ public class FerrisWheelManager : MonoBehaviour
         LinkedList<SpriteRenderer> childrens_reverse = new LinkedList<SpriteRenderer>(childrens.Reverse());
         for (k = 0; k < numeroSequenza; k++)
         {
-            ok = nonSoComeChiamartiNew(ok, check, childrens);
+            ok = checkSequenceInner(ok, check, childrens);
 
             if (ok)
                 break;
 
-            ok = ok | nonSoComeChiamartiNew(ok, check, childrens_reverse); //serve per fare il check anche in senso orario (sarebbe da ottimizzare la parallelizzazione dei due sensi)
+            ok = ok | checkSequenceInner(ok, check, childrens_reverse); //serve per fare il check anche in senso orario (sarebbe da ottimizzare la parallelizzazione dei due sensi)
 
             if (ok)
                 break;
@@ -194,7 +181,7 @@ public class FerrisWheelManager : MonoBehaviour
     }
 
     //check sequence part 2
-    bool nonSoComeChiamartiNew(bool ok, int check, LinkedList<SpriteRenderer> childrens) //check sequence part 2
+    bool checkSequenceInner(bool ok, int check, LinkedList<SpriteRenderer> childrens) //check sequence part 2
     {
         int i = 0, j = 0;//, k = 0;
         for (i = 0; i < numeroSequenza; i++) 
@@ -207,12 +194,8 @@ public class FerrisWheelManager : MonoBehaviour
                         return false;
                 }
             }
-
             else
-
-            {
                 return false;
-            }
         }
 
         return true;
@@ -251,13 +234,13 @@ public class FerrisWheelManager : MonoBehaviour
 
         FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
 
-        cFwm.listaPasseggeri = listaPasseggeri; 
+        cFwm.listaPasseggeri = listaPasseggeri; //mi passo i passeggeri al nuovo oggetto istanziato
 
-        unParentPassengers(cFwm);
+        unParentPassengers(cFwm); //sparento prima di distruggere, altrimenti i passeggeri vengono distrutti
 
-        cFwm.restartPassengers = true; //sta cosa di settare appen dopo instantiate non funziona.... (coroutine per aspettare che starta?)
+        cFwm.restartPassengers = true; //old restart method ->  needed to not initialize from scratch the array and lost data
 
-        Destroy(gameObject); //prima di fare questo mi servirebbe salvare tutti i figli dei figli e riposizionarli (bambini sulla ruota)
+        Destroy(gameObject); 
     }
 
     //sto metodo per funzionare richiede cose troppo precise, stesso raggio, stesso numero di cabine e così via, quello del numero di cabine era accettabile perchè risolveva un problema di passengeri, ma gli altri...
@@ -285,7 +268,7 @@ public class FerrisWheelManager : MonoBehaviour
             spriteSequence[j] = spriteArray[fwm.indiceSpritePerSequenza[j]];
     }
 
-    //void unParentPassengers(GameObject fsCopy, FerrisWheelManager cFwm)
+
     void unParentPassengers(FerrisWheelManager cFwm)
     {
         foreach(GameObject passenger in cFwm.listaPasseggeri)
@@ -294,22 +277,6 @@ public class FerrisWheelManager : MonoBehaviour
                 passenger.transform.parent = null;
         }
     }
-    //void RestartPassengers(GameObject fsCopy)
-    //{
-    //    int i = 0;
-    //    foreach (Transform child in fsCopy.transform)
-    //    {
-    //        //si potrebbe evitare questa get usando direttamente il vettore di questo oggetto attuale -> da Testare
-    //        Transform passsenger = child.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[i].transform; //[pos];
-    //        //int pos = child.GetComponent<CabinManager>().OrderInWheel;
-
-    //        //settare il parent
-    //        passsenger.parent = child.transform;
-    //        passsenger.localPosition = Vector3.zero;
-
-    //        i++;
-    //    }
-    //}
 
     void RestartPassengers()
     {
@@ -318,15 +285,12 @@ public class FerrisWheelManager : MonoBehaviour
         {
             if(listaPasseggeri[i] != null)
             {
-                //si potrebbe evitare questa get usando direttamente il vettore di questo oggetto attuale -> da Testare
-                Transform passsenger = listaPasseggeri[i].transform; //[pos];
-                //int pos = child.GetComponent<CabinManager>().OrderInWheel;
+                Transform passsenger = listaPasseggeri[i].transform; 
 
                 //settare il parent
                 passsenger.parent = child.transform;
                 passsenger.localPosition = Vector3.zero;
             }
-            
 
             i++;
         }

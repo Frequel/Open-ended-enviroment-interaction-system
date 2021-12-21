@@ -39,8 +39,9 @@ public class FerrisWheelEditord : Editor
 
         ///1. fare le funzioni con begin e end change per sicurezza
         ///2. dovrei aggiungere il fatto che se cambio il numero, dovrei cambiare automaticamente anche numero sequenza -> fare punto 1 e in più implementare il numero di sequanza come le cose di geek4geek oppure lo setto semplicemente ad 1
-        ///3. fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica) -> forse è meglio così, anzichè fare vari reset perchè ci sono anche i numeri primi in ballo -> oppure sbattertene perchè tanto non faccio cambiare variabile per un numero che non divide per intero....
-        EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
+        ///3. fare in modo che il numero sia sempre pari (se riesco mettere anche il popup overlay che lo specifica) -> forse è meglio così, anzichè fare vari reset perchè ci sono anche i numeri primi in ballo -> oppure sbattertene perchè tanto non faccio cambiare variabile per un numero che non divide per intero.... -> per ora uso il secondo metodo
+        //EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
+        SetNumCab();
 
         m_numeroSequenza.intValue = SetNumSeq(m_numeroSequenza.intValue, m_numeroCabine.intValue, "Numero Sequenza");
 
@@ -62,14 +63,15 @@ public class FerrisWheelEditord : Editor
         }
     }
 
-    private void DrawComponentsPopup(string[] options, int i, string label = "Cabina")
+    private void SetNumCab()
     {
+
         EditorGUI.BeginChangeCheck();
         {
-            int dd = EditorGUILayout.Popup(label, m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue, options);
+            EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
             if (EditorGUI.EndChangeCheck())
             {
-                m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue = dd;
+                m_numeroSequenza.intValue = 1;
             }
         }
     }
@@ -90,6 +92,18 @@ public class FerrisWheelEditord : Editor
         }
 
         return lunghezzaSeq;
+    }
+
+    private void DrawComponentsPopup(string[] options, int i, string label = "Cabina")
+    {
+        EditorGUI.BeginChangeCheck();
+        {
+            int dd = EditorGUILayout.Popup(label, m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue, options);
+            if (EditorGUI.EndChangeCheck())
+            {
+                m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue = dd;
+            }
+        }
     }
 
     void savePrefab(FerrisWheelManager script)

@@ -7,7 +7,7 @@ public class CabinManager : MonoBehaviour
 {
     //changeCabin
     SpriteRenderer m_SpriteRenderer;
-    FerrisWheelManager fwm;
+    FerrisWheelStructManager fwm;
     int i = 0;
     Sprite[] spriteArray;
 
@@ -31,8 +31,9 @@ public class CabinManager : MonoBehaviour
     {
         //changeCabin
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        fwm = gameObject.GetComponentInParent<FerrisWheelManager>();
-        spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
+        fwm = gameObject.GetComponentInParent<FerrisWheelStructManager>();
+        //spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");//old con miei asset
+        spriteArray = Resources.LoadAll<Sprite>("Sprites/RuotaAnnalisa/Cabine"); //new con sprite annalisa
 
         RandomizeCabin();
 
@@ -72,7 +73,8 @@ public class CabinManager : MonoBehaviour
         {
             while (countDown >= 0)
             {
-                transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
+                //transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
+                transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
                 transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w);
                 countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
                 yield return null;

@@ -15,7 +15,6 @@ public class FerrisWheelManager : MonoBehaviour
 
     [Tooltip("Indicare il numero di cabine presenti nella ruota panoramica")]
     [HideInInspector]
-    //public int numeroCabine;
     [SerializeField]
     int numeroCabine;
 
@@ -39,11 +38,6 @@ public class FerrisWheelManager : MonoBehaviour
     GameObject[] sequencesPrefabs;
     int flagCoroutine = 0;
 
-    //ripristinare passeggeri
-    [System.NonSerialized]
-    public GameObject[] listaPasseggeri;
-    bool restartPassengers = false;
-
     public int FlagCoroutine
     {
         get { return flagCoroutine; }
@@ -59,8 +53,6 @@ public class FerrisWheelManager : MonoBehaviour
     int rotationDuration = 15;
 
     //new Change Ferris Wheel
-    [SerializeField]
-    bool newMethod = true;
     SpriteRenderer m_SpriteRenderer;
     Sprite[] spriteArray;
 
@@ -81,20 +73,16 @@ public class FerrisWheelManager : MonoBehaviour
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>(); //new strategy to not destroy and instantiate
         spriteSequence = new Sprite[numeroSequenza];
-        //old reset wheel
-        //Sprite[] spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine"); // me lo devo salvare globale per il nuovo metodo di reset wheel
+
         spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine"); // me lo devo salvare globale per il nuovo metodo di reset wheel
 
         for (int i = 0; i < numeroSequenza; i++)
             spriteSequence[i] = spriteArray[indiceSpritePerSequenza[i]];
 
-        kids = new LinkedList<SpriteRenderer>();
+        kids = new LinkedList<SpriteRenderer>();//
 
         for (int i = 0; i < numeroCabine; i++)
         {
-            //coll = GetComponent<Collider>();
-            //size = coll.bounds.size;
-            //halfSize = size / 2;
             float angle = Mathf.PI * i / ((float)numeroCabine / 2);
             var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z), Quaternion.identity);
 
@@ -102,22 +90,7 @@ public class FerrisWheelManager : MonoBehaviour
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
             myNewCab.transform.parent = gameObject.transform;
 
-            kids.AddLast(myNewCab.GetComponent< SpriteRenderer> ());
-        }
-
-        if (!restartPassengers)
-            listaPasseggeri = new GameObject[numeroCabine];
-        else //if(restartPassengers)
-        {
-            Debug.Log("resettare i passengers");
-
-            //aggiungere nodi se lista passeggeri più lunga (anche se nel caso di diverse quantità di cabine cambia questa logica che non è fattibile, se il numero si riduce diventa un problema e dobbiamo utilizzare la "scesa" dei pg)
-            if (listaPasseggeri.Length < numeroCabine)
-            {
-                System.Array.Resize(ref listaPasseggeri, numeroCabine ); //dovrei farlo anche a ridurre, in teoria, ma il discorso su come gestire sta cosa è complesso
-            }
-
-            RestartPassengers();
+            kids.AddLast(myNewCab.GetComponent< SpriteRenderer> ());//
         }
 
         //new version -> utile per non avere troppo sbatti nel rimettere i passeggeri al loro posto
@@ -127,14 +100,6 @@ public class FerrisWheelManager : MonoBehaviour
         {
             if (gameObject.name == sequencesPrefabs[i].name)
                 prefabID = numeroCabine*100 + i;
-        }
-    }
-
-    void startRotation() 
-    {
-        foreach (Transform child in transform)
-        {
-            child.GetComponent<CabinManager>().correctSequenceRotation();
         }
     }
 
@@ -192,6 +157,15 @@ public class FerrisWheelManager : MonoBehaviour
         return true;
     }
 
+    void startRotation()
+    {
+        //aggiungere roba per i pali interni (cabina centro) -> capire se figlio di figlio o cosa... figlio di cabina forse è meglio -> da settare dentro la cabina la sua angolazione
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<CabinManager>().correctSequenceRotation();
+        }
+    }
+
     private IEnumerator waitRotation() {
         while (true)
         {
@@ -213,25 +187,7 @@ public class FerrisWheelManager : MonoBehaviour
         }
         while (prefabID == numeroCabine * 100 + i); //prima era solo i
 
-        if (!newMethod)
-            ChangeWheelOld(i);
-        else
-            ChangeWheelNew(i);
-    }
-
-    private void ChangeWheelOld(int i)
-    {
-        GameObject fsCopy = Instantiate(sequencesPrefabs[i], transform.position, Quaternion.identity);
-
-        FerrisWheelManager cFwm = fsCopy.GetComponent<FerrisWheelManager>();
-
-        cFwm.listaPasseggeri = listaPasseggeri; //mi passo i passeggeri al nuovo oggetto istanziato
-
-        unParentPassengers(cFwm); //sparento prima di distruggere, altrimenti i passeggeri vengono distrutti
-
-        cFwm.restartPassengers = true; //old restart method ->  needed to not initialize from scratch the array and lost data
-
-        Destroy(gameObject); 
+        ChangeWheelNew(i);
     }
 
     //sto metodo per funzionare richiede cose troppo precise, stesso raggio, stesso numero di cabine e così via, quello del numero di cabine era accettabile perchè risolveva un problema di passengeri, ma gli altri...
@@ -257,33 +213,5 @@ public class FerrisWheelManager : MonoBehaviour
 
         for (int j = 0; j < numeroSequenza; j++)
             spriteSequence[j] = spriteArray[fwm.indiceSpritePerSequenza[j]];
-    }
-
-
-    void unParentPassengers(FerrisWheelManager cFwm)
-    {
-        foreach(GameObject passenger in cFwm.listaPasseggeri)
-        {
-            if(passenger!=null)
-                passenger.transform.parent = null;
-        }
-    }
-
-    void RestartPassengers()
-    {
-        int i = 0;
-        foreach (Transform child in transform)
-        {
-            if(listaPasseggeri[i] != null)
-            {
-                Transform passsenger = listaPasseggeri[i].transform; 
-
-                //settare il parent
-                passsenger.parent = child.transform;
-                passsenger.localPosition = Vector3.zero;
-            }
-
-            i++;
-        }
     }
 }

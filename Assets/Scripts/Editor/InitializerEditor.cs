@@ -41,6 +41,9 @@ public class InitializerEditor : Editor
         /////////////////
         ///
 
+        ///aggiungere che se metto cabin interactor aggiungo cabin manager se non c'è e sarebbe da aggiungere anche la possibilità di creare la ruota da editor al solo click
+        ///
+
         TextMeshPro testo = null;
 
         //potrei fare un vect di interactable, tipo quello degli interactors e fare un for, no?

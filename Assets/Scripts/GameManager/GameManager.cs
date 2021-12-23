@@ -62,11 +62,13 @@ public class GameManager : MonoBehaviour
     public float HalfWorldWidth
     {
         get { return halfWorldWidth; }
+        //set { halfWorldWidth = value; }//newAnn
     }
 
     public float HalfWorldHeight
     {
         get { return halfWorldHeight; }
+        //set { halfWorldHeight = value; }//newAnn
     }
 
     public static GameManager GetInstance
@@ -79,8 +81,12 @@ public class GameManager : MonoBehaviour
         if (gm == null)
         {
             gm = this;
-            halfWorldHeight = Camera.main.orthographicSize;
-            halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
+            setMainCameraSize();
+            //float currentAspect = (float)Screen.width / (float)Screen.height;
+            //Camera.main.orthographicSize = (float)Screen.width / currentAspect / 200;
+            //Camera.main.orthographicSize = (float)Screen.height / 200;
+            //halfWorldHeight = Camera.main.orthographicSize;
+            //halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
             InitializeBoundWorld();
         }
         else
@@ -89,22 +95,48 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void setMainCameraSize()
+    {
+        getBackGroundBound();
+
+        float bgWidth = xMax - xMin;
+        float worldScreenWidth = bgWidth / 2 * Screen.width / 2436; // 2436 perchè lo schermo dell'iPhoneX su cui è stato progettato il Background dai grafici, fratto 2 perchè il telefono scelto deve occupare la metà della lunghezza del background, se fosse diversamente si dovrebbe modificare, magari inserendo un nuovo parametro nell'editor
+        Camera.main.orthographicSize = 0.5f * worldScreenWidth / Screen.width * Screen.height;
+    }
+
     void InitializeBoundWorld()
     {
+        halfWorldHeight = Camera.main.orthographicSize;
+        halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
+
+        //Vector2 xBound, yBound;
+        //getBackGroundBound(out xBound, out yBound);
+
+        //getBackGroundBound(); //facendo prima setMainCameraSize, non dovrebbe servire
+
+        //xMin /-/ xMax
+        //xBoundWorld = new Vector2(xBound.x + halfWorldWidth, xBound.y - halfWorldWidth);
+        //yBoundWorld = new Vector2(yBound.x + halfWorldHeight, yBound.y - halfWorldHeight);
+        //yMin /-/ yMax
+
+        xBoundWorld = new Vector2(xMin + halfWorldWidth, xMax - halfWorldWidth);
+        yBoundWorld = new Vector2(yMin + halfWorldHeight, yMax - halfWorldHeight);
+    }
+
+    //private void getBackGroundBound(out Vector2 xBound, out Vector2 yBound)
+    private void getBackGroundBound()
+    {
+        Vector2 xBound, yBound;
         bm = backgroundObject.GetComponent<BackgroundBoundsCalculator>();
 
         Vector2[] sceneBounds = bm.CalculateBoundWorlds();
 
-        Vector2 xBound = sceneBounds[0];
-        Vector2 yBound = sceneBounds[1];
-
+        xBound = sceneBounds[0];
+        yBound = sceneBounds[1];
         xMax = xBound.y;
         yMax = yBound.y;
         yMin = yBound.x;
         xMin = xBound.x;
-
-        xBoundWorld = new Vector2(xBound.x + halfWorldWidth, xBound.y - halfWorldWidth);
-        yBoundWorld = new Vector2(yBound.x + halfWorldHeight, yBound.y - halfWorldHeight);
     }
 
     public Vector3 Limit2Bound(Vector3 distanceView)

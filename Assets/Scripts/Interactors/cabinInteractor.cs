@@ -15,8 +15,8 @@ public class cabinInteractor : ObjectInteractor
             ///si potrebbe lanciare una funzione dell'interactable, che mette in un array del padre (padre della cabina = centro ruota)
             ///non si può fare di là, si deve fare qua anche perchè più diretto, avevo confuso le idee, quindi:
             ///aggiungere ad un array di ("sedute" / "pg seduti") l'oggetto che ha apena interagito (inizializzarlo con N cosi a null, così quando riparti, nel reset copio l'array precedente all'oggetto nuovo
-            int pos = GetComponent<CabinManager>().OrderInWheel;
-            gameObject.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[pos] = a_OtherInteractable;
+            //int pos = GetComponent<CabinManager>().OrderInWheel;
+            //gameObject.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[pos] = a_OtherInteractable;
         }
         else
         {

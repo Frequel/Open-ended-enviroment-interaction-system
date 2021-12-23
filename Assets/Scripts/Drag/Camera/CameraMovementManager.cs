@@ -15,10 +15,14 @@ public class CameraMovementManager : MonoBehaviour
     [SerializeField] public float speedFactor = 5;
 
     GameManager gm;
+
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.GetInstance;
+        //newAnn
+        //gm.HalfWorldHeight = Camera.main.orthographicSize;
+        //gm.HalfWorldWidth = gm.HalfWorldHeight * Screen.width / Screen.height;
         CreateBoxCollider();
     }
 

@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class cabinInteractor : ObjectInteractor
 {
+    SpriteRenderer sprite;
+    void Start()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+    }
+
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
 
@@ -17,6 +23,7 @@ public class cabinInteractor : ObjectInteractor
             ///aggiungere ad un array di ("sedute" / "pg seduti") l'oggetto che ha apena interagito (inizializzarlo con N cosi a null, così quando riparti, nel reset copio l'array precedente all'oggetto nuovo
             //int pos = GetComponent<CabinManager>().OrderInWheel;
             //gameObject.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[pos] = a_OtherInteractable;
+            cabinPositionable.postionCharacterInCabin(sprite.sortingOrder);
         }
         else
         {

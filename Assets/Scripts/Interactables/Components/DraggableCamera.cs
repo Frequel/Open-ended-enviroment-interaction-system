@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovementManager : MonoBehaviour
+public class DraggableCamera : MonoBehaviour, IDraggable
 {
     Vector3 lastPosView;
 
@@ -35,14 +35,18 @@ public class CameraMovementManager : MonoBehaviour
         box.size = new Vector3(x, y, 2);
     }
 
-    void OnMouseDown()
+    public void BeginDrag()
     {
         lastPosView = Camera.main.ScreenToViewportPoint(Input.mousePosition);
     }
-
-    void OnMouseDrag()
+    public void Dragging()
     {
         DragCamera();
+    }
+
+    public void EndDrag()
+    {
+        Debug.Log("no needed EndDrag 4 Camera");
     }
 
     private void DragCamera()

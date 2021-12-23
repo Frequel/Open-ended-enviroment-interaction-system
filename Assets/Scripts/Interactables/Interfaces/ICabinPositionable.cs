@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ICabinPositionable
 {
-    public void postionCharacterInCabin();
+    public void postionCharacterInCabin(int fatherSortOrder);
 }

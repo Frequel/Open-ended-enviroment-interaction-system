@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DragObject : MonoBehaviour
+public class DraggableObject : ObjectInteractor, IDraggable//MonoBehaviour, IDraggable
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
 
     SpriteRenderer sprite;
-    Collider coll;
+    Collider2D coll;
 
     protected float hww, hwh;
     TextMeshPro bcText;
 
     GameManager gm;
-    interactableChecker ic;
+    interactableChecker2D ic;
 
     void Start()
     {
@@ -25,36 +25,40 @@ public class DragObject : MonoBehaviour
         sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
 
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
+        transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1);
 
-        hww = gm.HalfWorldWidth; 
+        hww = gm.HalfWorldWidth;
         hwh = gm.HalfWorldHeight;
 
-        coll = GetComponent<Collider>();
-        
+        coll = GetComponent<Collider2D>();
+
         //X Testo
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
-        if(bcText!=null)
+        if (bcText != null)
             bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
 
-        ic = GetComponent<interactableChecker>();
+        ic = GetComponent<interactableChecker2D>();
 
     }
 
-    void OnMouseDown()
+    public void BeginDrag()
     {
         StartDragObject();
+    }
+    public void Dragging()
+    {
+        DraggingObject();
+    }
+
+    public void EndDrag()
+    {
+        FinishDragObject();
     }
 
     private void StartDragObject()
     {
         objectDragOrigin = GetMouseWorldPos();
         gameObject.layer = 3;
-    }
-
-    void OnMouseDrag()
-    {
-        DraggingObject();
     }
 
     private void DraggingObject()
@@ -69,20 +73,30 @@ public class DragObject : MonoBehaviour
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
+            //commentato per testing, da scommentare -> mezzo funziona sto stratagemma ma non è il top.sarà un problema per il contenitore
             sprite.sortingOrder = Mathf.CeilToInt(32766);
             //xTesto
-            if (bcText != null)
+            //if (bcText != null)
+            if (transform.childCount > 2 && bcText != null)
                 bcText.sortingOrder = Mathf.CeilToInt(32767);
+
+            //gestire in maniera tale che se ci sta il testo tra i figli non dà errore ma lo ignora e che entri nel for solo se ci stanno figli diversi dal testo
+            ///fare comunque i controlli sul fatto che ci vuole lo sprite renderer altrimenti lo ignora
+            else if(transform.childCount>0 && bcText == null || transform.childCount > 1 && bcText != null)
+            {
+                foreach (Transform child in transform)
+                    child.GetComponent<SpriteRenderer>().sortingOrder = sprite.sortingOrder + 1; 
+            }
+            else if (transform.childCount > 1 && bcText != null)
+            {
+                foreach (Transform child in transform)
+                    child.GetComponent<SpriteRenderer>().sortingOrder = sprite.sortingOrder + 1;
+            }
 
             transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
 
             ic.checkPulse();
         }
-    }
-
-    private void OnMouseUp()
-    {
-        FinishDragObject();
     }
 
     private void FinishDragObject()
@@ -94,8 +108,22 @@ public class DragObject : MonoBehaviour
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
         transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
 
-        if (bcText != null)
-            bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
+        //if (bcText != null) //-> ERA SOLO QUESTO PRIMA
+        if (transform.childCount > 2 && bcText != null)
+            bcText.sortingOrder = Mathf.CeilToInt(32767);
+
+        //gestire in maniera tale che se ci sta il testo tra i figli non dà errore ma lo ignora e che entri nel for solo se ci stanno figli diversi dal testo
+        ///fare comunque i controlli sul fatto che ci vuole lo sprite renderer altrimenti lo ignora
+        else if (transform.childCount > 0 && bcText == null || transform.childCount > 1 && bcText != null)
+        {
+            foreach (Transform child in transform)
+                child.GetComponent<SpriteRenderer>().sortingOrder = sprite.sortingOrder + 1;
+        }
+        else if (transform.childCount > 1 && bcText != null)
+        {
+            foreach (Transform child in transform)
+                child.GetComponent<SpriteRenderer>().sortingOrder = sprite.sortingOrder + 1;
+        }
 
         gameObject.layer = 0;
     }
@@ -198,5 +226,4 @@ public class DragObject : MonoBehaviour
             Camera.main.transform.Translate(cameraMovment);
         }
     }
-
 }

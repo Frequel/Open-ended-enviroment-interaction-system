@@ -185,7 +185,8 @@ public class FerrisWheelManager : MonoBehaviour
         {
             i = Random.Range(0, sequencesPrefabs.Length);
         }
-        while (prefabID == numeroCabine * 100 + i); //prima era solo i
+        //while (prefabID == numeroCabine * 100 + i); //prima era solo i
+        while (gameObject.name == sequencesPrefabs[i].name); //prima era solo i
 
         ChangeWheelNew(i);
     }

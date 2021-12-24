@@ -139,5 +139,10 @@ public class interactableChecker : MonoBehaviour
         //test dito
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(overlapBoxCenDito, overlapBoxDimDito);
+
+
+        ////test dito
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireCube(overlapBoxCenDito, new Vector3(0.0005f, 0.0005f, Camera.main.farClipPlane));
     }
 }

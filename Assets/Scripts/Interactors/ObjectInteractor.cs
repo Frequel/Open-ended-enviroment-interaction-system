@@ -14,7 +14,10 @@ public class ObjectInteractor : MonoBehaviour, IInteractor
 
     void initializeInteractableObject()
     {
+        //da scommentare e/o cambiare con il 2D
         interactableChecker ic = gameObject.AddComponent<interactableChecker>();
+        //interactableChecker2D ic = gameObject.AddComponent<interactableChecker2D>();
+
         ic.M_LayerMask = ~8;
         ic.getInteractor();
     }

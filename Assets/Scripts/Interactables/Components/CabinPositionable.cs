@@ -10,8 +10,8 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     Sprite inPiedi;
 
     SpriteRenderer sprite;
-    int fatherSortOrder;
-    bool fsoSetted = false;
+    //int fatherSortOrder;
+    //bool fsoSetted = false;
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
@@ -31,7 +31,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     {
         //fsoSetted = true;
         //this.fatherSortOrder = fatherSortOrder;
-        sprite.sortingOrder = fatherSortOrder;
+        sprite.sortingOrder = fatherSortOrder+1;
 
         sprite.sprite = seduto;
         //Debug.Log("prova");

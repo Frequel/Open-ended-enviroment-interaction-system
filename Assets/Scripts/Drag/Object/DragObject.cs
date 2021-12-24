@@ -98,6 +98,8 @@ public class DragObject : MonoBehaviour
             bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
 
         gameObject.layer = 0;
+
+        //ic.checkInteraction(); //se lo metto qua non funziona
     }
 
     Vector3 GetMouseWorldPos()

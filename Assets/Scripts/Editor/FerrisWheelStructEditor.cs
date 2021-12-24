@@ -37,7 +37,7 @@ public class FerrisWheelStructEditor : Editor
 
         FerrisWheelStructManager script = (FerrisWheelStructManager)target;
 
-        SetNumCab();
+        SetNumCab(script);
 
         m_numeroSequenza.intValue = SetNumSeq(m_numeroSequenza.intValue, m_numeroCabine.intValue, "Numero Sequenza");
 
@@ -59,7 +59,7 @@ public class FerrisWheelStructEditor : Editor
         }
     }
 
-    private void SetNumCab()
+    private void SetNumCab(FerrisWheelStructManager fwm)
     {
 
         EditorGUI.BeginChangeCheck();
@@ -68,6 +68,9 @@ public class FerrisWheelStructEditor : Editor
             if (EditorGUI.EndChangeCheck())
             {
                 m_numeroSequenza.intValue = 1;
+                //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo
+                //fwm.DestroyChild();
+                //fwm.InstantiateCabin();
             }
         }
     }
@@ -119,7 +122,8 @@ public class FerrisWheelStructEditor : Editor
         localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
 
         // Create the new Prefab.
-        PrefabUtility.SaveAsPrefabAssetAndConnect(script.gameObject, localPath, InteractionMode.UserAction); //sarebbe da cambiare per salvare tutto, anche la base e il centro ma poi devo cambiare altro nello script,per ora lascio così
-        //PrefabUtility.SaveAsPrefabAssetAndConnect(script.transform.parent.transform.parent.gameObject, localPath, InteractionMode.UserAction);
+        //PrefabUtility.SaveAsPrefabAssetAndConnect(script.gameObject, localPath, InteractionMode.UserAction); //sarebbe da cambiare per salvare tutto, anche la base e il centro ma poi devo cambiare altro nello script,per ora lascio così
+        //PrefabUtility.SaveAsPrefabAssetAndConnect(script.transform.parent.transform.parent.gameObject, localPath, InteractionMode.UserAction); //invece di fare così, si potrebbe fare che ferris wheel istanzia base e centro e che poi si imparenta... -> rimane la scomodità che in fase di costruzione non vedi dove metti le cose (stessa cosa vale anche per le cabine, però lo lascio perchè voglio rendere la cosa personalizzabile -> un'alternatica sarebbe che come cambio numero cabine, le distruggo tutte e lancio la funzione per crearle, oppure che controllo se il nuovo numero è maggiore o minore e riposiziono i figli e poi aggiungo o rimuovo cabine/figli)
+        PrefabUtility.SaveAsPrefabAsset(script.transform.parent.transform.parent.gameObject, localPath);
     }
 }

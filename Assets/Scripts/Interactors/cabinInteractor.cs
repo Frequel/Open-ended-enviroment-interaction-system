@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class cabinInteractor : ObjectInteractor
 {
+    
     SpriteRenderer sprite;
     void Start()
     {
@@ -12,12 +13,15 @@ public class cabinInteractor : ObjectInteractor
 
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
-
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
         if (cabinPositionable != null)
         {
-            a_OtherInteractable.transform.parent = transform;
-            a_OtherInteractable.transform.localPosition = Vector3.zero;
+            //a_OtherInteractable.transform.parent = transform;
+            a_OtherInteractable.transform.SetParent(transform,true);
+
+            //a_OtherInteractable.transform.localPosition = Vector3.zero; //provo a farlo in setPositionInSpace
+            //a_OtherInteractable.transform.position = new Vector3(0,0,1);//provo a farlo in setPositionInSpace
+
             ///si potrebbe lanciare una funzione dell'interactable, che mette in un array del padre (padre della cabina = centro ruota)
             ///non si può fare di là, si deve fare qua anche perchè più diretto, avevo confuso le idee, quindi:
             ///aggiungere ad un array di ("sedute" / "pg seduti") l'oggetto che ha apena interagito (inizializzarlo con N cosi a null, così quando riparti, nel reset copio l'array precedente all'oggetto nuovo

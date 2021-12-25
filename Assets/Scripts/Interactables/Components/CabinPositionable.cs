@@ -12,10 +12,15 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     SpriteRenderer sprite;
     //int fatherSortOrder;
     //bool fsoSetted = false;
+
+    setPositionInSpace sPiS;
+
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
-        inPiedi = sprite.sprite;
+        inPiedi = sprite.sprite; //da usare successivamente quando implemento i event&delegates
+
+        sPiS = GetComponent<setPositionInSpace>();
     }
 
     //sta roba non ha cambiato nulla.... perchè il padre cambia ad ogni drag, mentre tu ti mantieni il vecchio ordine di tuo padre + 1
@@ -31,10 +36,15 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     {
         //fsoSetted = true;
         //this.fatherSortOrder = fatherSortOrder;
-        sprite.sortingOrder = fatherSortOrder+1;
+        //sprite.sortingOrder = fatherSortOrder+1;
 
-        sprite.sprite = seduto;
+        sPiS.Pt = positionType.positionedPos;
+        //sPiS.setPosition(); //lo fà il dragObject alla fine di interactableChecker
+
+        //lo faccio nel positionate (o almeno ci provo)  
+        sprite.sprite = seduto;//lo faccio nel positionate (o almeno ci provo)   //troppo scomodo, almeno al momento non mi viene niente in mente di efficiente
         //Debug.Log("prova");
+        //sprite.sortingOrder = fatherSortOrder + 1;//lo faccio nel positionate (o almeno ci provo)  
     }
 }
 

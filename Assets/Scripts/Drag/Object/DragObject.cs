@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DragObject : MonoBehaviour
+public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
@@ -17,25 +17,37 @@ public class DragObject : MonoBehaviour
     GameManager gm;
     interactableChecker ic;
 
+    setPositionInSpace sPiS;
+
     void Start()
     {
-        gm = GameManager.GetInstance;
-        sprite = GetComponent<SpriteRenderer>();
+        gm = GameManager.GetInstance; //volevo fare che prendeva tutto da setPosition ma poi dovevo salvarci troppa roba dentro che non serviva direttamente a set position //alla fine era solo una variabile in più ma credo che non guadagnassi nulla perchè non faccio un getComponent su GM
+        //sprite = GetComponent<SpriteRenderer>();
 
-        sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
+        //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
 
-        var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
+        //var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
+        //transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
 
-        hww = gm.HalfWorldWidth; 
+        hww = gm.HalfWorldWidth;
         hwh = gm.HalfWorldHeight;
 
+        //fare getcomp di spis
+        //sPiS = GetComponent<setPositionInSpace>();
+        sPiS = gameObject.AddComponent<setPositionInSpace>();
+        //hww = sPiS.Hww;
+        //hwh = sPiS.Hwh;
+
+        //da fare in setpPosition, sennò non ha senso che allo start lo fà qualcun'altro
+        //sPiS.Pt = positionType.defPos;
+        //sPiS.setPosition(); //default
+
         coll = GetComponent<Collider>();
-        
-        //X Testo
-        bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
-        if(bcText!=null)
-            bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
+
+        ////X Testo
+        //bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
+        //if(bcText!=null)
+        //    bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
 
         ic = GetComponent<interactableChecker>();
 
@@ -69,12 +81,16 @@ public class DragObject : MonoBehaviour
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
-            sprite.sortingOrder = Mathf.CeilToInt(32766);
-            //xTesto
-            if (bcText != null)
-                bcText.sortingOrder = Mathf.CeilToInt(32767);
+            //sprite.sortingOrder = Mathf.CeilToInt(32766);
+            ////xTesto
+            //if (bcText != null)
+            //    bcText.sortingOrder = Mathf.CeilToInt(32767);
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
+            //transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
+
+            //nel nuovo codice
+            sPiS.Pt = positionType.draggingPos;
+            sPiS.setPosition(); //dragging
 
             ic.checkPulse();
         }
@@ -87,15 +103,20 @@ public class DragObject : MonoBehaviour
 
     private void FinishDragObject()
     {
+        sPiS.Pt = positionType.defPos;
         ic.checkInteraction();
 
-        sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
+        //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
 
-        var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
+        //var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
+        //transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
 
-        if (bcText != null)
-            bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
+        //if (bcText != null)
+        //    bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
+
+        //nel nuovo codice
+        //sPiS.Pt = positionType.defPos;
+        sPiS.setPosition(); //default 
 
         gameObject.layer = 0;
 

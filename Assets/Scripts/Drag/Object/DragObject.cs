@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+//[RequireComponent(typeof(setPositionInSpace))] //in teoria ci pensa initializer
+[RequireComponent(typeof(Initializer))] //se mai dovessi scordarmelo
 public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 {
     Vector3 objectDragPos;
@@ -34,7 +36,8 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
         //fare getcomp di spis
         //sPiS = GetComponent<setPositionInSpace>();
-        sPiS = gameObject.AddComponent<setPositionInSpace>();
+        //sPiS = gameObject.AddComponent<setPositionInSpace>(); //in teoria ci pensa initializer
+        sPiS = gameObject.GetComponent<setPositionInSpace>(); //ci pensano i vari requiredComponent
         //hww = sPiS.Hww;
         //hwh = sPiS.Hwh;
 

@@ -114,14 +114,28 @@ public class FerrisWheelStructManager : MonoBehaviour
         {
             float angle = Mathf.PI * i / ((float)numeroCabine / 2);
             //aggiungere alla posizione, l'altezza del box collider
-            var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z), Quaternion.identity);
+            //var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), 0), Quaternion.identity);// transform.position.z), Quaternion.identity);
+
+            //var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), 0), Quaternion.identity, transform);// uguale a sopra
+
+            var myNewCab = Instantiate(cabinePrefab, transform, true);
+            myNewCab.transform.localPosition = new Vector3(ferrisWheelRadius * Mathf.Cos(angle), ferrisWheelRadius * Mathf.Sin(angle), -1);
+
+            BoxCollider coll = myNewCab.GetComponent<BoxCollider>();
+            float childAngle = Mathf.PI / 180 * myNewCab.transform.eulerAngles.z;
+            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
+            //dopo essere istanziati creano anche set pos in space =>  devo settarli come positioned
+
+            setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
+            sPiS.Pt = positionType.dontMove;
+
             //Collider coll = myNewCab.GetComponent<Collider>();
             //Vector3 size = coll.bounds.size;
-            myNewCab.transform.position -= new Vector3 (0, myNewCab.GetComponent<Collider>().bounds.size.y, 0 );
+            //myNewCab.transform.position -= new Vector3 (0, myNewCab.GetComponent<Collider>().bounds.size.y, 0 ); //da capire un attimo, perchè poi nella rotazione esce una cosa bruttissima
 
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
-            myNewCab.transform.parent = gameObject.transform;
+            //myNewCab.transform.parent = gameObject.transform;
 
             kids.AddLast(myNewCab.GetComponent<SpriteRenderer>());//
         }
@@ -232,16 +246,27 @@ public class FerrisWheelStructManager : MonoBehaviour
         {
             while (countDown >= 0)
             {
-                //transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
+                transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
 
                 z += Time.deltaTime * rotationSpeed;
                 transform.localRotation = Quaternion.Euler(0, 0, z);
 
                 countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
-                foreach(Transform child in transform)
+
+                foreach (Transform child in transform)
                 {
-                    child.transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
+                    //child.transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
+                    //child.transform.RotateAround(child.transform.position + new Vector3(0, 3.030943f,0), Vector3.forward, -transform.rotation.z);
+
+                    //pivot in basso e traslazione in alto
+                    float angle = Mathf.PI / 180 * child.transform.eulerAngles.z; //da capire se angolo padre o figlio
+                    BoxCollider coll = child.GetComponent<BoxCollider>();
+                    //mi servono le coordinate globali
+                    //Vector3 childRotationAxis = child.transform.position - new Vector3(Mathf.Sin(angle) * coll.size.y, Mathf.Cos(angle) * coll.size.y, 0);
+                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y, 0);
+                    child.transform.RotateAround(childRotationAxis, Vector3.forward, -child.transform.eulerAngles.z);
                 }
+
                 yield return null;
             }
         }
@@ -324,6 +349,10 @@ public class FerrisWheelStructManager : MonoBehaviour
                 child.position = new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z);
                 k++;
                 ///
+
+                BoxCollider coll = child.GetComponent<BoxCollider>();
+                float childAngle = Mathf.PI / 180 * child.transform.eulerAngles.z;
+                child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
             }
         }
 

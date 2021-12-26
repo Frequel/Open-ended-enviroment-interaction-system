@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum positionType { defPos, draggingPos, positionedPos };
+public enum positionType { defPos, draggingPos, positionedPos, dontMove };
 
 public class setPositionInSpace : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class setPositionInSpace : MonoBehaviour
     //float oBsVs; //missione abortita
     //float hww, hwh; //missione abortita
     TextMeshPro bcText;
+    //Collider coll; //mi serve del padre
 
     //[System.NonSerialized]
     //[HideInInspector]
@@ -45,6 +46,8 @@ public class setPositionInSpace : MonoBehaviour
         //hww = gm.HalfWorldWidth;
         //hwh = gm.HalfWorldHeight;
 
+        //coll = GetComponent<Collider>();
+        
         setPosition(); //default
 
         //X Testo
@@ -63,6 +66,8 @@ public class setPositionInSpace : MonoBehaviour
                 break;
             case positionType.positionedPos:
                 positionedPositioning();
+                break;
+            case positionType.dontMove:
                 break;
             default:
                 defaultPositioning();
@@ -97,8 +102,16 @@ public class setPositionInSpace : MonoBehaviour
 
     private void positionedPositioning()
     {
+        Collider coll = transform.parent.GetComponent<BoxCollider>();
+        Vector3 size = coll.bounds.size;
+        Vector3 halfSize = size / 2;
+
         transform.localPosition = new Vector3(0, 0, -1); // invece di -1, ci andrebbe -halfSize.z //Vector3.zero;
+
+        //transform.localPosition = new Vector3(0, -size.y, -halfSize.z);
+
         //transform.position = new Vector3(0, 0, 1);
+        //pure scalare tutto ad 1 non sarebbe male, credo
         sprite.sortingOrder = 1;
         pt = positionType.defPos; //resetta dopo posizionamento
     }

@@ -17,7 +17,7 @@ public class InitializerEditor : Editor
         typeof(doubleWidthInteractor),
         typeof(widthDivisorInteractor),
         typeof(heightDivisorInteractor),
-        typeof(toColorText), 
+        typeof(toColorText),
         typeof(toColorBackground),
         typeof(penInteractor),
         typeof(cabinInteractor),
@@ -132,8 +132,8 @@ public class InitializerEditor : Editor
         EditorGUI.BeginChangeCheck();
         {
             int oldTypeIndex = GetExistingComponentIndex(targetObject, out Component component, types);
-            if (oldTypeIndex < 0)
-                oldTypeIndex = Array.IndexOf(types, typeof(ObjectInteractor));
+            //if (oldTypeIndex < 0)
+            //    oldTypeIndex = Array.IndexOf(types, typeof(ObjectInteractor)); //serve per mettere di default come voce quella di object interactor, ma siccome non viene captato il cambiamento, perchè appena lanciato l'editor, si dovrebbero aggiungere delle righe per farglielo aggiungere. il problema è che si potrebbero creare alcuni oggetti che non interagiscono a cui però và sempre messo setPositioninSpace. -> anche se tendenzialmente qualsiasi cosa in scena sarà interagibile, quelle ferme e non interagibili dovrebbero essere quelle disegnate sullo sfondo
             int typeIndex = EditorGUILayout.Popup(label, oldTypeIndex, options);
             if (EditorGUI.EndChangeCheck())
             {

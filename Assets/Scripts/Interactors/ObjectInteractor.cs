@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(interactableChecker))]
+[RequireComponent(typeof(PulseEffect))]
 public class ObjectInteractor : MonoBehaviour, IInteractor
 {
 
@@ -9,13 +11,14 @@ public class ObjectInteractor : MonoBehaviour, IInteractor
     {
         initializeInteractableObject();
 
-        gameObject.AddComponent<PulseEffect>();
+        //gameObject.AddComponent<PulseEffect>();//perchè ora ho messo required
     }
 
     void initializeInteractableObject()
     {
         //da scommentare e/o cambiare con il 2D
-        interactableChecker ic = gameObject.AddComponent<interactableChecker>();
+        //interactableChecker ic = gameObject.AddComponent<interactableChecker>();
+        interactableChecker ic = gameObject.GetComponent<interactableChecker>(); //perchè con required già è messo, lo duplicherei soltanto
         //interactableChecker2D ic = gameObject.AddComponent<interactableChecker2D>();
 
         ic.M_LayerMask = ~8;

@@ -21,13 +21,15 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     setPositionInSpace sPiS;
 
+    public delegate void DragOut();
+    public event DragOut DraggingOut;
+
     void Start()
     {
         gm = GameManager.GetInstance; //volevo fare che prendeva tutto da setPosition ma poi dovevo salvarci troppa roba dentro che non serviva direttamente a set position //alla fine era solo una variabile in più ma credo che non guadagnassi nulla perchè non faccio un getComponent su GM
         //sprite = GetComponent<SpriteRenderer>();
 
         //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
-
         //var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
         //transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
 
@@ -58,6 +60,13 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     void OnMouseDown()
     {
+        //check sulla posizione se è positioned
+        //positionType.positionedPos
+        //se lo è chiami l'evento DragOut dell'interfaccia DraggingOut (o qualcosa per obbligare determinate classi ad implementare questi metodi) -> ha senso la cosa dell'evento? -> vedi WordPad
+        //e poi fai
+        if (sPiS.Pt == positionType.positionedPos) //forse è meglio != ....defPos -> dipende se ci saranno altre soluzioni per il dragOut
+            if (DraggingOut != null)
+                DraggingOut(); 
         StartDragObject();
     }
 
@@ -106,7 +115,7 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     private void FinishDragObject()
     {
-        sPiS.Pt = positionType.defPos;
+        sPiS.Pt = positionType.defPos; //non sò perchè stava qua //da capire ma credo sia superfluo
         ic.checkInteraction();
 
         //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));

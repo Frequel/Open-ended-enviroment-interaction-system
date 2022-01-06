@@ -15,7 +15,8 @@ public class CabinManager : MonoBehaviour
     GameObject target;
     Vector3 rotationVector = new Vector3(0, 0, 1);
 
-    bool isRotating = false; //flag per bloccare interazione con cabine durante la rotazione
+    [System.NonSerialized]
+    public bool isRotating = false; //flag per bloccare interazione con cabine durante la rotazione
 
     int orderInWheel = -1;
 

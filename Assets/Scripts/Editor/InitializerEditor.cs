@@ -140,7 +140,7 @@ public class InitializerEditor : Editor
                 if (oldTypeIndex >= 0)
                     DestroyImmediate(component,true);
                 if (typeIndex >= 0)
-                    targetObject.AddComponent(types[typeIndex]);
+                    targetObject.AddComponent(types[typeIndex]); //dovrei aggiungere cabin manager se metto cabin interactor
             }
         }
     }

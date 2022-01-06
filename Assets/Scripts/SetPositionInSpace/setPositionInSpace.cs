@@ -94,8 +94,6 @@ public class setPositionInSpace : MonoBehaviour
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
         transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);// - 1); //funziona per i pivot in basso, pivot in alto avrebbe problemi
 
-
-
         if (bcText != null)
             bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
     }
@@ -113,6 +111,6 @@ public class setPositionInSpace : MonoBehaviour
         //transform.position = new Vector3(0, 0, 1);
         //pure scalare tutto ad 1 non sarebbe male, credo
         sprite.sortingOrder = 1;
-        pt = positionType.defPos; //resetta dopo posizionamento
+        //pt = positionType.defPos; //resetta dopo posizionamento -> teoricamente lo resetto al draggingOut
     }
 }

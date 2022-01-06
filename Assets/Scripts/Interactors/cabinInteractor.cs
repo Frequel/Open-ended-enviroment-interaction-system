@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class cabinInteractor : ObjectInteractor
 {
-    
+    bool reserved = false;
     SpriteRenderer sprite;
+    DragObject dOb;
+    CabinManager cm;
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
+        cm = GetComponent<CabinManager>();
     }
 
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
-        if (cabinPositionable != null)
+        if (cabinPositionable != null && reserved == false &&  cm.isRotating != true)
         {
             //a_OtherInteractable.transform.parent = transform;
-            a_OtherInteractable.transform.SetParent(transform,true);
-
+            a_OtherInteractable.transform.SetParent(transform,true); //scala dimensioni tutte ad uno?
+            //a_OtherInteractable.transform.localScale = Vector3.one;
             //a_OtherInteractable.transform.localPosition = Vector3.zero; //provo a farlo in setPositionInSpace
             //a_OtherInteractable.transform.position = new Vector3(0,0,1);//provo a farlo in setPositionInSpace
 
@@ -28,6 +31,10 @@ public class cabinInteractor : ObjectInteractor
             //int pos = GetComponent<CabinManager>().OrderInWheel;
             //gameObject.GetComponentInParent<FerrisWheelManager>().listaPasseggeri[pos] = a_OtherInteractable;
             cabinPositionable.postionCharacterInCabin(sprite.sortingOrder);
+
+            reserved = true;
+            if(cabinPositionable is CabinPositionable)
+                ((CabinPositionable)cabinPositionable).dOb.DraggingOut += SParent;
         }
         else
         {
@@ -39,7 +46,7 @@ public class cabinInteractor : ObjectInteractor
     public override bool canPassiveInteract(GameObject a_OtherInteractable)
     {
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
-        if (cabinPositionable != null)
+        if (cabinPositionable != null && reserved == false && cm.isRotating != true)
         {
             return true;
         }
@@ -48,5 +55,12 @@ public class cabinInteractor : ObjectInteractor
             Debug.Log("No passive Interaction present for this object");
             return false;
         }
+    }
+
+    void SParent()
+    {
+        //levare flag
+        reserved = false;
+        dOb.DraggingOut -= SParent;
     }
 }

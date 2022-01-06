@@ -96,6 +96,8 @@ public class FerrisWheelStructManager : MonoBehaviour
 
         //new version -> utile per non avere troppo sbatti nel rimettere i passeggeri al loro posto
         sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/AnnalisaVersion/" + numeroCabine); //da moddare per adattare strategia suddivisione cartelle
+        //sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/AnnalisaVersion/newBoard/" + numeroCabine); //X sperimentare con la board a sprite variabili
+
 
         for (int i = 0; i < sequencesPrefabs.Length; i++)
         {
@@ -123,7 +125,8 @@ public class FerrisWheelStructManager : MonoBehaviour
 
             BoxCollider coll = myNewCab.GetComponent<BoxCollider>();
             float childAngle = Mathf.PI / 180 * myNewCab.transform.eulerAngles.z;
-            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
+            //myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
+            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y/2, Mathf.Cos(childAngle) * coll.size.y/2, 0); //a metà cabina come chiede andrea
             //dopo essere istanziati creano anche set pos in space =>  devo settarli come positioned
 
             setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
@@ -171,6 +174,7 @@ public class FerrisWheelStructManager : MonoBehaviour
             if (ok)
                 break;
 
+            //una chicca sarebbe utilizzare due ok diversi, uno per senso della sequenza, se la sequenza è in senso orario, lanci la rotazione in senso orario o viceversa.
             ok = ok | checkSequenceInner(ok, check, childrens_reverse); //serve per fare il check anche in senso orario (sarebbe da ottimizzare la parallelizzazione dei due sensi)
 
             if (ok)
@@ -233,7 +237,7 @@ public class FerrisWheelStructManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             startingPositions[j] = child.transform.position;
-            //child.getComponent<CabinManager>.isRotating = true;
+            child.GetComponent<CabinManager>().isRotating = true;
             j++;
         }
 
@@ -263,7 +267,8 @@ public class FerrisWheelStructManager : MonoBehaviour
                     BoxCollider coll = child.GetComponent<BoxCollider>();
                     //mi servono le coordinate globali
                     //Vector3 childRotationAxis = child.transform.position - new Vector3(Mathf.Sin(angle) * coll.size.y, Mathf.Cos(angle) * coll.size.y, 0);
-                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y, 0);
+                    //Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y, 0);
+                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y/2, 0); //a metà come chiede andrea
                     child.transform.RotateAround(childRotationAxis, Vector3.forward, -child.transform.eulerAngles.z);
                 }
 
@@ -280,7 +285,8 @@ public class FerrisWheelStructManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             child.transform.position = startingPositions[j];
-            //child.getComponent<CabinManager>.isRotating = false;
+            child.GetComponent<CabinManager>().isRotating = false;
+            child.transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
             j++;
         }
 
@@ -306,7 +312,7 @@ public class FerrisWheelStructManager : MonoBehaviour
             i = Random.Range(0, sequencesPrefabs.Length);
         }
         //while (prefabID == numeroCabine * 100 + i); //prima era solo i
-        while (gameObject.name == sequencesPrefabs[i].name);
+        while (gameObject.name == sequencesPrefabs[i].name); //sta cosa funzionava prima dove distruggevo e creavo l'oggetto che trovavo in sto array, ma mo per renderlo efficace devo copiare anche il nome
 
         ChangeWheelNew(i);
     }
@@ -318,8 +324,16 @@ public class FerrisWheelStructManager : MonoBehaviour
         //FerrisWheelStructManager fwm = sequencesPrefabs[i].GetComponent<FerrisWheelStructManager>(); //sarebbe da cambiare per salvare tutto, anche la base e il centro, infatti poi qui dovrei accedere al figlio del figlio, per ora lascio così. Dovrei fare child di child
 
         //versione ruota intera
-        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject;
-        m_SpriteRenderer.sprite = wheelStruct.GetComponent<SpriteRenderer>().sprite;
+
+        transform.parent.GetComponent<SpriteRenderer>().sprite = sequencesPrefabs[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite; //per versione mia con sprite fisse
+
+        //CopiaSequenzaCentraleAnnV(i); //per versione con sprite tabellone staccate
+
+        //GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject;
+        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).gameObject; //per versione tabellone separato 
+
+        //m_SpriteRenderer.sprite = wheelStruct.GetComponent<SpriteRenderer>().sprite; //questa non cambia, ma quella del primo figlio si -> con versione tabellone diviso da sprite sequenza tutto in realtà
+
         FerrisWheelStructManager fwm = wheelStruct.GetComponent<FerrisWheelStructManager>();
 
         //problema raggio
@@ -352,25 +366,52 @@ public class FerrisWheelStructManager : MonoBehaviour
 
                 BoxCollider coll = child.GetComponent<BoxCollider>();
                 float childAngle = Mathf.PI / 180 * child.transform.eulerAngles.z;
-                child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
+                //child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
+                child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y/2, Mathf.Cos(childAngle) * coll.size.y/2, 0); //al centro come chiede Andrea
+
+                child.GetComponent<CabinManager>().RandomizeCabin();
+            }
+
+            //da aggiungere uno switch di sprite tra il padre di questo e il padre di quello salvato (più tecnicamente il figlio di sequencesPrefabs[i] )
+        }
+
+        else
+
+        {
+            //brutto fare due volte il foreach ma quando il raggio rimane uguale eviti di riposizionare le cabine -> con else e aggiunta nel for each precedente risolvo (credo)
+            foreach (Transform child in transform)
+            {
+                child.GetComponent<CabinManager>().RandomizeCabin();
             }
         }
 
-        //brutto fare due volte sto foreach ma quando il raggio rimane uguale eviti di riposizionare le cabine
-        foreach (Transform child in transform)
-        {
-            child.GetComponent<CabinManager>().RandomizeCabin();
-        }
-
-        //dovrei anche salvarmi indiceSpritePerSequenza = fwm.indiceSpritePerSequenza -> si sennò nell'editor non mi accordo di nulla...
+        //dovrei anche salvarmi indiceSpritePerSequenza = fwm.indiceSpritePerSequenza -> si sennò nell'editor non mi accorgo di nulla...
         if (indiceSpritePerSequenza != fwm.indiceSpritePerSequenza)
         {
             indiceSpritePerSequenza = fwm.indiceSpritePerSequenza;
             System.Array.Resize(ref spriteSequence, numeroSequenza);
             //spriteSequence = new Sprite[numeroSequenza];
+
+            //sarebbe da aggiungerci il codice relativo alla soluzione tabellone con sprite seq separate
         }
 
         for (int j = 0; j < numeroSequenza; j++)
             spriteSequence[j] = spriteArray[fwm.indiceSpritePerSequenza[j]];
+
+        transform.parent.name = sequencesPrefabs[i].name;
+    }
+
+    void CopiaSequenzaCentraleAnnV(int i)
+    {
+        //idelamente per non sprecare destroy e instantiate sarebbe da fare un foreach che ad oggni passaggio copia localPos e localScale, oltre alla sprite, dal prefab al tabellone attuale e che se poi la squenza è più lunga aggiunge sprite copiando sempre scale e localPos o distrugge i figli rimanenti (basta vedere quanti figli ha il tabellone della nuova ruota)
+        GameObject sequenceBoard = transform.parent.transform.GetChild(1).gameObject;
+        Destroy(sequenceBoard);
+
+        //sequenceBoard = sequencesPrefabs[i].transform.GetChild(1).gameObject;
+        //GameObject 
+            sequenceBoard = sequencesPrefabs[i].transform.GetChild(1).gameObject;
+        sequenceBoard = Instantiate(sequenceBoard);
+        sequenceBoard.transform.SetParent(transform.parent, true);
+        sequenceBoard.transform.localPosition = new Vector3(0, 11, 0); //ad-hoc per le cose attuali
     }
 }

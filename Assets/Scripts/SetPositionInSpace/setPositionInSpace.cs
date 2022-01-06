@@ -9,27 +9,8 @@ public class setPositionInSpace : MonoBehaviour
 {
     GameManager gm;
     SpriteRenderer sprite;
-    //float oBsVs; //missione abortita
-    //float hww, hwh; //missione abortita
     TextMeshPro bcText;
-    //Collider coll; //mi serve del padre
-
-    //[System.NonSerialized]
-    //[HideInInspector]
-    //public 
     positionType pt = positionType.defPos;
-
-    //public float Hww
-    //{
-    //    get { return hww; }
-    //    set { hww = value; }
-    //}
-
-    //public float Hwh
-    //{
-    //    get { return hwh; }
-    //    set { hwh = value; }
-    //}
 
     public positionType Pt
     {
@@ -42,19 +23,14 @@ public class setPositionInSpace : MonoBehaviour
     {
         gm = GameManager.GetInstance;
         sprite = GetComponent<SpriteRenderer>();
-        //oBsVs = gm.ObjectScrollViewSpeed;
-        //hww = gm.HalfWorldWidth;
-        //hwh = gm.HalfWorldHeight;
-
-        //coll = GetComponent<Collider>();
         
         setPosition(); //default
 
-        //X Testo
+        //To manage Hypotetical Text into object
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
     }
 
-    public void setPosition()//mettere un enum per indicare draggin, positionate e altro
+    public void setPosition()//set position in space based on the kind of position
     {
         switch (pt)
         {
@@ -78,13 +54,11 @@ public class setPositionInSpace : MonoBehaviour
     private void draggingPositioning()
     {
         sprite.sortingOrder = Mathf.CeilToInt(32766);
-        //xTesto
+        //Text
         if (bcText != null)
             bcText.sortingOrder = Mathf.CeilToInt(32767);
 
-        //Vector3 size = coll.bounds.size;
-        //Vector3 halfSize = size / 2; // non conviene perchè devi esse troppo preciso, però se usi il collider qua e drag se lo prende da questo sarebbe top.
-        transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);// Camera.main.nearClipPlane + halfSize.z);// 1);
+        transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);// is possible to use the half size z of BoxCollider instead of 1
     }
 
     private void defaultPositioning()
@@ -92,7 +66,7 @@ public class setPositionInSpace : MonoBehaviour
         sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
 
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);// - 1); //funziona per i pivot in basso, pivot in alto avrebbe problemi
+        transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
 
         if (bcText != null)
             bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
@@ -100,17 +74,12 @@ public class setPositionInSpace : MonoBehaviour
 
     private void positionedPositioning()
     {
-        Collider coll = transform.parent.GetComponent<BoxCollider>();
-        Vector3 size = coll.bounds.size;
-        Vector3 halfSize = size / 2;
+        //Collider coll = transform.parent.GetComponent<BoxCollider>();
+        //Vector3 size = coll.bounds.size;
+        //Vector3 halfSize = size / 2;
 
-        transform.localPosition = new Vector3(0, 0, -1); // invece di -1, ci andrebbe -halfSize.z //Vector3.zero;
+        transform.localPosition = new Vector3(0, 0, -1); // is possible to use the half size z of BoxCollider instead of 1
 
-        //transform.localPosition = new Vector3(0, -size.y, -halfSize.z);
-
-        //transform.position = new Vector3(0, 0, 1);
-        //pure scalare tutto ad 1 non sarebbe male, credo
         sprite.sortingOrder = 1;
-        //pt = positionType.defPos; //resetta dopo posizionamento -> teoricamente lo resetto al draggingOut
     }
 }

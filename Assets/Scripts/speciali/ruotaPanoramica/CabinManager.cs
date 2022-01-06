@@ -16,7 +16,7 @@ public class CabinManager : MonoBehaviour
     Vector3 rotationVector = new Vector3(0, 0, 1);
 
     [System.NonSerialized]
-    public bool isRotating = false; //flag per bloccare interazione con cabine durante la rotazione
+    public bool isRotating = false; //block interaction during wheel rotation
 
     int orderInWheel = -1;
 
@@ -33,8 +33,8 @@ public class CabinManager : MonoBehaviour
         //changeCabin
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         fwm = gameObject.GetComponentInParent<FerrisWheelStructManager>();
-        //spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");//old con miei asset
-        spriteArray = Resources.LoadAll<Sprite>("Sprites/RuotaAnnalisa/Cabine"); //new con sprite annalisa
+        //spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
+        spriteArray = Resources.LoadAll<Sprite>("Sprites/RuotaAnnalisa/Cabine");  //to bhe updated with official assets
 
         RandomizeCabin();
 
@@ -55,37 +55,37 @@ public class CabinManager : MonoBehaviour
         }
     }
 
-    public void correctSequenceRotation() //rotation
-    {
-        StartCoroutine(startRotationRoutine());
-    }
+    //public void correctSequenceRotation() //rotation
+    //{
+    //    StartCoroutine(startRotationRoutine());
+    //}
 
-    //con questo metodo faccio un giro completo nei secondi che indico dall'editor, ma non si ferma precisamente alla posizione di partenza, quindi più lo usi e più si sminchiano le posizioni, però con il reset sta cosa dovrebbe essere risolta -> lo è, ma devo vedere come gestire la presenza di marmocchi a bordo
-    private IEnumerator startRotationRoutine()
-    {
-        Vector3 startRot = transform.position;
-        rotationSpeed = 360 / fwm.RotationDuration;
-        float countDown = fwm.RotationDuration;
-        isRotating = true; //paramentro che flagga la possibilità di cambiare le cabine finchè non vengono resettate
-        Vector3 rotationAxis; //asse intorno a cui la ruota panoramica gira
-        rotationAxis = target.transform.position;
+    ////con questo metodo faccio un giro completo nei secondi che indico dall'editor, ma non si ferma precisamente alla posizione di partenza, quindi più lo usi e più si sminchiano le posizioni, però con il reset sta cosa dovrebbe essere risolta -> lo è, ma devo vedere come gestire la presenza di marmocchi a bordo
+    //private IEnumerator startRotationRoutine()
+    //{
+    //    Vector3 startRot = transform.position;
+    //    rotationSpeed = 360 / fwm.RotationDuration;
+    //    float countDown = fwm.RotationDuration;
+    //    isRotating = true;
+    //    Vector3 rotationAxis; 
+    //    rotationAxis = target.transform.position;
 
-        for (int i = 0; i < 10000; i++)
-        {
-            while (countDown >= 0)
-            {
-                //transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
-                transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
-                transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w);
-                countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
-                yield return null;
-            }
-        }
+    //    for (int i = 0; i < 10000; i++)
+    //    {
+    //        while (countDown >= 0)
+    //        {
+    //            //transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
+    //            transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
+    //            transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w);
+    //            countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
+    //            yield return null;
+    //        }
+    //    }
 
-        transform.position = startRot;
-        isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
-        fwm.FlagCoroutine++;
-    }
+    //    transform.position = startRot;
+    //    isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
+    //    fwm.FlagCoroutine++;
+    //}
 
     //new reset wheel
    public void RandomizeCabin()

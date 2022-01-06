@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-//[RequireComponent(typeof(setPositionInSpace))] //in teoria ci pensa initializer
-[RequireComponent(typeof(Initializer))] //se mai dovessi scordarmelo
-public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
+
+[RequireComponent(typeof(Initializer))] //is usable only with initializer and setPositionInCabin (required from initiliazer)
+public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
@@ -26,33 +26,14 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     void Start()
     {
-        gm = GameManager.GetInstance; //volevo fare che prendeva tutto da setPosition ma poi dovevo salvarci troppa roba dentro che non serviva direttamente a set position //alla fine era solo una variabile in più ma credo che non guadagnassi nulla perchè non faccio un getComponent su GM
-        //sprite = GetComponent<SpriteRenderer>();
-
-        //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
-        //var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        //transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
+        gm = GameManager.GetInstance; //get GameManager Singleton Instance
 
         hww = gm.HalfWorldWidth;
         hwh = gm.HalfWorldHeight;
 
-        //fare getcomp di spis
-        //sPiS = GetComponent<setPositionInSpace>();
-        //sPiS = gameObject.AddComponent<setPositionInSpace>(); //in teoria ci pensa initializer
-        sPiS = gameObject.GetComponent<setPositionInSpace>(); //ci pensano i vari requiredComponent
-        //hww = sPiS.Hww;
-        //hwh = sPiS.Hwh;
-
-        //da fare in setpPosition, sennò non ha senso che allo start lo fà qualcun'altro
-        //sPiS.Pt = positionType.defPos;
-        //sPiS.setPosition(); //default
+        sPiS = gameObject.GetComponent<setPositionInSpace>(); 
 
         coll = GetComponent<Collider>();
-
-        ////X Testo
-        //bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
-        //if(bcText!=null)
-        //    bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
 
         ic = GetComponent<interactableChecker>();
 
@@ -60,13 +41,10 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     void OnMouseDown()
     {
-        //check sulla posizione se è positioned
-        //positionType.positionedPos
-        //se lo è chiami l'evento DragOut dell'interfaccia DraggingOut (o qualcosa per obbligare determinate classi ad implementare questi metodi) -> ha senso la cosa dell'evento? -> vedi WordPad
-        //e poi fai
-        if (sPiS.Pt == positionType.positionedPos) //forse è meglio != ....defPos -> dipende se ci saranno altre soluzioni per il dragOut
+        if (sPiS.Pt == positionType.positionedPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
             if (DraggingOut != null)
                 DraggingOut(); 
+
         StartDragObject();
     }
 
@@ -93,18 +71,10 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
-            //sprite.sortingOrder = Mathf.CeilToInt(32766);
-            ////xTesto
-            //if (bcText != null)
-            //    bcText.sortingOrder = Mathf.CeilToInt(32767);
+            sPiS.Pt = positionType.draggingPos; 
+            sPiS.setPosition(); //set Active Position to dragging
 
-            //transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
-
-            //nel nuovo codice
-            sPiS.Pt = positionType.draggingPos;
-            sPiS.setPosition(); //dragging
-
-            ic.checkPulse();
+            ic.checkPulse(); //check if a interaction is available and animate a feedback for this
         }
     }
 
@@ -115,24 +85,13 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
 
     private void FinishDragObject()
     {
-        sPiS.Pt = positionType.defPos; //non sò perchè stava qua //da capire ma credo sia superfluo
+        sPiS.Pt = positionType.defPos; 
+
         ic.checkInteraction();
 
-        //sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
-
-        //var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        //transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
-
-        //if (bcText != null)
-        //    bcText.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2))) + 1;
-
-        //nel nuovo codice
-        //sPiS.Pt = positionType.defPos;
-        sPiS.setPosition(); //default 
+        sPiS.setPosition(); //set Active Position to default if no interaction changes it 
 
         gameObject.layer = 0;
-
-        //ic.checkInteraction(); //se lo metto qua non funziona
     }
 
     Vector3 GetMouseWorldPos()
@@ -144,7 +103,7 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
     private Vector3 LimitObjectBound(Vector3 dragMovment)
     {
         CalculateObjectBounds(out float xMax, out float yMax, out float xMin, out float yMin);
-        //costretto a fare cos? perch? con local size e basta non v? bene
+        //localSize doesn't give the right dimension of the object but only its scale, not the unit
         Vector3 size = coll.bounds.size;
         Vector3 halfSize = size / 2;
 
@@ -188,11 +147,12 @@ public class DragObject : MonoBehaviour //ma farlo dipendere da setPosition?
         xMax = Camera.main.transform.position.x + hww;
     }
 
-    private void MoveCamera(Vector3 dragMovment) //versione old con size. rivisitata x Hx2
+    private void MoveCamera(Vector3 dragMovment) 
     {
 
         CalculateObjectBounds(out float xMax, out float yMax, out float xMin, out float yMin);
         Vector3 cameraMovment = Vector3.zero;
+        //localSize doesn't give the right dimension of the object but only its scale, not the unit
         Vector3 size = coll.bounds.size;
         Vector3 halfSize = size / 2;
 

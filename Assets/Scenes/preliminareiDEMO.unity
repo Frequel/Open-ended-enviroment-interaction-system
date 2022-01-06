@@ -666,9 +666,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6867e2b61e79b0d4486879034bfb9025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indiceSpritePerSequenza: 00000000
-  numeroCabine: 8
-  numeroSequenza: 1
+  seqSpriteIndex: 
+  cabNum: 0
+  seqLenght: 1
   cabinePrefab: {fileID: 5372978816918718557, guid: 8607cc8d9e5c844428bc75796714ccbb, type: 3}
   ferrisWheelRadius: 6.5
   rotationDuration: 10
@@ -794,6 +794,18 @@ PrefabInstance:
     - target: {fileID: 7746736506644617150, guid: e1b9d11182613734f89e7d97ba924686, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746736506941933104, guid: e1b9d11182613734f89e7d97ba924686, type: 3}
+      propertyPath: cabNum
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746736506941933104, guid: e1b9d11182613734f89e7d97ba924686, type: 3}
+      propertyPath: ferrisWheelRadius
+      value: 6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746736506941933104, guid: e1b9d11182613734f89e7d97ba924686, type: 3}
+      propertyPath: seqSpriteIndex.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1b9d11182613734f89e7d97ba924686, type: 3}
@@ -1111,9 +1123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6867e2b61e79b0d4486879034bfb9025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indiceSpritePerSequenza: 01000000
-  numeroCabine: 8
-  numeroSequenza: 1
+  seqSpriteIndex: 
+  cabNum: 0
+  seqLenght: 1
   cabinePrefab: {fileID: 4170527698999436748, guid: b8c4dcf588acf7d4486cc999430caae1, type: 3}
   ferrisWheelRadius: 6
   rotationDuration: 5
@@ -1862,9 +1874,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6867e2b61e79b0d4486879034bfb9025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indiceSpritePerSequenza: 0000000001000000
-  numeroCabine: 8
-  numeroSequenza: 2
+  seqSpriteIndex: 
+  cabNum: 0
+  seqLenght: 1
   cabinePrefab: {fileID: 4170527698999436748, guid: b8c4dcf588acf7d4486cc999430caae1, type: 3}
   ferrisWheelRadius: 6.5
   rotationDuration: 10

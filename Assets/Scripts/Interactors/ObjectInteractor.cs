@@ -10,18 +10,13 @@ public class ObjectInteractor : MonoBehaviour, IInteractor
     void Awake()
     {
         initializeInteractableObject();
-
-        //gameObject.AddComponent<PulseEffect>();//perchè ora ho messo required
     }
 
     void initializeInteractableObject()
     {
-        //da scommentare e/o cambiare con il 2D
-        //interactableChecker ic = gameObject.AddComponent<interactableChecker>();
-        interactableChecker ic = gameObject.GetComponent<interactableChecker>(); //perchè con required già è messo, lo duplicherei soltanto
-        //interactableChecker2D ic = gameObject.AddComponent<interactableChecker2D>();
+        interactableChecker ic = gameObject.GetComponent<interactableChecker>(); //required component
 
-        ic.M_LayerMask = ~8;
+        ic.M_LayerMask = ~8; //default mask for interactable objects
         ic.getInteractor();
     }
 

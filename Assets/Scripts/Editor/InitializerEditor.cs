@@ -120,7 +120,7 @@ public class InitializerEditor : Editor
                 }
                 else if (!hasComponent && hadComponent)
                 {
-                    DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora s? che ci sta solo sto figlio o che comunque come primo figlio avr? il testo (per come ? adesso il codice) ma successivamente non lo s?, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html
+                    DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora s? che ci sta solo sto figlio o che comunque come primo figlio avr? il testo (per come ? adesso il codice) ma successivamente non lo s?, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html -> il figlio si chiamerà testo di default
                 }
             }
         }
@@ -132,9 +132,8 @@ public class InitializerEditor : Editor
         EditorGUI.BeginChangeCheck();
         {
             int oldTypeIndex = GetExistingComponentIndex(targetObject, out Component component, types);
-            //if (oldTypeIndex < 0)
-            //    oldTypeIndex = Array.IndexOf(types, typeof(ObjectInteractor)); //serve per mettere di default come voce quella di object interactor, ma siccome non viene captato il cambiamento, perchè appena lanciato l'editor, si dovrebbero aggiungere delle righe per farglielo aggiungere. il problema è che si potrebbero creare alcuni oggetti che non interagiscono a cui però và sempre messo setPositioninSpace. -> anche se tendenzialmente qualsiasi cosa in scena sarà interagibile, quelle ferme e non interagibili dovrebbero essere quelle disegnate sullo sfondo
-            int typeIndex = EditorGUILayout.Popup(label, oldTypeIndex, options);
+            
+            int typeIndex = EditorGUILayout.Popup(label, oldTypeIndex, options); //because could exist object in scene that doesn't interact, then the default value is empty
             if (EditorGUI.EndChangeCheck())
             {
                 if (oldTypeIndex >= 0)

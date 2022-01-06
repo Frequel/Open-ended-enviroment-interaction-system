@@ -20,9 +20,7 @@ public class CameraMovementManager : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance;
-        //newAnn
-        //gm.HalfWorldHeight = Camera.main.orthographicSize;
-        //gm.HalfWorldWidth = gm.HalfWorldHeight * Screen.width / Screen.height;
+
         CreateBoxCollider();
     }
 

@@ -11,23 +11,23 @@ using TMPro;
 [CanEditMultipleObjects]
 public class FerrisWheelStructEditor : Editor
 {
-    SerializedProperty m_numeroCabine;
-    SerializedProperty m_numeroSequenza;
-    SerializedProperty m_indiceSpritePerSequenza;
+    SerializedProperty m_cabNum;
+    SerializedProperty m_seqLenght;
+    SerializedProperty m_seqSpriteIndex;
     SerializedProperty m_rotationDuration;
 
     Sprite[] spriteArray;
     private static string[] cabine;
 
-    string seqPath = "Assets/Resources/Prefab/FerrisWheelSequences/AnnalisaVersion/"; //da modificare con i prefab di asset di annalisa
+    string seqPath = "Assets/Resources/Prefab/FerrisWheelSequences/AnnalisaVersion/"; //da riscrivere quando ho degli asset definitivi
     private void OnEnable()
     {
         spriteArray = Resources.LoadAll<Sprite>("Sprites/RuotaAnnalisa/Cabine");
         cabine = Array.ConvertAll(spriteArray, t => t.name);
 
-        m_numeroCabine = serializedObject.FindProperty("numeroCabine");
-        m_numeroSequenza = serializedObject.FindProperty("numeroSequenza");
-        m_indiceSpritePerSequenza = serializedObject.FindProperty("indiceSpritePerSequenza");
+        m_cabNum = serializedObject.FindProperty("cabNum");
+        m_seqLenght = serializedObject.FindProperty("seqLenght");
+        m_seqSpriteIndex = serializedObject.FindProperty("seqSpriteIndex");
         m_rotationDuration = serializedObject.FindProperty("rotationDuration");
     }
 
@@ -37,15 +37,16 @@ public class FerrisWheelStructEditor : Editor
 
         FerrisWheelStructManager script = (FerrisWheelStructManager)target;
 
-        SetNumCab(script);
+        //SetNumCab(script); //future improvements
+        SetNumCab();
 
-        m_numeroSequenza.intValue = SetNumSeq(m_numeroSequenza.intValue, m_numeroCabine.intValue, "Numero Sequenza");
+        m_seqLenght.intValue = SetNumSeq(m_seqLenght.intValue, m_cabNum.intValue, "Numero Sequenza");
 
-        m_indiceSpritePerSequenza.arraySize = m_numeroSequenza.intValue;
+        m_seqSpriteIndex.arraySize = m_seqLenght.intValue;
 
         EditorGUILayout.PropertyField(m_rotationDuration, new GUIContent("Durata Giro completo"), GUILayout.Height(20));
 
-        for (int i = 0; i < m_numeroSequenza.intValue; i++)
+        for (int i = 0; i < m_seqLenght.intValue; i++)
             DrawComponentsPopup(cabine, i, "Cabina " + (i+1));
 
         this.serializedObject.ApplyModifiedProperties();
@@ -59,21 +60,50 @@ public class FerrisWheelStructEditor : Editor
         }
     }
 
-    private void SetNumCab(FerrisWheelStructManager fwm)
+    //possibile prime numbers
+    //private void SetNumCab(FerrisWheelStructManager fwm) //improvement to be made in the future
+    //private void SetNumCab()
+    //{
+
+    //    EditorGUI.BeginChangeCheck();
+    //    {
+    //        EditorGUILayout.PropertyField(m_cabNum, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
+    //        if (EditorGUI.EndChangeCheck())
+    //        {
+    //            m_seqLenght.intValue = 1;
+    //            //improvement to be made in the future
+    //            //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo -> se il numCab è lo stesso lasci stare così, se cambi lo devi reistanziare
+    //            //fwm.DestroyChild();
+    //            //fwm.InstantiateCabin();
+    //        }
+    //    }
+    //}
+
+    //no prime numbers
+    //private void SetNumCab(FerrisWheelStructManager fwm) //improvement to be made in the future
+    private void SetNumCab()
     {
 
         EditorGUI.BeginChangeCheck();
         {
-            EditorGUILayout.PropertyField(m_numeroCabine, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
+            int ncb = EditorGUILayout.IntSlider("Numero Cabine", m_cabNum.intValue, 1, 100);
             if (EditorGUI.EndChangeCheck())
             {
-                m_numeroSequenza.intValue = 1;
-                //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo
+                if (ncb % 2 == 0) //change cabin quantity only if even, so i avoid prime numbers
+                {
+                    m_cabNum.intValue = ncb;
+                }
+
+                m_seqLenght.intValue = 1;
+
+                //improvement to be made in the future
+                //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo -> se il numCab è lo stesso lasci stare così, se cambi lo devi reistanziare
                 //fwm.DestroyChild();
                 //fwm.InstantiateCabin();
             }
         }
     }
+
 
     private int SetNumSeq(int lunghezzaSeq, int numCab, string label= "Numero Sequenza")
     {
@@ -83,7 +113,7 @@ public class FerrisWheelStructEditor : Editor
             int nsq = EditorGUILayout.IntSlider("Numero Sequenza", lunghezzaSeq, 1, numCab);
             if (EditorGUI.EndChangeCheck())
             {
-                if (numCab % nsq == 0) //ti permette di non cambiare se la lunghezza di sequnza non divide il numero di cabine
+                if (numCab % nsq == 0) //change sequence lenght only if the number of Cabin is divisible by the lenght
                 {
                     lunghezzaSeq = nsq;
                 }
@@ -97,10 +127,10 @@ public class FerrisWheelStructEditor : Editor
     {
         EditorGUI.BeginChangeCheck();
         {
-            int dd = EditorGUILayout.Popup(label, m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue, options);
+            int dd = EditorGUILayout.Popup(label, m_seqSpriteIndex.GetArrayElementAtIndex(i).intValue, options);
             if (EditorGUI.EndChangeCheck())
             {
-                m_indiceSpritePerSequenza.GetArrayElementAtIndex(i).intValue = dd;
+                m_seqSpriteIndex.GetArrayElementAtIndex(i).intValue = dd;
             }
         }
     }
@@ -108,7 +138,7 @@ public class FerrisWheelStructEditor : Editor
     void savePrefab(FerrisWheelStructManager script)
     {
 
-        string dirPath = seqPath + m_numeroCabine.intValue;
+        string dirPath = seqPath + m_cabNum.intValue;
 
         if (!Directory.Exists(dirPath))
         {
@@ -122,8 +152,6 @@ public class FerrisWheelStructEditor : Editor
         localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
 
         // Create the new Prefab.
-        //PrefabUtility.SaveAsPrefabAssetAndConnect(script.gameObject, localPath, InteractionMode.UserAction); //sarebbe da cambiare per salvare tutto, anche la base e il centro ma poi devo cambiare altro nello script,per ora lascio così
-        //PrefabUtility.SaveAsPrefabAssetAndConnect(script.transform.parent.transform.parent.gameObject, localPath, InteractionMode.UserAction); //invece di fare così, si potrebbe fare che ferris wheel istanzia base e centro e che poi si imparenta... -> rimane la scomodità che in fase di costruzione non vedi dove metti le cose (stessa cosa vale anche per le cabine, però lo lascio perchè voglio rendere la cosa personalizzabile -> un'alternatica sarebbe che come cambio numero cabine, le distruggo tutte e lancio la funzione per crearle, oppure che controllo se il nuovo numero è maggiore o minore e riposiziono i figli e poi aggiungo o rimuovo cabine/figli)
-        PrefabUtility.SaveAsPrefabAsset(script.transform.parent.transform.parent.gameObject, localPath);
+        PrefabUtility.SaveAsPrefabAsset(script.transform.parent.transform.parent.gameObject, localPath); //Saving the GrandFather that contains all the wheel
     }
 }

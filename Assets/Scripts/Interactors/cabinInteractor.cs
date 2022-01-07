@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CabinManager))]
 public class cabinInteractor : ObjectInteractor
 {
     bool reserved = false; //indicates if the cabin is full or not
@@ -17,7 +18,7 @@ public class cabinInteractor : ObjectInteractor
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
-        if (cabinPositionable != null && reserved == false &&  cm.isRotating != true)
+        if (cabinPositionable != null && reserved == false &&  cm.IsRotating != true)
         {
             a_OtherInteractable.transform.SetParent(transform,true); 
 
@@ -25,7 +26,10 @@ public class cabinInteractor : ObjectInteractor
 
             reserved = true;
             if(cabinPositionable is CabinPositionable)
-                ((CabinPositionable)cabinPositionable).dOb.DraggingOut += SParent;
+            {
+                dOb = ((CabinPositionable)cabinPositionable).dOb;
+                dOb.DraggingOut += SParent;
+            }
         }
         else
         {
@@ -37,7 +41,7 @@ public class cabinInteractor : ObjectInteractor
     public override bool canPassiveInteract(GameObject a_OtherInteractable)
     {
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
-        if (cabinPositionable != null && reserved == false && cm.isRotating != true)
+        if (cabinPositionable != null && reserved == false && cm.IsRotating != true)
         {
             return true;
         }

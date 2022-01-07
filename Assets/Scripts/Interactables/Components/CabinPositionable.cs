@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(setPositionInSpace))]
+[RequireComponent(typeof(DragObject))]
 public class CabinPositionable : MonoBehaviour, ICabinPositionable
 {
     [SerializeField]
@@ -33,6 +35,8 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
 
         sprite.sprite = seduto; //change sprite to seat into cabin
 
+        transform.localScale = Vector3.one;
+
         dOb.DraggingOut += SParent;
     }
 
@@ -41,8 +45,8 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
         transform.SetParent(null); //unpartenpassenger from cabin
         sprite.sprite = inPiedi; //change back sprite
         sPiS.Pt = positionType.defPos; //set back the position to default
-        dOb.DraggingOut -= SParent;
         transform.localScale = Vector3.one;
+        dOb.DraggingOut -= SParent;
     }
 }
 

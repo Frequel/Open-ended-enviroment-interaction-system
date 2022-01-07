@@ -16,7 +16,6 @@ public class CameraMovementManager : MonoBehaviour
 
     GameManager gm;
 
-    // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.GetInstance;

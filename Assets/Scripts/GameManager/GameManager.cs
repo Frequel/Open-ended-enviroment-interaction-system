@@ -62,13 +62,11 @@ public class GameManager : MonoBehaviour
     public float HalfWorldWidth
     {
         get { return halfWorldWidth; }
-        //set { halfWorldWidth = value; }//newAnn
     }
 
     public float HalfWorldHeight
     {
         get { return halfWorldHeight; }
-        //set { halfWorldHeight = value; }//newAnn
     }
 
     public static GameManager GetInstance
@@ -82,11 +80,7 @@ public class GameManager : MonoBehaviour
         {
             gm = this;
             setMainCameraSize();
-            //float currentAspect = (float)Screen.width / (float)Screen.height;
-            //Camera.main.orthographicSize = (float)Screen.width / currentAspect / 200;
-            //Camera.main.orthographicSize = (float)Screen.height / 200;
-            //halfWorldHeight = Camera.main.orthographicSize;
-            //halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
+
             InitializeBoundWorld();
         }
         else
@@ -108,16 +102,6 @@ public class GameManager : MonoBehaviour
     {
         halfWorldHeight = Camera.main.orthographicSize;
         halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
-
-        //Vector2 xBound, yBound;
-        //getBackGroundBound(out xBound, out yBound);
-
-        //getBackGroundBound(); //facendo prima setMainCameraSize, non dovrebbe servire
-
-        //xMin /-/ xMax
-        //xBoundWorld = new Vector2(xBound.x + halfWorldWidth, xBound.y - halfWorldWidth);
-        //yBoundWorld = new Vector2(yBound.x + halfWorldHeight, yBound.y - halfWorldHeight);
-        //yMin /-/ yMax
 
         xBoundWorld = new Vector2(xMin + halfWorldWidth, xMax - halfWorldWidth);
         yBoundWorld = new Vector2(yMin + halfWorldHeight, yMax - halfWorldHeight);

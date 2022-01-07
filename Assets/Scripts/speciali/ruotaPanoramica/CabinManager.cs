@@ -7,16 +7,32 @@ public class CabinManager : MonoBehaviour
 {
     //changeCabin
     SpriteRenderer m_SpriteRenderer;
-    FerrisWheelStructManager fwm;
+    FerrisWheelManager fwm;
     int i = 0;
     Sprite[] spriteArray;
 
     //rotation
-    GameObject target;
-    Vector3 rotationVector = new Vector3(0, 0, 1);
+    //GameObject target;
+    //Vector3 rotationVector = new Vector3(0, 0, 1);
 
-    [System.NonSerialized]
-    public bool isRotating = false; //block interaction during wheel rotation
+    bool isRotating = false; //block interaction during wheel rotation
+
+    public bool IsRotating
+    {
+        get { return isRotating; }
+        
+        set 
+        { //verifica che i valori erano diversi
+          //verifica che hai dei figli
+          //prendi il dragObject dal figlio
+          //setta il flag dentro dragObject
+          //
+            if (isRotating != value && transform.childCount > 1)
+                //transform.GetChild(1).GetComponent<DragObject>().BlockMov = value;
+                transform.GetChild(1).GetComponent<BoxCollider>().enabled = !value; //its ok!
+            isRotating = value; 
+        }
+    }
 
     int orderInWheel = -1;
 
@@ -26,20 +42,20 @@ public class CabinManager : MonoBehaviour
         set { orderInWheel = value; }
     }
 
-    float rotationSpeed = 20;
+    //float rotationSpeed = 20;
 
     void Start()
     {
         //changeCabin
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        fwm = gameObject.GetComponentInParent<FerrisWheelStructManager>();
+        fwm = gameObject.GetComponentInParent<FerrisWheelManager>();
         //spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
-        spriteArray = Resources.LoadAll<Sprite>("Sprites/RuotaAnnalisa/Cabine");  //to bhe updated with official assets
+        spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/");  //to bhe updated with official assets
 
         RandomizeCabin();
 
         //rotation
-        target = gameObject.transform.parent.gameObject;
+        //target = gameObject.transform.parent.gameObject;
 
     }
 

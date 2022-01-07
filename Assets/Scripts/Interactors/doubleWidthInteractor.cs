@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class doubleWidthInteractor : ObjectInteractor
 {
-    // Start is called before the first frame update
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
         IDoubleDimensions doubled = a_OtherInteractable.GetComponent<IDoubleDimensions>();

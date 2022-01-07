@@ -42,7 +42,7 @@ public class InitializerEditor : Editor
         ///
 
         ///aggiungere che se metto cabin interactor aggiungo cabin manager se non c'è e sarebbe da aggiungere anche la possibilità di creare la ruota da editor al solo click
-        ///
+        /// --> ma meglio fare che se clicco su ferris wheel vede se ha un figlio/nipote e gli attacca lo script di Ferris Wheel e cose annesse a cabin interactor
 
         TextMeshPro testo = null;
 

@@ -60,27 +60,6 @@ public class FerrisWheelEditor : Editor
         }
     }
 
-    //possibile prime numbers
-    //private void SetNumCab(FerrisWheelManager fwm) //improvement to be made in the future
-    //private void SetNumCab()
-    //{
-
-    //    EditorGUI.BeginChangeCheck();
-    //    {
-    //        EditorGUILayout.PropertyField(m_cabNum, new GUIContent("Numero di Cabine"), GUILayout.Height(20));
-    //        if (EditorGUI.EndChangeCheck())
-    //        {
-    //            m_seqLenght.intValue = 1;
-    //            //improvement to be made in the future
-    //            //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo -> se il numCab è lo stesso lasci stare così, se cambi lo devi reistanziare
-    //            //fwm.DestroyChild();
-    //            //fwm.InstantiateCabin();
-    //        }
-    //    }
-    //}
-
-    //no prime numbers
-    //private void SetNumCab(FerrisWheelManager fwm) //improvement to be made in the future
     private void SetNumCab()
     {
 
@@ -95,11 +74,6 @@ public class FerrisWheelEditor : Editor
                 }
 
                 m_seqLenght.intValue = 1;
-
-                //improvement to be made in the future
-                //per stategia di fare tutta la ruota con tutte le cabine già visibili ma abortita perchè compelssa e richiedeva troppo tempo -> se il numCab è lo stesso lasci stare così, se cambi lo devi reistanziare
-                //fwm.DestroyChild();
-                //fwm.InstantiateCabin();
             }
         }
     }
@@ -146,7 +120,7 @@ public class FerrisWheelEditor : Editor
             Directory.CreateDirectory(dirPath);
         }
 
-        string name = m_cabNum.intValue + "Cab_" + m_seqLenght.intValue + "SeqL_" + script.FerrisWheelRadius + "R_ " + m_rotationDuration.intValue + "dur_"; //a useful thing could be append the sequence at the end of the name but it could became too long
+        string name = m_cabNum.intValue + "Cab_" + m_seqLenght.intValue + "SeqL_" + script.FerrisWheelRadius + "R_ " + m_rotationDuration.intValue + "dur_";
 
         toSave.name = name;
 

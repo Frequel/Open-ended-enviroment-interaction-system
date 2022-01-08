@@ -5,7 +5,7 @@ using TMPro;
 
 
 [RequireComponent(typeof(Initializer))] //is usable only with initializer and setPositionInCabin (required from initiliazer)
-[RequireComponent(typeof(ObjectInteractor))]
+[RequireComponent(typeof(ObjectInteractor))] //requires interactable checker that require BoxCollider
 public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;

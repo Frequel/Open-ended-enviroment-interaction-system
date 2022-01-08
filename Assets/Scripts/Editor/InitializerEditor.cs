@@ -69,7 +69,7 @@ public class InitializerEditor : Editor
         }
 
         //is not convenient use DrawToggleComponent for special specific components, because you always need to add adding and dertroying if and relatives methods -> gives a standard
-        if(script.GetComponents(typeof(Component)).Length <= 5 && !specialChecker(script.gameObject, typeof(TextMeshPro))) //5 is the maximum required component for the Ferris Wheel Base Object, text add a child, so this if should be updated in case of pother special components in use
+        if(script.GetComponents(typeof(Component)).Length <= 4 && !specialChecker(script.gameObject, typeof(TextMeshPro))) //4 is the maximum required component for the Ferris Wheel Base Object, text add a child, so this if should be updated in case of pother special components in use
         {
             DrawToggleComponent(script.gameObject, out FerrisWheelManager fwm, onAdd: mr => Debug.Log("FerrisWheelManager added"), onRemove: ma => Debug.Log("FerrisWheelManager removed"));
         }        

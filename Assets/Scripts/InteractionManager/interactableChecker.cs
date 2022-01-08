@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class interactableChecker : MonoBehaviour
 {
     Vector3 overlapBoxDim;

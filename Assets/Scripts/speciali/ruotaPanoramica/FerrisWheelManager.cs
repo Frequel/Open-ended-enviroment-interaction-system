@@ -51,8 +51,6 @@ public class FerrisWheelManager : MonoBehaviour
         set { flagCoroutine = value; }
     }
 
-    //int prefabID = -1;
-
     //cabin rotation
     [Tooltip("Inserire la durata in secondi per fare un giro completo della ruota panoramica")] //Add english Version
     [HideInInspector]
@@ -84,13 +82,6 @@ public class FerrisWheelManager : MonoBehaviour
 
         sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/" + cabNum);
 
-
-        //for (int i = 0; i < sequencesPrefabs.Length; i++)
-        //{
-        //    //da vedere meglio sta cosa dell'unicità, forse è meglio vedere il nome del prefab e basta
-        //    if (gameObject.name == sequencesPrefabs[i].name)
-        //        prefabID = cabNum * 100 + i;
-        //}
     }
 
     //sarebbe meglio trovare una soluzione per metterle prima del play, tramite editor script magari
@@ -123,20 +114,6 @@ public class FerrisWheelManager : MonoBehaviour
         }
     }
 
-
-    //public void DestroyChilds()
-    //{
-    //    if (transform.childCount > 0) //%%kids.lenght > 0?
-    //    {
-    //        kids.Clear();
-    //        foreach (Transform child in transform)
-    //        {
-    //            GameObject.DestroyImmediate(child.gameObject);
-    //        }
-    //    }
-
-    //}
-
     //check sequence part 1
     public void checkSequenceOuter()
     {
@@ -166,7 +143,6 @@ public class FerrisWheelManager : MonoBehaviour
 
         if (ok)
         {
-            //startCabineRotation();
             StartCoroutine(startStructureRotation());
             StartCoroutine(waitRotation()); //aspetta che le coroutine della rotazione delle cabine finiscano per far partire il reset
         }
@@ -193,18 +169,8 @@ public class FerrisWheelManager : MonoBehaviour
         return true;
     }
 
-    //void startCabineRotation()
-    //{
-    //    //aggiungere roba per i pali interni (cabina centro) -> capire se figlio di figlio o cosa... figlio di cabina forse è meglio -> da settare dentro la cabina la sua angolazione
-    //    foreach (Transform child in transform)
-    //    {
-    //        child.GetComponent<CabinManager>().correctSequenceRotation();
-    //    }
-    //}
-
     private IEnumerator startStructureRotation()
     {
-        //Vector3 rotationVector = new Vector3(0, 0, 1);
         Quaternion startRot = transform.localRotation;
         Vector3 startPos = transform.localPosition;
         float rotationSpeed = 360 / RotationDuration;
@@ -212,7 +178,7 @@ public class FerrisWheelManager : MonoBehaviour
 
         Vector3[] startingPositions = new Vector3[transform.childCount];
         int j = 0;
-        //foreach child
+
         foreach (Transform child in transform)
         {
             startingPositions[j] = child.transform.position;
@@ -220,9 +186,7 @@ public class FerrisWheelManager : MonoBehaviour
             j++;
         }
 
-        //isRotating = true; //paramentro che flagga la possibilità di cambiare le cabine finchè non vengono resettate
-        Vector3 rotationAxis; //asse intorno a cui la ruota panoramica gira
-        rotationAxis = transform.position;
+        Vector3 rotationAxis = transform.position;
         var rot = transform.rotation;
         float z = 0;
         for (int i = 0; i < 10000; i++)
@@ -238,16 +202,14 @@ public class FerrisWheelManager : MonoBehaviour
 
                 foreach (Transform child in transform)
                 {
-                    //child.transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
-                    //child.transform.RotateAround(child.transform.position + new Vector3(0, 3.030943f,0), Vector3.forward, -transform.rotation.z);
-
                     //pivot in basso e traslazione in alto
-                    float angle = Mathf.PI / 180 * child.transform.eulerAngles.z; //da capire se angolo padre o figlio
+                    float angle = Mathf.PI / 180 * child.transform.eulerAngles.z; 
                     BoxCollider coll = child.GetComponent<BoxCollider>();
-                    //mi servono le coordinate globali
-                    //Vector3 childRotationAxis = child.transform.position - new Vector3(Mathf.Sin(angle) * coll.size.y, Mathf.Cos(angle) * coll.size.y, 0);
+                    //global coordinations
+                    //moving the cab around the attachment point to the wheel at its top
                     //Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y, 0);
-                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y / 2, 0); //a metà come chiede andrea
+                    //moving the cab around the attachment point to the wheel at its center
+                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y / 2, 0); 
                     child.transform.RotateAround(childRotationAxis, Vector3.forward, -child.transform.eulerAngles.z);
                 }
 
@@ -257,10 +219,8 @@ public class FerrisWheelManager : MonoBehaviour
 
         transform.localRotation = startRot;
         transform.localPosition = startPos;
-        //foreach child
-        //isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
+
         j = 0;
-        //foreach child
         foreach (Transform child in transform)
         {
             child.transform.position = startingPositions[j];
@@ -291,54 +251,49 @@ public class FerrisWheelManager : MonoBehaviour
         {
             i = Random.Range(0, sequencesPrefabs.Length);
         }
-        //while (prefabID == cabNum * 100 + i); //prima era solo i
-        while (gameObject.name == sequencesPrefabs[i].name); //sta cosa funzionava prima dove distruggevo e creavo l'oggetto che trovavo in sto array, ma mo per renderlo efficace devo copiare anche il nome
+        while (gameObject.name == sequencesPrefabs[i].name); //i use standard name to not repeate a sequence twice in a Row
 
-        ChangeWheelNew(i);
+        ChangeWheel(i);
     }
 
     //sto metodo per funzionare richiede cose troppo precise, stesso raggio, stesso numero di cabine e così via, quello del numero di cabine era accettabile perchè risolveva un problema di passengeri, ma gli altri...
-    private void ChangeWheelNew(int i)
+    private void ChangeWheel(int i)
     {
-        //m_SpriteRenderer.sprite = sequencesPrefabs[i].GetComponent<SpriteRenderer>().sprite;
-        //FerrisWheelManager fwm = sequencesPrefabs[i].GetComponent<FerrisWheelManager>(); //sarebbe da cambiare per salvare tutto, anche la base e il centro, infatti poi qui dovrei accedere al figlio del figlio, per ora lascio così. Dovrei fare child di child
+        //full wheel version
 
-        //versione ruota intera
+        transform.parent.GetComponent<SpriteRenderer>().sprite = sequencesPrefabs[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite; //Fixed Sequence Board version
 
-        transform.parent.GetComponent<SpriteRenderer>().sprite = sequencesPrefabs[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite; //per versione mia con sprite fisse
+        //CopiaSequenzaCentraleAnnV(i); //Dynamic Sequence Board version
 
-        //CopiaSequenzaCentraleAnnV(i); //per versione con sprite tabellone staccate
-
-        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject; //per versione mia con sprite fisse -> si può modificare la versione fissa per usare lo stesso codice sotto commentato, cioè, che la sprite fissa è fratello della struttura anzichè padre --> poi da capire chi è 0 e chi 1
-        //GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).gameObject; //per versione tabellone separato 
+        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject; //Fixed Sequence Board version -> you can adapt this version to use the same code of the following commented line -> board and structure brothers but needs to know is the first or second child
+        //GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).gameObject; //Dynamic Sequence Board version
 
         //m_SpriteRenderer.sprite = wheelStruct.GetComponent<SpriteRenderer>().sprite; //questa non cambia, ma quella del primo figlio si -> con versione tabellone diviso da sprite sequenza tutto in realtà
 
         FerrisWheelManager fwm = wheelStruct.GetComponent<FerrisWheelManager>();
 
-        //problema raggio
-        //int k = 0;
-        //ferrisWheelRadius = fwm.ferrisWheelRadius;
-
-        //salvare durata
+        //Updating rotation time
         rotationDuration = fwm.rotationDuration;
 
-        //salvare numero sequenza -> quello cabine non serve perchè ho forzato che tra una ruota e l'altra c'è lo stesso numero di cabine
+        //Updating Cabin Number -> no needed for game design decisions
+        //Hypotetical code
+
+        //Updating Sequence Length
         if (seqLenght != fwm.seqLenght)
         {
             seqLenght = fwm.seqLenght;
             System.Array.Resize(ref spriteSequence, seqLenght);
-            //spriteSequence = new Sprite[seqLenght];
         }
-        //seqLenght = fwm.seqLenght;
+
+        //Updating Radius and Sprite
         if (ferrisWheelRadius != fwm.ferrisWheelRadius)
         {
             int k = 0;
             ferrisWheelRadius = fwm.ferrisWheelRadius;
-            //funzione per randomizzare cabine -> ciò la cabina già lo fà allo start, si può sfruttare quello.
+
             foreach (Transform child in transform)
             {
-                ///problema raggio
+                ///Updating Radius
                 float angle = Mathf.PI * k / ((float)cabNum / 2);
                 child.position = new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), transform.position.z);
                 k++;
@@ -346,33 +301,29 @@ public class FerrisWheelManager : MonoBehaviour
 
                 BoxCollider coll = child.GetComponent<BoxCollider>();
                 float childAngle = Mathf.PI / 180 * child.transform.eulerAngles.z;
+                //moving the cab to have as attachment point to the wheel its top
                 //child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
-                child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); //al centro come chiede Andrea
+                //moving the cab to have as attachment point to the wheel its center
+                child.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0);
 
-                child.GetComponent<CabinManager>().RandomizeCabin();
+                child.GetComponent<CabinManager>().RandomizeCabin(); //done only once here or in the else
             }
-
-            //da aggiungere uno switch di sprite tra il padre di questo e il padre di quello salvato (più tecnicamente il figlio di sequencesPrefabs[i] )
         }
 
         else
-
+        //Updating Sprite
         {
-            //brutto fare due volte il foreach ma quando il raggio rimane uguale eviti di riposizionare le cabine -> con else e aggiunta nel for each precedente risolvo (credo)
             foreach (Transform child in transform)
             {
-                child.GetComponent<CabinManager>().RandomizeCabin();
+                child.GetComponent<CabinManager>().RandomizeCabin(); //done only once here or in the else
             }
         }
 
-        //dovrei anche salvarmi seqSpriteIndex = fwm.seqSpriteIndex -> si sennò nell'editor non mi accorgo di nulla...
+        //Updating seqSpriteIndex for the editor
         if (seqSpriteIndex != fwm.seqSpriteIndex)
         {
             seqSpriteIndex = fwm.seqSpriteIndex;
             System.Array.Resize(ref spriteSequence, seqLenght);
-            //spriteSequence = new Sprite[seqLenght];
-
-            //sarebbe da aggiungerci il codice relativo alla soluzione tabellone con sprite seq separate
         }
 
         for (int j = 0; j < seqLenght; j++)

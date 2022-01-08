@@ -11,10 +11,6 @@ public class CabinManager : MonoBehaviour
     int i = 0;
     Sprite[] spriteArray;
 
-    //rotation
-    //GameObject target;
-    //Vector3 rotationVector = new Vector3(0, 0, 1);
-
     bool isRotating = false; //block interaction during wheel rotation
 
     public bool IsRotating
@@ -22,13 +18,8 @@ public class CabinManager : MonoBehaviour
         get { return isRotating; }
         
         set 
-        { //verifica che i valori erano diversi
-          //verifica che hai dei figli
-          //prendi il dragObject dal figlio
-          //setta il flag dentro dragObject
-          //
+        {   //disable drag for passenger on rotating wheel
             if (isRotating != value && transform.childCount > 1)
-                //transform.GetChild(1).GetComponent<DragObject>().BlockMov = value;
                 transform.GetChild(1).GetComponent<BoxCollider>().enabled = !value; //its ok!
             isRotating = value; 
         }
@@ -42,21 +33,16 @@ public class CabinManager : MonoBehaviour
         set { orderInWheel = value; }
     }
 
-    //float rotationSpeed = 20;
-
     void Start()
     {
         //changeCabin
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+
         fwm = gameObject.GetComponentInParent<FerrisWheelManager>();
-        //spriteArray = Resources.LoadAll<Sprite>("Sprites/Cabine");
+
         spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/");  //to bhe updated with official assets
 
         RandomizeCabin();
-
-        //rotation
-        //target = gameObject.transform.parent.gameObject;
-
     }
 
     private void OnMouseDown() //changeCabin
@@ -70,38 +56,6 @@ public class CabinManager : MonoBehaviour
             fwm.checkSequenceOuter();
         }
     }
-
-    //public void correctSequenceRotation() //rotation
-    //{
-    //    StartCoroutine(startRotationRoutine());
-    //}
-
-    ////con questo metodo faccio un giro completo nei secondi che indico dall'editor, ma non si ferma precisamente alla posizione di partenza, quindi più lo usi e più si sminchiano le posizioni, però con il reset sta cosa dovrebbe essere risolta -> lo è, ma devo vedere come gestire la presenza di marmocchi a bordo
-    //private IEnumerator startRotationRoutine()
-    //{
-    //    Vector3 startRot = transform.position;
-    //    rotationSpeed = 360 / fwm.RotationDuration;
-    //    float countDown = fwm.RotationDuration;
-    //    isRotating = true;
-    //    Vector3 rotationAxis; 
-    //    rotationAxis = target.transform.position;
-
-    //    for (int i = 0; i < 10000; i++)
-    //    {
-    //        while (countDown >= 0)
-    //        {
-    //            //transform.RotateAround(rotationAxis, rotationVector, rotationSpeed * Time.smoothDeltaTime);
-    //            transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
-    //            transform.localRotation = new Quaternion(0, 0, 0, transform.rotation.w);
-    //            countDown -= Time.smoothDeltaTime; //smoothDeltaTime è quello che dà una fermata più precisa
-    //            yield return null;
-    //        }
-    //    }
-
-    //    transform.position = startRot;
-    //    isRotating = false; //sarebbe da risettare nel momento del reset per una sincronizzazione precisa, ma non credo il giocatore riesca a glitchare sta cosa
-    //    fwm.FlagCoroutine++;
-    //}
 
     //new reset wheel
    public void RandomizeCabin()

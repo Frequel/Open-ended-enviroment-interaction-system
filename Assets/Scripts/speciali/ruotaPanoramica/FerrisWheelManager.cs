@@ -322,7 +322,7 @@ public class FerrisWheelManager : MonoBehaviour
 
         //CopiaSequenzaCentraleAnnV(i); //per versione con sprite tabellone staccate
 
-        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject; //per versione mia con sprite fisse
+        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject; //per versione mia con sprite fisse -> si può modificare la versione fissa per usare lo stesso codice sotto commentato, cioè, che la sprite fissa è fratello della struttura anzichè padre --> poi da capire chi è 0 e chi 1
         //GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).gameObject; //per versione tabellone separato 
 
         //m_SpriteRenderer.sprite = wheelStruct.GetComponent<SpriteRenderer>().sprite; //questa non cambia, ma quella del primo figlio si -> con versione tabellone diviso da sprite sequenza tutto in realtà

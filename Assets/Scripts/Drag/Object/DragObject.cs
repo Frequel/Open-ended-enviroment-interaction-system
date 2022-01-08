@@ -22,18 +22,6 @@ public class DragObject : MonoBehaviour
 
     setPositionInSpace sPiS;
 
-    //should add some flag to disable drag if the object is in some particular state (Ex, is on a cabin of ferris wheel that is rotating) -> the blocking interaction should set the drag flag to block 
-    /// <summary>
-    /// i can use to disable and enable boxCollider instead
-    /// </summary>
-    //bool blockMov = false;
-
-    //public bool BlockMov
-    //{
-    //    get { return blockMov; }
-    //    set { blockMov = value; }
-    //}
-
     public delegate void DragOut();
     public event DragOut DraggingOut;
 

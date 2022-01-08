@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Screen width reference")]
+    [Tooltip("The screen width used as reference by the artist to draw the background")]
+    [SerializeField]
+    int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
+
     Vector2 xBoundWorld;
     Vector2 yBoundWorld;
     float halfWorldWidth;
@@ -94,8 +99,7 @@ public class GameManager : MonoBehaviour
         getBackGroundBound();
 
         float bgWidth = xMax - xMin;
-        float worldScreenWidth = bgWidth / 2 * Screen.width / 2436; // 2436 perchè lo schermo dell'iPhoneX su cui è stato progettato il Background dai grafici, fratto 2 perchè il telefono scelto deve occupare la metà della lunghezza del background, se fosse diversamente si dovrebbe modificare, magari inserendo un nuovo parametro nell'editor
-        Camera.main.orthographicSize = 0.5f * worldScreenWidth / Screen.width * Screen.height;
+        Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
     }
 
     void InitializeBoundWorld()

@@ -45,22 +45,11 @@ public class InitializerEditor : Editor
         DrawDefaultInspector();
 
         Initializer script = (Initializer)target;
-        ///
-        ///////////////
-        //altra cosa da aggiungere potrebbe essere quella di costruire la ruota panoramica da 0, quindi mettere un toggle per ruota panoramica che disabiliti tutti gli altri toggle e viceversa quando usi uno degli altri toggle disabiliti la ruota panoramica
-        //una cosa carina sarebbe disabilitare gli interactable se si selezionasse cabinInteractor, perch? non interagisce con nessuno se non con il personaggio che ci metti dentro
-        /////////////////
-        ///
 
-        ///aggiungere che se metto cabin interactor aggiungo cabin manager se non c'è e sarebbe da aggiungere anche la possibilità di creare la ruota da editor al solo click
-        /// --> ma meglio fare che se clicco su ferris wheel vede se ha un figlio/nipote e gli attacca lo script di Ferris Wheel e cose annesse a cabin interactor
-
-        //TextMeshPro testo = null; //old
-
-        //potrei fare un vect di interactable, tipo quello degli interactors e fare un for, no? ///-> non ci sono riuscito
+        //its possibile to disable options depending on interactors and interactables but it would be to complex growing the posibilities, the artist that will build the scene could have the brain to not mix things
 
         if (fwmRef == null)
-        {
+        {   //should be useful create a way to use a for/foreach but triyng to do it we could rewrite a lot of code
             DrawToggleComponent(script.gameObject, out bgColorable bgc, onAdd: mr => Debug.Log("bgColorable added"), onRemove: ma => Debug.Log("bgColorable removed"));
             DrawToggleComponent(script.gameObject, out weighable w, onAdd: mr => Debug.Log("weighable added"), onRemove: ma => Debug.Log("weighable removed"));
             DrawToggleComponent(script.gameObject, out Doubled dd, onAdd: mr => Debug.Log("Doubled added"), onRemove: ma => Debug.Log("Doubled removed"));
@@ -83,12 +72,7 @@ public class InitializerEditor : Editor
         if(script.GetComponents(typeof(Component)).Length <= 5) //5 is the maximum required component for the Ferris Wheel Base Object
         {
             DrawToggleComponent(script.gameObject, out FerrisWheelManager fwm, onAdd: mr => Debug.Log("FerrisWheelManager added"), onRemove: ma => Debug.Log("FerrisWheelManager removed"));
-        }
-
-        /// old method to add text
-        //DrawToggleText(script.gameObject, out testo, onAdd: mr => Debug.Log("text added"), onRemove: ma => Debug.Log("text removed"));
-        ///
-        
+        }        
 
         DrawComponentsPopup(script.gameObject, interactors, interactorsType, "Interactor");
     }
@@ -97,11 +81,8 @@ public class InitializerEditor : Editor
         where T : Component
     {
         bool hadComponent = targetObject.TryGetComponent(out component);
-        //bool hadComponent;
         if (specialInteractable.Contains(typeof(T)))  //if it is a special component, needs an appropriate verification
             hadComponent = specialChecker(targetObject, typeof(T));
-        //else
-        //    hadComponent = targetObject.TryGetComponent(out component);
 
         bool hasComponent = hadComponent;
         EditorGUI.BeginChangeCheck();
@@ -174,7 +155,7 @@ public class InitializerEditor : Editor
         wheelStruct.AddComponent<SpriteRenderer>();
         fwmRef = wheelStruct.AddComponent<FerrisWheelManager>();
         wheelStruct.name = "wheelStruct";
-        //wheelStruct.transform.parent = targetObject.transform; //for a better implementation to do in future
+        //wheelStruct.transform.parent = targetObject.transform; //for a better implementation -> to do in future
         wheelStruct.transform.parent = sequence.transform;
     }
 
@@ -218,6 +199,8 @@ public class InitializerEditor : Editor
         DestroyImmediate(targetObject.transform.GetChild(0).gameObject);
         testo = null;
         textColorable tc = targetObject.GetComponent<textColorable>();
+
+        //removing dependencies with text -> add other removes if needed 
         if ( tc != null)
             DestroyImmediate(tc);
 
@@ -258,7 +241,7 @@ public class InitializerEditor : Editor
                 {
                     DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora s? che ci sta solo sto figlio o che comunque come primo figlio avr? il testo (per come ? adesso il codice) ma successivamente non lo s?, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html -> il figlio si chiamerà testo di default
 
-                    //rimuovo gli interactable dipendenti dal testo (da aggiungerne altri se ce ne saranno)
+                    //removing dependencies with text -> add other removes if needed 
                     textColorable tc = targetObject.GetComponent<textColorable>(); 
                     if (tc != null)
                         DestroyImmediate(tc);

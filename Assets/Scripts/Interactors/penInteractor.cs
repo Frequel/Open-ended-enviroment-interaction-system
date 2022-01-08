@@ -6,7 +6,6 @@ public class penInteractor : ObjectInteractor
 {
     SpriteRenderer m_SpriteRenderer;
 
-    bool colorText, colorBackground;
 
     void Start()
     {

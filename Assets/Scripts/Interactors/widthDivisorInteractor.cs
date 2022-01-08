@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class widthDivisorInteractor : ObjectInteractor
 {
-    // Start is called before the first frame update
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
         IDivisibleDimensions divisible = a_OtherInteractable.GetComponent<IDivisibleDimensions>();

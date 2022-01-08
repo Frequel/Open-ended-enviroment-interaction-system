@@ -8,5 +8,4 @@ public class specificBgColorable : MonoBehaviour, IBgColorable
     {
         return GetComponent<SpriteRenderer>();
     }
-
 }

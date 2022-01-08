@@ -15,10 +15,11 @@ public class CameraMovementManager : MonoBehaviour
     [SerializeField] public float speedFactor = 5;
 
     GameManager gm;
-    // Start is called before the first frame update
+
     void Start()
     {
         gm = GameManager.GetInstance;
+
         CreateBoxCollider();
     }
 
@@ -37,6 +38,11 @@ public class CameraMovementManager : MonoBehaviour
     }
 
     void OnMouseDrag()
+    {
+        DragCamera();
+    }
+
+    private void DragCamera()
     {
         var newPosView = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         var cameraMovment = (lastPosView - newPosView) * speedFactor;

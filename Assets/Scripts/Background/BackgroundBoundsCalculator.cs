@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BackgroundBoundsCalculator : MonoBehaviour
 {
+    private void Start()
+    {
+        transform.position = new Vector3(0, 0, Camera.main.farClipPlane + Camera.main.transform.position.z);
+    }
     public Vector2[] CalculateBoundWorlds()
     {
         SpriteRenderer m_SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();

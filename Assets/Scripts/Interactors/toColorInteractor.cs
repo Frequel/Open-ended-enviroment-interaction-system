@@ -6,7 +6,6 @@ public class toColorInteractor : ObjectInteractor
 {
     SpriteRenderer m_SpriteRenderer;
 
-    bool colorText, colorBackground;
 
     void Start()
     {

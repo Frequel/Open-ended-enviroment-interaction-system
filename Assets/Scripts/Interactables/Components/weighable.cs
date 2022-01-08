@@ -6,7 +6,6 @@ public class weighable : MonoBehaviour, IWeighable
 {
     [SerializeField]
     float weight = 2f;
-
     public float getWeight()
     {
         return weight;

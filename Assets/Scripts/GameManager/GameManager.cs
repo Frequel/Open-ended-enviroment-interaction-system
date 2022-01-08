@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Screen width reference")]
+    [Tooltip("The screen width used as reference by the artist to draw the background")]
+    [SerializeField]
+    int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
+
     Vector2 xBoundWorld;
     Vector2 yBoundWorld;
     float halfWorldWidth;
@@ -18,7 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float objectScrollViewSpeed = 0.2f;
 
-    [Header("Numeric value of speed factor")]
+    [Header("Numeric value of distance from screen board")]
     [Tooltip("A float using the Range attribute")]
     [Range(0f, 1f)]
     [SerializeField]
@@ -79,8 +84,8 @@ public class GameManager : MonoBehaviour
         if (gm == null)
         {
             gm = this;
-            halfWorldHeight = Camera.main.orthographicSize;
-            halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
+            setMainCameraSize();
+
             InitializeBoundWorld();
         }
         else
@@ -89,22 +94,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void setMainCameraSize()
+    {
+        getBackGroundBound();
+
+        float bgWidth = xMax - xMin;
+        Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
+    }
+
     void InitializeBoundWorld()
     {
+        halfWorldHeight = Camera.main.orthographicSize;
+        halfWorldWidth = halfWorldHeight * Screen.width / Screen.height;
+
+        xBoundWorld = new Vector2(xMin + halfWorldWidth, xMax - halfWorldWidth);
+        yBoundWorld = new Vector2(yMin + halfWorldHeight, yMax - halfWorldHeight);
+    }
+
+    //private void getBackGroundBound(out Vector2 xBound, out Vector2 yBound)
+    private void getBackGroundBound()
+    {
+        Vector2 xBound, yBound;
         bm = backgroundObject.GetComponent<BackgroundBoundsCalculator>();
 
         Vector2[] sceneBounds = bm.CalculateBoundWorlds();
 
-        Vector2 xBound = sceneBounds[0];
-        Vector2 yBound = sceneBounds[1];
-
+        xBound = sceneBounds[0];
+        yBound = sceneBounds[1];
         xMax = xBound.y;
         yMax = yBound.y;
         yMin = yBound.x;
         xMin = xBound.x;
-
-        xBoundWorld = new Vector2(xBound.x + halfWorldWidth, xBound.y - halfWorldWidth);
-        yBoundWorld = new Vector2(yBound.x + halfWorldHeight, yBound.y - halfWorldHeight);
     }
 
     public Vector3 Limit2Bound(Vector3 distanceView)

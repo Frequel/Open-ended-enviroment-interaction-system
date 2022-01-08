@@ -1,51 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class DragObject : MonoBehaviour
+
+[RequireComponent(typeof(Initializer))] //is usable only with initializer and setPositionInCabin (required from initiliazer)
+[RequireComponent(typeof(ObjectInteractor))] //requires interactable checker that require BoxCollider
+public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;
     Vector3 objectDragOrigin;
-    Vector3 size;
-    Vector3 halfSize;
 
     SpriteRenderer sprite;
     Collider coll;
 
-    float mZCoord; 
     protected float hww, hwh;
+    TextMeshPro bcText;
 
     GameManager gm;
     interactableChecker ic;
 
-    // Start is called before the first frame update
+    setPositionInSpace sPiS;
+
+    public delegate void DragOut();
+    public event DragOut DraggingOut;
+
     void Start()
     {
-        gm = GameManager.GetInstance;
-        
-        sprite = GetComponent<SpriteRenderer>();
-        sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
-       
-        var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp - 1); 
-        
+        gm = GameManager.GetInstance; //get GameManager Singleton Instance
+
         hww = gm.HalfWorldWidth;
         hwh = gm.HalfWorldHeight;
 
+        sPiS = gameObject.GetComponent<setPositionInSpace>(); 
+
         coll = GetComponent<Collider>();
-        size = coll.bounds.size;
-        halfSize = size / 2;
 
         ic = GetComponent<interactableChecker>();
+
     }
 
     void OnMouseDown()
+    {
+        if (sPiS.Pt == positionType.positionedPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
+            if (DraggingOut != null)
+                DraggingOut(); 
+
+        StartDragObject();
+    }
+
+    private void StartDragObject()
     {
         objectDragOrigin = GetMouseWorldPos();
         gameObject.layer = 3;
     }
 
     void OnMouseDrag()
+    {
+        DraggingObject();
+    }
+
+    private void DraggingObject()
     {
         Vector3 objectDragPos_debug = GetMouseWorldPos();
         Vector3 objectMovment = objectDragPos_debug - objectDragOrigin;
@@ -57,38 +72,39 @@ public class DragObject : MonoBehaviour
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
-            sprite.sortingOrder = Mathf.CeilToInt(32767);
-            //try to fix drag&drop overlapping logic
-            transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);
+            sPiS.Pt = positionType.draggingPos; 
+            sPiS.setPosition(); //set Active Position to dragging
 
-            ic.checkPulse();
+            ic.checkPulse(); //check if a interaction is available and animate a feedback for this
         }
-
     }
 
-    void OnMouseUp()
+    private void OnMouseUp()
     {
+        FinishDragObject();
+    }
+
+    private void FinishDragObject()
+    {
+        sPiS.Pt = positionType.defPos; 
+
         ic.checkInteraction();
 
-        sprite.sortingOrder = -Mathf.CeilToInt((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)));
+        sPiS.setPosition(); //set Active Position to default if no interaction changes it 
 
-        var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z;
-        transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1);
-        
         gameObject.layer = 0;
     }
-    
+
     Vector3 GetMouseWorldPos()
     {
         objectDragPos = Input.mousePosition;
-
         return Camera.main.ScreenToWorldPoint(objectDragPos);
     }
 
     private Vector3 LimitObjectBound(Vector3 dragMovment)
     {
         CalculateObjectBounds(out float xMax, out float yMax, out float xMin, out float yMin);
-        //costretto a fare così perchè con local size e basta non và bene
+        //localSize doesn't give the right dimension of the object but only its scale, not the unit
         Vector3 size = coll.bounds.size;
         Vector3 halfSize = size / 2;
 
@@ -132,11 +148,12 @@ public class DragObject : MonoBehaviour
         xMax = Camera.main.transform.position.x + hww;
     }
 
-    private void MoveCamera(Vector3 dragMovment) //versione old con size. rivisitata x Hx2
+    private void MoveCamera(Vector3 dragMovment) 
     {
 
         CalculateObjectBounds(out float xMax, out float yMax, out float xMin, out float yMin);
         Vector3 cameraMovment = Vector3.zero;
+        //localSize doesn't give the right dimension of the object but only its scale, not the unit
         Vector3 size = coll.bounds.size;
         Vector3 halfSize = size / 2;
 

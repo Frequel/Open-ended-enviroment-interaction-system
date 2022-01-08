@@ -9,8 +9,6 @@ public class penWritable : MonoBehaviour, IWriteable
     public GameObject foglioScritto;
     public void write(GameObject pen)
     {
-        //GameObject fsCopy = Instantiate<GameObject>(foglioScritto);
-
         GameObject fsCopy = Instantiate(foglioScritto, transform.position, Quaternion.identity);
         fsCopy.GetComponent<SpriteRenderer>().color = gameObject.GetComponent<SpriteRenderer>().color;
         TextMeshPro bcText = fsCopy.GetComponentInChildren<TMPro.TextMeshPro>();

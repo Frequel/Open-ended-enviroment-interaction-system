@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(interactableChecker))]
+[RequireComponent(typeof(PulseEffect))]
 public class ObjectInteractor : MonoBehaviour, IInteractor
 {
 
     void Awake()
     {
         initializeInteractableObject();
-
-        gameObject.AddComponent<PulseEffect>();
     }
 
     void initializeInteractableObject()
     {
-        interactableChecker ic = gameObject.AddComponent<interactableChecker>();
-        ic.m_LayerMask = ~8;//-1;
-        ic.getInteractible();
+        interactableChecker ic = gameObject.GetComponent<interactableChecker>(); //required component
+
+        ic.M_LayerMask = ~8; //default mask for interactable objects
+        ic.getInteractor();
     }
 
     public virtual void activeInteractor(GameObject a_OtherInteractable)

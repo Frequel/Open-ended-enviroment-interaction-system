@@ -51,7 +51,7 @@ public class FerrisWheelManager : MonoBehaviour
         set { flagCoroutine = value; }
     }
 
-    int prefabID = -1;
+    //int prefabID = -1;
 
     //cabin rotation
     [Tooltip("Inserire la durata in secondi per fare un giro completo della ruota panoramica")] //Add english Version
@@ -59,9 +59,7 @@ public class FerrisWheelManager : MonoBehaviour
     [SerializeField]
     int rotationDuration = 15;
 
-    //new Change Ferris Wheel
-    //SpriteRenderer m_SpriteRenderer;
-    Sprite[] spriteArray;
+    Sprite[] spriteArray; //needed to reset the wheel
 
     public int RotationDuration
     {
@@ -74,10 +72,9 @@ public class FerrisWheelManager : MonoBehaviour
 
     void Start()
     {
-        //m_SpriteRenderer = GetComponent<SpriteRenderer>(); //new strategy to not destroy and instantiate
         spriteSequence = new Sprite[seqLenght];
 
-        spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/"); // me lo devo salvare globale per il nuovo metodo di reset wheel
+        spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/");
 
         for (int i = 0; i < seqLenght; i++)
             spriteSequence[i] = spriteArray[seqSpriteIndex[i]];
@@ -86,17 +83,14 @@ public class FerrisWheelManager : MonoBehaviour
             InstantiateCabin();
 
         sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/" + cabNum);
-        //new version -> utile per non avere troppo sbatti nel rimettere i passeggeri al loro posto
-        //sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/AnnalisaVersion/" + cabNum); //da moddare per adattare strategia suddivisione cartelle
-        //sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/AnnalisaVersion/newBoard/" + cabNum); //X sperimentare con la board a sprite variabili
 
 
-        for (int i = 0; i < sequencesPrefabs.Length; i++)
-        {
-            //da vedere meglio sta cosa dell'unicità, forse è meglio vedere il nome del prefab e basta
-            if (gameObject.name == sequencesPrefabs[i].name)
-                prefabID = cabNum * 100 + i;
-        }
+        //for (int i = 0; i < sequencesPrefabs.Length; i++)
+        //{
+        //    //da vedere meglio sta cosa dell'unicità, forse è meglio vedere il nome del prefab e basta
+        //    if (gameObject.name == sequencesPrefabs[i].name)
+        //        prefabID = cabNum * 100 + i;
+        //}
     }
 
     //sarebbe meglio trovare una soluzione per metterle prima del play, tramite editor script magari
@@ -107,48 +101,41 @@ public class FerrisWheelManager : MonoBehaviour
         for (int i = 0; i < cabNum; i++)
         {
             float angle = Mathf.PI * i / ((float)cabNum / 2);
-            //aggiungere alla posizione, l'altezza del box collider
-            //var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), 0), Quaternion.identity);// transform.position.z), Quaternion.identity);
-
-            //var myNewCab = Instantiate(cabinePrefab, new Vector3(transform.position.x + ferrisWheelRadius * Mathf.Cos(angle), transform.position.y + ferrisWheelRadius * Mathf.Sin(angle), 0), Quaternion.identity, transform);// uguale a sopra
-
+            
             var myNewCab = Instantiate(cabinePrefab, transform, true);
             myNewCab.transform.localPosition = new Vector3(ferrisWheelRadius * Mathf.Cos(angle), ferrisWheelRadius * Mathf.Sin(angle), -1);
 
             BoxCollider coll = myNewCab.GetComponent<BoxCollider>();
             float childAngle = Mathf.PI / 180 * myNewCab.transform.eulerAngles.z;
+
+            //moving the cab to have as attachment point to the wheel its top
             //myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y, Mathf.Cos(childAngle) * coll.size.y, 0);
-            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); //a metà cabina come chiede andrea
-            //dopo essere istanziati creano anche set pos in space =>  devo settarli come positioned
+            //moving the cab to have as attachment point to the wheel its center
+            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); 
 
             setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
-            sPiS.Pt = positionType.dontMove;
-
-            //Collider coll = myNewCab.GetComponent<Collider>();
-            //Vector3 size = coll.bounds.size;
-            //myNewCab.transform.position -= new Vector3 (0, myNewCab.GetComponent<Collider>().bounds.size.y, 0 ); //da capire un attimo, perchè poi nella rotazione esce una cosa bruttissima
+            sPiS.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
 
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
-            //myNewCab.transform.parent = gameObject.transform;
 
-            kids.AddLast(myNewCab.GetComponent<SpriteRenderer>());//
+            kids.AddLast(myNewCab.GetComponent<SpriteRenderer>());
         }
     }
 
 
-    public void DestroyChilds()
-    {
-        if (transform.childCount > 0) //%%kids.lenght > 0?
-        {
-            kids.Clear();
-            foreach (Transform child in transform)
-            {
-                GameObject.DestroyImmediate(child.gameObject);
-            }
-        }
+    //public void DestroyChilds()
+    //{
+    //    if (transform.childCount > 0) //%%kids.lenght > 0?
+    //    {
+    //        kids.Clear();
+    //        foreach (Transform child in transform)
+    //        {
+    //            GameObject.DestroyImmediate(child.gameObject);
+    //        }
+    //    }
 
-    }
+    //}
 
     //check sequence part 1
     public void checkSequenceOuter()
@@ -391,7 +378,8 @@ public class FerrisWheelManager : MonoBehaviour
         for (int j = 0; j < seqLenght; j++)
             spriteSequence[j] = spriteArray[fwm.seqSpriteIndex[j]];
 
-        transform.parent.name = sequencesPrefabs[i].name;
+        //transform.parent.name = sequencesPrefabs[i].name; //sequence board and wheel structure brother
+        transform.parent.transform.parent.name = sequencesPrefabs[i].name; //sequence board and wheel structure father and son
     }
 
     void CopiaSequenzaCentraleAnnV(int i)

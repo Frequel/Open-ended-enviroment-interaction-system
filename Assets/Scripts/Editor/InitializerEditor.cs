@@ -116,7 +116,7 @@ public class InitializerEditor : Editor
         return hasComponent;
     }
 
-    //adding special components
+    //adding special components (interactables)
     void specialComponentAddiction(GameObject targetObject, Type t) //add an if to this code and the relative method to add the component
     {
         if (t == typeof(FerrisWheelManager))
@@ -211,45 +211,9 @@ public class InitializerEditor : Editor
         TextMeshPro component = targetObject.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
         return component != null ? true : false;
     }
-    //ending special components
+    //ending special components (interactables)
 
-    private bool DrawToggleText(GameObject targetObject, out TextMeshPro component, string label = null, Action<TextMeshPro> onAdd = null, Action<TextMeshPro> onRemove = null)
-    {
-        component = targetObject.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
-        bool hadComponent = component != null ? true : false;
-        bool hasComponent = hadComponent;
-        EditorGUI.BeginChangeCheck();
-        {
-            hasComponent = GUILayout.Toggle(hadComponent, label ?? typeof(TextMeshPro).Name);
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (hasComponent && !hadComponent)
-                {
-                    GameObject go = new GameObject("testo");
-                    component = go.AddComponent<TextMeshPro>();
-                    go.transform.SetParent(targetObject.transform);
-                    component.rectTransform.localPosition = new Vector3(0, 0.5f, 0);
-                    component.rectTransform.sizeDelta = new Vector2(1,1);
-                    component.rectTransform.localScale = new Vector3(1, 1, 1);
-                    component.color = Color.black;
-                    component.alignment = TextAlignmentOptions.Center;
-                    component.enableAutoSizing = true;
-                    component.fontSizeMin = 1;
-                    component.fontSizeMax = 18;
-                }
-                else if (!hasComponent && hadComponent)
-                {
-                    DestroyImmediate(targetObject.transform.GetChild(0).gameObject);  //ora s? che ci sta solo sto figlio o che comunque come primo figlio avr? il testo (per come ? adesso il codice) ma successivamente non lo s?, potrebbe esse utile iterare tra i figli e crecare child.name=="testo" https://answers.unity.com/questions/183649/how-to-find-a-child-gameobject-by-name.html -> il figlio si chiamerà testo di default
-
-                    //removing dependencies with text -> add other removes if needed 
-                    textColorable tc = targetObject.GetComponent<textColorable>(); 
-                    if (tc != null)
-                        DestroyImmediate(tc);
-                }
-            }
-        }
-        return hasComponent;
-    }
+    //interactors
 
     private void DrawComponentsPopup(GameObject targetObject, string[] options, Type[] types, string label = "Component")
     {

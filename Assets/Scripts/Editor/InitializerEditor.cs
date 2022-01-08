@@ -26,6 +26,7 @@ public class InitializerEditor : Editor
     };
     private static string[] interactors;
 
+    //to add special component that requires more action than to only be added (se methods below) 
     private static readonly Type[] specialInteractable = new Type[]
     {
         typeof(TextMeshPro),
@@ -71,21 +72,23 @@ public class InitializerEditor : Editor
             DrawToggleComponent(script.gameObject, out CabinPositionable cp, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
 
             DrawToggleComponent(script.gameObject, out DragObject dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
+
+            DrawToggleComponent(script.gameObject, out TextMeshPro txt, onAdd: mr => Debug.Log("TextMeshPro added"), onRemove: ma => Debug.Log("TextMeshPro removed"));
+
+            if (testo != null)
+                DrawToggleComponent(script.gameObject, out textColorable tc, onAdd: mr => Debug.Log("textColorable added"), onRemove: ma => Debug.Log("textColorable removed"));
         }
 
-        //is not convenient use DrawToggleComponent for special specific components, because you always need to add adding and dertroying if and relatives methods
+        //is not convenient use DrawToggleComponent for special specific components, because you always need to add adding and dertroying if and relatives methods -> gives a standard
         if(script.GetComponents(typeof(Component)).Length <= 5) //5 is the maximum required component for the Ferris Wheel Base Object
         {
             DrawToggleComponent(script.gameObject, out FerrisWheelManager fwm, onAdd: mr => Debug.Log("FerrisWheelManager added"), onRemove: ma => Debug.Log("FerrisWheelManager removed"));
         }
 
-        ///
+        /// old method to add text
         //DrawToggleText(script.gameObject, out testo, onAdd: mr => Debug.Log("text added"), onRemove: ma => Debug.Log("text removed"));
         ///
-        DrawToggleComponent(script.gameObject, out TextMeshPro txt, onAdd: mr => Debug.Log("TextMeshPro added"), onRemove: ma => Debug.Log("TextMeshPro removed"));
-
-        if (testo != null)
-            DrawToggleComponent(script.gameObject, out textColorable tc, onAdd: mr => Debug.Log("textColorable added"), onRemove: ma => Debug.Log("textColorable removed"));
+        
 
         DrawComponentsPopup(script.gameObject, interactors, interactorsType, "Interactor");
     }
@@ -95,7 +98,7 @@ public class InitializerEditor : Editor
     {
         bool hadComponent = targetObject.TryGetComponent(out component);
         //bool hadComponent;
-        if (specialInteractable.Contains(typeof(T)))
+        if (specialInteractable.Contains(typeof(T)))  //if it is a special component, needs an appropriate verification
             hadComponent = specialChecker(targetObject, typeof(T));
         //else
         //    hadComponent = targetObject.TryGetComponent(out component);
@@ -132,8 +135,8 @@ public class InitializerEditor : Editor
         return hasComponent;
     }
 
-    //inizio prova di generalizzazione
-    void specialComponentAddiction(GameObject targetObject, Type t)
+    //adding special components
+    void specialComponentAddiction(GameObject targetObject, Type t) //add an if to this code and the relative method to add the component
     {
         if (t == typeof(FerrisWheelManager))
             fwmCreator(targetObject);
@@ -141,7 +144,7 @@ public class InitializerEditor : Editor
             textCreator(targetObject);
     }
 
-    void specialComponentDeletion(GameObject targetObject, Type t)
+    void specialComponentDeletion(GameObject targetObject, Type t)  //add an if to this code and the relative method to delete the component
     {
         if (t == typeof(FerrisWheelManager))
             fwmDestroyer(targetObject);
@@ -149,7 +152,7 @@ public class InitializerEditor : Editor
             textDestroyer(targetObject);
     }
 
-    bool specialChecker(GameObject targetObject, Type t)
+    bool specialChecker(GameObject targetObject, Type t) //add an if to this code and the relative method to check if is already present or not
     {
         if (t == typeof(FerrisWheelManager))
             return fwmChecker(targetObject);
@@ -225,7 +228,7 @@ public class InitializerEditor : Editor
         TextMeshPro component = targetObject.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
         return component != null ? true : false;
     }
-    //fine prova di generalizzazione
+    //ending special components
 
     private bool DrawToggleText(GameObject targetObject, out TextMeshPro component, string label = null, Action<TextMeshPro> onAdd = null, Action<TextMeshPro> onRemove = null)
     {

@@ -5,5 +5,5 @@ using UnityEngine;
 public interface ILiquidDensityInteractable
 { 
     public float getDensity();
-    public void postionLiquidInContainer(setPositionInSpace father_sPiS);//(int fatherSortOrder);
+    public void postionLiquidInContainer(setPositionInSpace father_sPiS, LiquidDensityInteractor father_ldi);
 }

@@ -12,6 +12,12 @@ public class LiquidDensityInteractor : ObjectInteractor
     [SerializeField]
     float bottomPosition;
 
+    [Tooltip("Indicare la metà esatta della parte dove và collocato il liquido all'interno interno - vedi la lineaa nella scena")] //Add english Version
+    [HideInInspector]
+    [SerializeField]
+    float centerPosition;
+
+
     [SerializeField]
     int capacity = 4;
     GameObject[] liquidList;
@@ -22,18 +28,20 @@ public class LiquidDensityInteractor : ObjectInteractor
 
     setPositionInSpace sPiS;
 
-    //Comparer<int> descendingComparer;
+    //AGGIUNGERE ISCRIZIONE AD EVENTO PADRE -> RESET OT TO EMPTY CONTAINER
+    public delegate void toEmpty();
+    public event toEmpty emptyingContainer;
 
     private void Start()
     {
         liquidList = new GameObject[capacity];
         freeSlot = capacity;
         sPiS = GetComponent<setPositionInSpace>();
-        //descendingComparer = Comparer<int>.Create((x, y) => y.CompareTo(x));
+
         var descendingComparer = Comparer<float>.Create((x, y) => y.CompareTo(x));
-        sortedContainedLiquid =
-            new SortedList<float, GameObject>(descendingComparer);
+        sortedContainedLiquid = new SortedList<float, GameObject>(descendingComparer);
     }
+
     public override void passiveInteractor(GameObject a_OtherInteractable)
     {
         ILiquidDensityInteractable liquidDensityPositionable = a_OtherInteractable.GetComponent<ILiquidDensityInteractable>();
@@ -41,7 +49,7 @@ public class LiquidDensityInteractor : ObjectInteractor
         {
             a_OtherInteractable.transform.SetParent(transform, true);
 
-            liquidDensityPositionable.postionLiquidInContainer(sPiS);//(sprite.sortingOrder);
+            liquidDensityPositionable.postionLiquidInContainer(sPiS,this);//(sprite.sortingOrder);
 
             //controllare se liquido non è già presente? //mettere alla posizione corretta
             freeSlot--;  //non farlo andare sotto 0 Mathf.Max()?
@@ -49,18 +57,28 @@ public class LiquidDensityInteractor : ObjectInteractor
             {
                 LiquidDensityInteractable ldi = ((LiquidDensityInteractable)liquidDensityPositionable);
                 dOb = ldi.dOb;
-                dOb.DraggingOut += SParent;
+                //dOb.DraggingOut += SParent; //not available , could not drag out liquids but only empty the container
                 sortedContainedLiquid.Add(ldi.getDensity(), ldi.gameObject);
                 //sPiS.childrenPositioning += ldi.letParentPositioning()
 
                 //riposizionare i figli //il top sarebbe riposizionare solo i figli sopra
                 int i = 0;
+                float height = 0;
                 foreach (var gobj in sortedContainedLiquid)
                 {
-                    //trova stratagemma per metterlo dentro il contenitore (doppio figlio?)
-                    float yVal = bottomPosition + gobj.Value.GetComponent<Collider>().bounds.size.y*i;//GetComponent<BoxCollider>().size.y * i;
-                    Vector3 offset = Vector3.up * yVal;
-                     gobj.Value.transform.position = transform.position + offset;// + new Vector3(0, yVal, 0) ; 
+                    //code here
+                    GameObject go = gobj.Value;
+                    SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                    float ySize  = sr.sprite.bounds.size.y;
+                    float ySize1 = sr.bounds.size.y;
+                    float ySize2 = sr.size.y;
+                    //float yVal = bottomPosition + 1.45f * (float)i; //1.45 to be substitute with sprite.size
+                    //float yVal = bottomPosition + sr.size.y * (float)i;
+                    float yVal = bottomPosition + ySize * (float)i;
+                    Vector3 offset = yVal * Vector3.up + centerPosition * Vector3.right;
+
+                    //gobj.Value.transform.position = transform.position + offset;
+                    go.transform.localPosition = offset;
                     i++;
                 }
             }
@@ -100,15 +118,29 @@ public class LiquidDensityInteractor : ObjectInteractor
         dOb.DraggingOut -= SParent;
     }
 
+    public void resetContainer()
+    {
+        emptyingContainer();
+        freeSlot = capacity;
+        sortedContainedLiquid.Clear();
+
+    }
 
     void OnDrawGizmos()
     {
-        //Gizmos.color = Color.red;
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.red;
+        //Gizmos.color = Color.yellow;
 
         Collider m_Collider = GetComponent<Collider>();
         Vector3 from = new Vector3(m_Collider.bounds.min.x, transform.position.y + bottomPosition, transform.position.z);
         Vector3 to = new Vector3(m_Collider.bounds.max.x, transform.position.y + bottomPosition, transform.position.z);
+        Gizmos.DrawLine(from, to);
+
+
+        //Gizmos.color = Color.red;
+
+        from = new Vector3(transform.position.x + centerPosition, m_Collider.bounds.min.y,  transform.position.z);
+        to = new Vector3( transform.position.x + centerPosition, m_Collider.bounds.max.y, transform.position.z);
         Gizmos.DrawLine(from, to);
     }
 }

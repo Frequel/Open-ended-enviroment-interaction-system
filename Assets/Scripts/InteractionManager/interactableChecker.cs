@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
+//[RequireComponent(typeof(BoxCollider))] //da rimettere con un if getcomponent e addComponent
 public class interactableChecker : MonoBehaviour
 {
     Vector3 overlapBoxDim;
@@ -30,11 +30,23 @@ public class interactableChecker : MonoBehaviour
     PulseEffect pe_old = null;
     PulseEffect pe_new = null;
 
+    //aggiunto per testing, nel caso è da rimuovere
+    IInteractor otherInteractible;
+
     void Start()
     {
         overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);
 
         overlapBoxDimDito = new Vector3(1, 1, Camera.main.farClipPlane);
+
+        if(gameObject.GetComponent<BoxCollider>() == null)
+        {
+            gameObject.AddComponent<BoxCollider>();
+        }
+
+        m_LayerMask = ~8;
+
+        
     }
 
     public void getInteractor()
@@ -60,12 +72,19 @@ public class interactableChecker : MonoBehaviour
         {
             Debug.Log(gameObject.name + " interact with " + hitColliders[0].name);
 
-
-            IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+            //commentato per testing, da liberare
+            //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
 
             if (otherInteractible != null)
             {
-                myInteractable.activeInteractor(hitColliders[0].gameObject);
+                //pezzi di test per liquido
+                if (myInteractable != null)
+                {
+                    myInteractable.activeInteractor(hitColliders[0].gameObject);
+                }
+
+                //myInteractable.activeInteractor(hitColliders[0].gameObject);
+
                 otherInteractible.passiveInteractor(gameObject);
 
                 if (pe_old != null)
@@ -87,41 +106,69 @@ public class interactableChecker : MonoBehaviour
         {
             Debug.Log(gameObject.name + " interact with " + hitColliders[0].name);
 
-            IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+            //commentato per testing
+            //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
+            otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
             if (otherInteractible != null)
             {
-                if (myInteractable.canActiveInteract(hitColliders[0].gameObject) || otherInteractible.canPassiveInteract(gameObject))
+                checkingPulse(hitColliders[0].gameObject, otherInteractible);
+            }
+            //testando roba per i liquidi, non è detto che sta roba sia universale per tutto
+            else if (hitColliders[0].transform.parent != null)
+            {
+                otherInteractible = hitColliders[0].transform.parent.GetComponent<IInteractor>();
+                if (otherInteractible != null)
                 {
-                    pe_new = hitColliders[0].GetComponent<PulseEffect>();
-
-                    if (pe_new != null)
-                    {
-                        if (pe_new != pe_old)
-                        {
-                            if (pe_old != null)
-                            {
-                                pe_old.StopSequence();
-                            }
-                            pe_new.StartTween();
-                            pe_old = pe_new;
-                        }
-
-                    }
-                    else if (pe_old != null)
-                    {
-                        pe_old.StopSequence();
-                        pe_old = null;
-                        pe_new = null;
-                    }
-                }
-                else if (pe_old != null)
-                {
-                    pe_old.StopSequence();
-                    pe_old = null;
-                    pe_new = null;
+                    checkingPulse(hitColliders[0].transform.parent.gameObject, otherInteractible);
                 }
             }
 
+        }
+        else if (pe_old != null)
+        {
+            pe_old.StopSequence();
+            pe_old = null;
+            pe_new = null;
+        }
+    }
+
+    private void checkingPulse(GameObject collObj, IInteractor otherInteractible)
+    {
+        bool first = false;
+        if (myInteractable != null)
+        {
+            if (myInteractable.canActiveInteract(collObj))
+            {
+                first = true;
+            }
+        }
+
+        if (first || otherInteractible.canPassiveInteract(gameObject))
+        //if (myInteractable.canActiveInteract(collObj) || otherInteractible.canPassiveInteract(gameObject))
+        {
+            pe_new = collObj.GetComponent<PulseEffect>();
+
+            if (pe_new != null)
+            {
+                if (pe_new != pe_old)
+                {
+                    if (pe_old != null)
+                    {
+                        pe_old.StopSequence();
+                    }
+                    pe_new.StartTween();
+                    pe_old = pe_new;
+                }
+
+            }
+            else if (pe_old != null)
+            {
+                pe_old.StopSequence();
+                pe_old = null;
+                pe_new = null;
+            }
         }
         else if (pe_old != null)
         {

@@ -25,6 +25,11 @@ public class FerrisWheelManager : MonoBehaviour
 
     Sprite[] spriteSequence;
 
+    //struct positioning
+    SpriteRenderer m_SpriteRenderer;
+    setPositionInSpace father_sPiS;
+    bool positioned = false;
+
     //CabinSpawner
     [Tooltip("Seleziona Il prefab base delle cabine, la Sprite corretta verr? associata in Play")] //Add english Version
     [SerializeField]
@@ -70,6 +75,16 @@ public class FerrisWheelManager : MonoBehaviour
 
     void Start()
     {
+        //positioning
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        if (transform.parent != null)
+        {
+            father_sPiS = GetComponentInParent<setPositionInSpace>();
+            father_sPiS.childrenPositioning += letParentPositioning;
+            if (!positioned)
+                letParentPositioning(father_sPiS.GetComponent<SpriteRenderer>());
+        }
+
         spriteSequence = new Sprite[seqLenght];
 
         spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/");
@@ -104,14 +119,23 @@ public class FerrisWheelManager : MonoBehaviour
             //moving the cab to have as attachment point to the wheel its center
             myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); 
 
-            setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
-            sPiS.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
+            //setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
+            //sPiS.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
 
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
 
             kids.AddLast(myNewCab.GetComponent<SpriteRenderer>());
         }
+    }
+
+    void letParentPositioning(SpriteRenderer fatherSprite)
+    {
+        if (!positioned)
+            positioned = true;
+
+        m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 0, 32766);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
     }
 
     //check sequence part 1

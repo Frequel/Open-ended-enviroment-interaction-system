@@ -22,6 +22,7 @@ public class InitializerEditor : Editor
         typeof(toColorBackground),
         typeof(penInteractor),
         typeof(cabinInteractor),
+        typeof(LiquidDensityInteractor),
         typeof(ObjectInteractor)
     };
     private static string[] interactors;
@@ -59,6 +60,8 @@ public class InitializerEditor : Editor
             DrawToggleComponent(script.gameObject, out penWritable pw, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
 
             DrawToggleComponent(script.gameObject, out CabinPositionable cp, onAdd: mr => Debug.Log("penWritable added"), onRemove: ma => Debug.Log("penWritable removed"));
+
+            DrawToggleComponent(script.gameObject, out LiquidDensityInteractable ldi, onAdd: mr => Debug.Log("LiquidDensityInteractable added"), onRemove: ma => Debug.Log("LiquidDensityInteractable removed"));
 
             DrawToggleComponent(script.gameObject, out DragObject dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
 
@@ -150,6 +153,11 @@ public class InitializerEditor : Editor
         sequence.AddComponent<SpriteRenderer>();
         sequence.name = "SequenceBoard";
         sequence.transform.parent = targetObject.transform;
+
+        GameObject shadow = new GameObject();
+        shadow.AddComponent<SpriteRenderer>();
+        shadow.name = "Shadow";
+        shadow.transform.parent = targetObject.transform; //with default sprites by Marshmallow Games -> + (0,-0.07,0.1) and pivot bottom centered in (0.486,0)
 
         GameObject wheelStruct = new GameObject();
         wheelStruct.AddComponent<SpriteRenderer>();

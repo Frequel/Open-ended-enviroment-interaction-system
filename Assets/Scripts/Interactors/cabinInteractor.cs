@@ -20,9 +20,9 @@ public class cabinInteractor : ObjectInteractor
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
         if (cabinPositionable != null && reserved == false &&  cm.IsRotating != true)
         {
-            a_OtherInteractable.transform.SetParent(transform,true); 
+            a_OtherInteractable.transform.SetParent(transform,true);
 
-            cabinPositionable.postionCharacterInCabin(sprite.sortingOrder);
+            cabinPositionable.postionCharacterInCabin();//(sprite.sortingOrder);
 
             reserved = true;
             if(cabinPositionable is CabinPositionable)

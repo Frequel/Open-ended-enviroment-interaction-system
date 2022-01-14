@@ -148,13 +148,14 @@ public class FerrisWheelEditor : Editor
 
         string name = m_cabNum.intValue + "Cab_" + m_seqLenght.intValue + "SeqL_" + script.FerrisWheelRadius + "R_ " + m_rotationDuration.intValue + "dur_"; //a useful thing could be append the sequence at the end of the name but it could became too long
 
-        toSave.name = name;
+        //toSave.name = name;
 
         for(int i = 0; i < m_seqLenght.intValue; i++)
         {
             name += cabine[m_seqSpriteIndex.GetArrayElementAtIndex(i).intValue];
         }
 
+        toSave.name = name;
         //string localPath = dirPath + "/" + toSave.name + ".prefab";
         string localPath = dirPath + "/" + name + ".prefab";
 

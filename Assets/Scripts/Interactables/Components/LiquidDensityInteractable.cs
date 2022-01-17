@@ -25,7 +25,7 @@ public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractab
 
     BoxCollider coll;
 
-    Transform startingPosition; //save starting position for the container reset to respawn this in the right position
+    Vector3 startingPosition;
 
     void Start()
     {
@@ -38,7 +38,7 @@ public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractab
 
         coll = GetComponent<BoxCollider>();
 
-        startingPosition = transform;
+        startingPosition = transform.position;
 
     }
 
@@ -53,21 +53,12 @@ public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractab
         sPiS.Pt = positionType.positionedPos;
 
         sprite.sprite = liquid; //change sprite to seat into cabin 
-        DestroyImmediate(coll);//-> need to change boxCollider
-
-        //coll = gameObject.AddComponent<BoxCollider>(); //for new strategy
-
+        coll.enabled = false;
 
         transform.localScale = Vector3.one;
 
-        //transform.localPosition = Vector3.zero; //todo
-
-        //dOb.DraggingOut += SParent; //not available , could not drag out liquids but only empty the container
-
-        //AGGIUNGERE ISCRIZIONE AD EVENTO PADRE -> RESET OT TO EMPTY CONTAINER
         father_ldi.emptyingContainer += SParent;
 
-        //father_sPiS.childrenPositioning += letParentPositioning(); //or proper default positioning if needed.
         father_sPiS.childrenPositioning += new setPositionInSpace.setChildrenPos(letParentPositioning);
     }
 
@@ -75,15 +66,12 @@ public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractab
     {
         transform.SetParent(null); //unpartenpassenger from cabin
         sprite.sprite = potion; //change back sprite 
-        //DestroyImmediate(coll);//-> need to change boxCollider //only reset
-        coll = gameObject.AddComponent<BoxCollider>();//-> need to change boxCollider
+        //coll = gameObject.AddComponent<BoxCollider>();//-> need to change boxCollider
+        coll.enabled = true;
         sPiS.Pt = positionType.defPos; //set back the position to default
-        //transform.localScale = Vector3.one;
-        //gameObject.transform = startingPosition;
-        //new -> only reset
-        transform.position = startingPosition.position;
-        transform.localScale = startingPosition.localScale;
-        transform.localRotation = startingPosition.localRotation;
+
+        transform.localScale = Vector3.one;
+        transform.position = startingPosition;
 
         sPiS.setPosition();
 

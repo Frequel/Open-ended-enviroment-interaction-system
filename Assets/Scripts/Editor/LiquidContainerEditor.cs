@@ -34,26 +34,11 @@ public class LiquidContainerEditor : Editor
         this.serializedObject.ApplyModifiedProperties();
     }
 
-    //private void SetBottomPosition()
-    //{
-
-    //    EditorGUI.BeginChangeCheck();
-    //    {
-    //        //float bp = EditorGUILayout.FloatField(m_bottomPosition.floatValue); // EditorGUILayout.IntSlider("Numero Cabine", m_cabNum.intValue, 1, 100);
-    //        float bp = EditorGUILayout.Slider(m_bottomPosition.floatValue, 0, m_Collider.bounds.size.y);
-    //        if (EditorGUI.EndChangeCheck())
-    //        {
-    //            m_bottomPosition.floatValue = bp;
-    //        }
-    //    }
-    //}
-
     private float SetOffset(float value, float min, float max)
     {
 
         EditorGUI.BeginChangeCheck();
         {
-            //float bp = EditorGUILayout.FloatField(m_bottomPosition.floatValue); // EditorGUILayout.IntSlider("Numero Cabine", m_cabNum.intValue, 1, 100);
             float bp = EditorGUILayout.Slider(value, min, max);
             if (EditorGUI.EndChangeCheck())
             {

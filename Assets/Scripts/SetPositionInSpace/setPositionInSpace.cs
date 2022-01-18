@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum positionType { defPos, draggingPos, positionedPos, dontMove, childrenPos }; //should add interacdtion position (like a general position of positionedPos) to add a new kind of positioning and build a method specified for the kind of interaction (if possible) 
+public enum positionType { defPos, draggingPos, positionedPos, dontMove, childrenPos }; 
 
 //set pos.z and sorting layer
 public class setPositionInSpace : MonoBehaviour

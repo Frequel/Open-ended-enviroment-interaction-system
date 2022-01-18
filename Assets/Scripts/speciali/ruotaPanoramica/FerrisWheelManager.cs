@@ -116,9 +116,6 @@ public class FerrisWheelManager : MonoBehaviour
             //moving the cab to have as attachment point to the wheel its center
             myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); 
 
-            //setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
-            //sPiS.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
-
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
 
@@ -132,7 +129,6 @@ public class FerrisWheelManager : MonoBehaviour
             positioned = true;
 
         m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 0, 32766);
-        //transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
     }
 
     //check sequence part 1

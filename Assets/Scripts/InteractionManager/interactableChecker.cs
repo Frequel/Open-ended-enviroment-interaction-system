@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-//[RequireComponent(typeof(BoxCollider))] //da rimettere con un if getcomponent e addComponent
+[RequireComponent(typeof(BoxCollider))] //da rimettere con un if getcomponent e addComponent //-> change of strategy, we will never destroy box collider but will modify it in function of SpriteRenderer and its Sprite
 public class interactableChecker : MonoBehaviour
 {
     Vector3 overlapBoxDim;
@@ -39,10 +39,11 @@ public class interactableChecker : MonoBehaviour
 
         overlapBoxDimDito = new Vector3(1, 1, Camera.main.farClipPlane);
 
-        if(gameObject.GetComponent<BoxCollider>() == null)
-        {
-            gameObject.AddComponent<BoxCollider>();
-        }
+        //change of strategy, can use requireComponent
+        //if(gameObject.GetComponent<BoxCollider>() == null)
+        //{
+        //    gameObject.AddComponent<BoxCollider>();
+        //}
 
         m_LayerMask = ~8;
 

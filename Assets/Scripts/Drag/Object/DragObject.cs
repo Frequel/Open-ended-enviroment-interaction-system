@@ -5,7 +5,9 @@ using TMPro;
 
 
 [RequireComponent(typeof(Initializer))] //is usable only with initializer and setPositionInCabin (required from initiliazer)
-[RequireComponent(typeof(ObjectInteractor))] //requires interactable checker that require BoxCollider
+//[RequireComponent(typeof(ObjectInteractor))] //requires interactable checker that require BoxCollider //-> its not mandatory to have object interactor, so i cannot require it but i can require interactable object or BoxCollider //-> can we have draggable object that are not interactable? -> to study this question with "poggiable" and "drag release" strategy
+//[RequireComponent(typeof(BoxCollider))] //testing -> the object could be not draggable sometimes, so i need to destroy BoxCollider.... //-> try disable on drag object also
+[RequireComponent(typeof(interactableChecker))]
 public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;
@@ -31,6 +33,12 @@ public class DragObject : MonoBehaviour
 
         hww = gm.HalfWorldWidth;
         hwh = gm.HalfWorldHeight;
+
+        //change of strategy, can use requireComponent
+        //if (gameObject.GetComponent<BoxCollider>() == null)
+        //{
+        //    gameObject.AddComponent<BoxCollider>();
+        //}
 
         sPiS = gameObject.GetComponent<setPositionInSpace>(); 
 

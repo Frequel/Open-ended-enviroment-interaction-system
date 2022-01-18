@@ -28,7 +28,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
         dOb = GetComponent<DragObject>(); 
     }
 
-    public void postionCharacterInCabin(int fatherSortOrder)
+    public void postionCharacterInCabin()//(int fatherSortOrder)
     {
 
         sPiS.Pt = positionType.positionedPos;
@@ -36,6 +36,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
         sprite.sprite = seduto; //change sprite to seat into cabin
 
         transform.localScale = Vector3.one;
+        transform.localPosition = Vector3.zero;
 
         dOb.DraggingOut += SParent;
     }

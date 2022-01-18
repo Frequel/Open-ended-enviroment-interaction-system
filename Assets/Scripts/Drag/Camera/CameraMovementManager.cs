@@ -34,7 +34,7 @@ public class CameraMovementManager : MonoBehaviour
 
     void OnMouseDown()
     {
-        lastPosView = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        setLastPosView();
     }
 
     void OnMouseDrag()
@@ -42,7 +42,13 @@ public class CameraMovementManager : MonoBehaviour
         DragCamera();
     }
 
-    private void DragCamera()
+    public void setLastPosView()
+    {
+        lastPosView = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+    }
+
+    //private void DragCamera()
+    public void DragCamera()
     {
         var newPosView = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         var cameraMovment = (lastPosView - newPosView) * speedFactor;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(setPositionInSpace))]
+[RequireComponent(typeof(setPositionOnZ))]
 [RequireComponent(typeof(DragObject))]
 public class CabinPositionable : MonoBehaviour, ICabinPositionable
 {
@@ -13,7 +13,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
 
     SpriteRenderer sprite;
 
-    setPositionInSpace sPiS;
+    setPositionOnZ sPoZ;
 
     [System.NonSerialized]
     public DragObject dOb;
@@ -23,7 +23,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
         sprite = GetComponent<SpriteRenderer>();
         inPiedi = sprite.sprite; 
 
-        sPiS = GetComponent<setPositionInSpace>();
+        sPoZ = GetComponent<setPositionOnZ>();
 
         dOb = GetComponent<DragObject>(); 
     }
@@ -31,7 +31,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     public void postionCharacterInCabin()//(int fatherSortOrder)
     {
 
-        sPiS.Pt = positionType.positionedPos;
+        sPoZ.Pt = positionType.positionedPos;
 
         sprite.sprite = seduto; //change sprite to seat into cabin
 
@@ -45,7 +45,7 @@ public class CabinPositionable : MonoBehaviour, ICabinPositionable
     {
         transform.SetParent(null); //unpartenpassenger from cabin
         sprite.sprite = inPiedi; //change back sprite
-        sPiS.Pt = positionType.defPos; //set back the position to default
+        sPoZ.Pt = positionType.defPos; //set back the position to default
         transform.localScale = Vector3.one;
         dOb.DraggingOut -= SParent;
     }

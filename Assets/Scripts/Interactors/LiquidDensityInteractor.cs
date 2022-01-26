@@ -4,7 +4,7 @@ using UnityEngine;
 
 //la densità approssimata a meno di un decimo: miele (1,4), sciroppo (1,3), glicerina (1,2), acqua (1), olio (0,9), alcol etilico (0,8).  
 [RequireComponent(typeof(DivertDrag2Camera))]
-[RequireComponent(typeof(setPositionInSpace))]
+[RequireComponent(typeof(setPositionOnZ))]
 public class LiquidDensityInteractor : ObjectInteractor
 {
     [Tooltip("Indicare il punto più basso dove và collocato il liquido all'interno interno - vedi la lineaa nella scena")] //Add english Version
@@ -26,7 +26,7 @@ public class LiquidDensityInteractor : ObjectInteractor
     int freeSlot;
     DragObject dOb;
 
-    setPositionInSpace sPiS;
+    setPositionOnZ sPoZ;
 
     public delegate void toEmpty();
     public event toEmpty emptyingContainer;
@@ -38,7 +38,7 @@ public class LiquidDensityInteractor : ObjectInteractor
         liquidList = new GameObject[capacity];
         freeSlot = capacity;
 
-        sPiS = GetComponent<setPositionInSpace>();
+        sPoZ = GetComponent<setPositionOnZ>();
 
         cbm = GetComponentInChildren<ContainerButtonManager>();
         if (cbm != null)
@@ -55,7 +55,7 @@ public class LiquidDensityInteractor : ObjectInteractor
         {
             a_OtherInteractable.transform.SetParent(transform, true);
 
-            liquidDensityPositionable.postionLiquidInContainer(sPiS,this);//(sprite.sortingOrder);
+            liquidDensityPositionable.postionLiquidInContainer(sPoZ,this);//(sprite.sortingOrder);
 
             //controllare se liquido non è già presente? //mettere alla posizione corretta
             freeSlot--;  //non farlo andare sotto 0 Mathf.Max()?

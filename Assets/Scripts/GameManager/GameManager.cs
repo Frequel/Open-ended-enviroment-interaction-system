@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     float halfWorldWidth;
     float halfWorldHeight;
     float xMax, yMax, xMin, yMin;
+    float maxYavailable;
     [SerializeField]
     GameObject backgroundObject;
 
@@ -73,6 +74,10 @@ public class GameManager : MonoBehaviour
     {
         get { return halfWorldHeight; }
     }
+    public float MaxYavailable
+    {
+        get { return maxYavailable; }
+    }
 
     public static GameManager GetInstance
     {
@@ -87,6 +92,8 @@ public class GameManager : MonoBehaviour
             setMainCameraSize();
 
             InitializeBoundWorld();
+
+            maxYavailable = bm.MaxYavailable;
         }
         else
         {

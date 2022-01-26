@@ -27,7 +27,7 @@ public class FerrisWheelManager : MonoBehaviour
 
     //struct positioning
     SpriteRenderer m_SpriteRenderer;
-    setPositionInSpace father_sPiS;
+    setPositionOnZ father_sPoZ;
     bool positioned = false;
 
     //CabinSpawner
@@ -79,10 +79,10 @@ public class FerrisWheelManager : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         if (transform.parent != null)
         {
-            father_sPiS = GetComponentInParent<setPositionInSpace>();
-            father_sPiS.childrenPositioning += letParentPositioning;
+            father_sPoZ = GetComponentInParent<setPositionOnZ>();
+            father_sPoZ.childrenPositioning += letParentPositioning;
             if (!positioned)
-                letParentPositioning(father_sPiS.GetComponent<SpriteRenderer>());
+                letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
         }
 
         spriteSequence = new Sprite[seqLenght];
@@ -114,10 +114,10 @@ public class FerrisWheelManager : MonoBehaviour
             float childAngle = Mathf.PI / 180 * myNewCab.transform.eulerAngles.z;
             
             //moving the cab to have as attachment point to the wheel its center
-            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0); 
+            myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0);
 
-            //setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
-            //sPiS.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
+            //setPositionOnZ sPoZ = myNewCab.GetComponent<setPositionOnZ>();
+            //sPoZ.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
 
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;

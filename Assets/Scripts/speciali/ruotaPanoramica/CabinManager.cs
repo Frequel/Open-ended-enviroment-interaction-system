@@ -14,7 +14,7 @@ public class CabinManager : MonoBehaviour
     bool isRotating = false; //block interaction during wheel rotation
 
     //positioning
-    setPositionInSpace father_sPiS;
+    setPositionOnZ father_sPiS;
     bool positioned = false;
 
     public bool IsRotating
@@ -48,7 +48,7 @@ public class CabinManager : MonoBehaviour
 
         if (transform.parent != null)
         {
-            father_sPiS = GetComponentInParent<setPositionInSpace>();
+            father_sPiS = GetComponentInParent<setPositionOnZ>();
             father_sPiS.childrenPositioning += letParentPositioning;
             if (!positioned)
                 letParentPositioning(father_sPiS.GetComponent<SpriteRenderer>());

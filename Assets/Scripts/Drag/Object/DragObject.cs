@@ -8,6 +8,7 @@ using TMPro;
 //[RequireComponent(typeof(ObjectInteractor))] //requires interactable checker that require BoxCollider //-> its not mandatory to have object interactor, so i cannot require it but i can require interactable object or BoxCollider //-> can we have draggable object that are not interactable? -> to study this question with "poggiable" and "drag release" strategy
 //[RequireComponent(typeof(BoxCollider))] //testing -> the object could be not draggable sometimes, so i need to destroy BoxCollider.... //-> try disable on drag object also
 [RequireComponent(typeof(interactableChecker))]
+[RequireComponent(typeof(setPositionOnY))]
 public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;
@@ -22,7 +23,8 @@ public class DragObject : MonoBehaviour
     GameManager gm;
     interactableChecker ic;
 
-    setPositionInSpace sPiS;
+    setPositionOnZ sPoZ;
+    setPositionOnY sPoY;
 
     public delegate void DragOut();
     public event DragOut DraggingOut;
@@ -40,7 +42,9 @@ public class DragObject : MonoBehaviour
         //    gameObject.AddComponent<BoxCollider>();
         //}
 
-        sPiS = gameObject.GetComponent<setPositionInSpace>(); 
+        sPoZ = gameObject.GetComponent<setPositionOnZ>();
+
+        sPoY = gameObject.GetComponent<setPositionOnY>();
 
         coll = GetComponent<Collider>();
 
@@ -50,7 +54,7 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (sPiS.Pt == positionType.positionedPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
+        if (sPoZ.Pt == positionType.positionedPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
             if (DraggingOut != null)
                 DraggingOut(); 
 
@@ -72,7 +76,7 @@ public class DragObject : MonoBehaviour
     {
         Vector3 objectDragPos_debug = GetMouseWorldPos();
         Vector3 objectMovment = objectDragPos_debug - objectDragOrigin;
-        if ((objectMovment) != new Vector3(0f, 0f, 10f))
+        if ((objectMovment) != new Vector3(0f, 0f, 10f)) //-> why?
         {
             objectDragOrigin = objectDragPos_debug;
 
@@ -80,8 +84,8 @@ public class DragObject : MonoBehaviour
             objectMovment = LimitObjectBound(objectMovment);
             transform.Translate(objectMovment);
 
-            sPiS.Pt = positionType.draggingPos; 
-            sPiS.setPosition(); //set Active Position to dragging
+            sPoZ.Pt = positionType.draggingPos; 
+            sPoZ.setPosition(); //set Active Position to dragging
 
             ic.checkPulse(); //check if a interaction is available and animate a feedback for this
         }
@@ -94,11 +98,20 @@ public class DragObject : MonoBehaviour
 
     private void FinishDragObject()
     {
-        sPiS.Pt = positionType.defPos; 
+        sPoZ.Pt = positionType.defPos; 
 
         ic.checkInteraction();
 
-        sPiS.setPosition(); //set Active Position to default if no interaction changes it 
+        /*
+         if(!interaction)
+            sPoY.setPosition();
+
+        //oppure senza if, fai qualcosa nel setPosition che se l'oggetto è flaggato in qualche modo dall'interazione allora non fai niente, tipo positioned in sPoZ
+         */
+
+        sPoY.setPosition();
+
+        sPoZ.setPosition(); //set Active Position to default if no interaction changes it 
 
         gameObject.layer = 0;
     }

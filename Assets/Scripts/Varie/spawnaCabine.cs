@@ -35,8 +35,8 @@ public class spawnaCabine : MonoBehaviour
             myNewCab.transform.localPosition = new Vector3(ferrisWheelRadius * Mathf.Cos(angle), ferrisWheelRadius * Mathf.Sin(angle), -1);
             //dopo essere istanziati creano anche set pos in space =>  devo settarli come positioned
 
-            //setPositionInSpace sPiS = myNewCab.GetComponent<setPositionInSpace>();
-            //sPiS.Pt = positionType.dontMove;
+            //setPositionOnZ sPoZ = myNewCab.GetComponent<setPositionOnZ>();
+            //sPoZ.Pt = positionType.dontMove;
 
             //Collider coll = myNewCab.GetComponent<Collider>();
             //Vector3 size = coll.bounds.size;

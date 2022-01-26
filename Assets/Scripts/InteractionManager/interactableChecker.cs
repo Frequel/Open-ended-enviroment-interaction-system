@@ -6,16 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))] //da rimettere con un if getcomponent e addComponent //-> change of strategy, we will never destroy box collider but will modify it in function of SpriteRenderer and its Sprite
 public class interactableChecker : MonoBehaviour
 {
-    Vector3 overlapBoxDim;
-    Vector3 overlapBoxCen;
+    //Vector3 overlapBoxDim;
+    //Vector3 overlapBoxCen;
     Vector3 overlapBoxDimDito; 
     Vector3 overlapBoxCenDito;
 
-    public Vector3 OverlapBoxDim
-    {
-        get { return overlapBoxDim; }
-        set { overlapBoxDim = value; ; }
-    }
+    //public Vector3 OverlapBoxDim
+    //{
+    //    get { return overlapBoxDim; }
+    //    set { overlapBoxDim = value; ; }
+    //}
 
     LayerMask m_LayerMask;
 
@@ -35,7 +35,7 @@ public class interactableChecker : MonoBehaviour
 
     void Start()
     {
-        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);
+        //overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);
 
         overlapBoxDimDito = new Vector3(1, 1, Camera.main.farClipPlane);
 
@@ -57,7 +57,7 @@ public class interactableChecker : MonoBehaviour
 
     void OnMouseDrag()
     {
-        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);
+        //overlapBoxCen = new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, Camera.main.farClipPlane / 2 + transform.position.z);
 
         Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 overlapBoxCenDitoOffset = new Vector3(0, 0, Camera.main.farClipPlane / 2);
@@ -182,8 +182,8 @@ public class interactableChecker : MonoBehaviour
     //Draw the Box Overlap as a gizmo to show where it currently is testing. Click the Gizmos button to see this
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(overlapBoxCen, overlapBoxDim);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawWireCube(overlapBoxCen, overlapBoxDim);
 
         //test dito
         Gizmos.color = Color.blue;

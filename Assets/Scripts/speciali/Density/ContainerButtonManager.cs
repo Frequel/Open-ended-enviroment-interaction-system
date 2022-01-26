@@ -12,7 +12,7 @@ public class ContainerButtonManager : MonoBehaviour
 
     SpriteRenderer m_SpriteRenderer;
 
-    setPositionInSpace father_sPiS;
+    setPositionOnZ father_sPoZ;
     bool positioned = false;
 
     BoxCollider coll;
@@ -33,10 +33,10 @@ public class ContainerButtonManager : MonoBehaviour
 
         if (transform.parent != null)
         {
-            father_sPiS = GetComponentInParent<setPositionInSpace>();
-            father_sPiS.childrenPositioning += letParentPositioning;
+            father_sPoZ = GetComponentInParent<setPositionOnZ>();
+            father_sPoZ.childrenPositioning += letParentPositioning;
             if (!positioned)
-                letParentPositioning(father_sPiS.GetComponent<SpriteRenderer>());
+                letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
         }
     }
 

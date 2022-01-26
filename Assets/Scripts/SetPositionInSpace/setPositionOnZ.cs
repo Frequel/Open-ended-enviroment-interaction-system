@@ -6,7 +6,7 @@ using TMPro;
 public enum positionType { defPos, draggingPos, positionedPos, dontMove, childrenPos }; //should add interacdtion position (like a general position of positionedPos) to add a new kind of positioning and build a method specified for the kind of interaction (if possible) 
 
 //set pos.z and sorting layer
-public class setPositionInSpace : MonoBehaviour
+public class setPositionOnZ : MonoBehaviour
 {
     GameManager gm;
     SpriteRenderer sprite;

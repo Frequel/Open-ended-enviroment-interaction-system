@@ -649,6 +649,7 @@ GameObject:
   - component: {fileID: 182444143}
   - component: {fileID: 182444141}
   - component: {fileID: 182444140}
+  - component: {fileID: 182444142}
   m_Layer: 0
   m_Name: potion1_honey
   m_TagString: Untagged
@@ -680,6 +681,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &182444142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182444139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &182444143
@@ -1380,6 +1393,7 @@ GameObject:
   - component: {fileID: 663084739}
   - component: {fileID: 663084738}
   - component: {fileID: 663084737}
+  - component: {fileID: 663084746}
   m_Layer: 0
   m_Name: DefaultObject (2)
   m_TagString: Untagged
@@ -1540,6 +1554,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &663084746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663084736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &667195649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,6 +1583,7 @@ GameObject:
   - component: {fileID: 667195653}
   - component: {fileID: 667195651}
   - component: {fileID: 667195650}
+  - component: {fileID: 667195652}
   m_Layer: 0
   m_Name: potion4_oil
   m_TagString: Untagged
@@ -1588,6 +1615,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &667195652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667195649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &667195653
@@ -1734,6 +1773,7 @@ GameObject:
   - component: {fileID: 822657351}
   - component: {fileID: 822657349}
   - component: {fileID: 822657348}
+  - component: {fileID: 822657350}
   m_Layer: 0
   m_Name: potion3_water
   m_TagString: Untagged
@@ -1765,6 +1805,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &822657350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822657347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &822657351
@@ -2453,6 +2505,7 @@ GameObject:
   - component: {fileID: 1074685067}
   - component: {fileID: 1074685066}
   - component: {fileID: 1074685065}
+  - component: {fileID: 1074685074}
   m_Layer: 0
   m_Name: DefaultObject (1)
   m_TagString: Untagged
@@ -2613,6 +2666,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1074685074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074685064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1087131458
 GameObject:
   m_ObjectHideFlags: 0
@@ -3275,6 +3340,7 @@ GameObject:
   - component: {fileID: 1467348648}
   - component: {fileID: 1467348646}
   - component: {fileID: 1467348645}
+  - component: {fileID: 1467348647}
   m_Layer: 0
   m_Name: potion2_soap
   m_TagString: Untagged
@@ -3306,6 +3372,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1467348647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467348644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1467348648
@@ -4446,6 +4524,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2367987754583620992, guid: dc2eb846f0ad1364992c2345a97b344b, type: 3}
+      propertyPath: maxYavailable
+      value: -6.59
+      objectReference: {fileID: 0}
     - target: {fileID: 2367987754583620993, guid: dc2eb846f0ad1364992c2345a97b344b, type: 3}
       propertyPath: m_Name
       value: background

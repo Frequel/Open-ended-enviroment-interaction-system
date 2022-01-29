@@ -54,7 +54,9 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (sPoZ.Pt == positionType.positionedPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
+        //non sò se funziona sto if, ma sopratutto se và bene children pos
+        //if (sPoZ.Pt == (positionType.positionedPos | positionType.childrenPos)) 
+        if (sPoZ.Pt == positionType.positionedPos || sPoZ.Pt == positionType.childrenPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
             if (DraggingOut != null)
                 DraggingOut(); 
 
@@ -102,6 +104,8 @@ public class DragObject : MonoBehaviour
 
         ic.checkInteraction();
 
+
+        //fare un unico script che setta la Y e la Z? -> ma poi coi component? ne aggiungo un terzo per sti due? doppia eredità non si può fà...
         /*
          if(!interaction)
             sPoY.setPosition();
@@ -111,10 +115,29 @@ public class DragObject : MonoBehaviour
 
         sPoY.setPosition();
 
-        sPoZ.setPosition(); //set Active Position to default if no interaction changes it 
-
+        //use this only after sPoY animation end -> how?
+        //while (sPoY.TESTpositioning) ;
+        //if(!sPoY.TESTpositioning)
+        
+        //LO FACCIO NELLA COROUTINE
+        //sPoZ.setPosition(); //set Active Position to default if no interaction changes it 
+                            //  OLTRE ALLA Z DOVREI DISABILITARE IL DRAG FINO AL POSIZIONAMENTO DI Y
+                            
+        StartCoroutine(waitY());
+        
         gameObject.layer = 0;
     }
+    private IEnumerator waitY()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => sPoY.TESTpositioning == false);
+            break;
+        }
+
+        sPoZ.setPosition();
+    }
+
 
     Vector3 GetMouseWorldPos()
     {

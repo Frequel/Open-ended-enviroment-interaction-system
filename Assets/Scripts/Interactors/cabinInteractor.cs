@@ -13,6 +13,9 @@ public class cabinInteractor : ObjectInteractor
     {
         sprite = GetComponent<SpriteRenderer>();
         cm = GetComponent<CabinManager>();
+
+        ///if child has cabin positionable
+        ///prendi cabin positionable del figlio e tutte le cose che fai nell'interazione quando figli (da reserved alla fine del suo if)
     }
 
     public override void passiveInteractor(GameObject a_OtherInteractable)

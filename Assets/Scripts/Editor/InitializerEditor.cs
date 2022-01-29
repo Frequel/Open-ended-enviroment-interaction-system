@@ -23,6 +23,7 @@ public class InitializerEditor : Editor
         typeof(penInteractor),
         typeof(cabinInteractor),
         typeof(LiquidDensityInteractor),
+        typeof(PlaceableSurface),
         typeof(ObjectInteractor)
     };
     private static string[] interactors;
@@ -64,6 +65,8 @@ public class InitializerEditor : Editor
             DrawToggleComponent(script.gameObject, out LiquidDensityInteractable ldi, onAdd: mr => Debug.Log("LiquidDensityInteractable added"), onRemove: ma => Debug.Log("LiquidDensityInteractable removed"));
 
             DrawToggleComponent(script.gameObject, out DragObject dg, onAdd: mr => Debug.Log("dragObject added"), onRemove: ma => Debug.Log("dragObject removed"));
+
+            DrawToggleComponent(script.gameObject, out PositionableObject po, onAdd: mr => Debug.Log("PositionableObject added"), onRemove: ma => Debug.Log("PositionableObject removed"));
 
             DrawToggleComponent(script.gameObject, out TextMeshPro txt, onAdd: mr => Debug.Log("TextMeshPro added"), onRemove: ma => Debug.Log("TextMeshPro removed"));
 

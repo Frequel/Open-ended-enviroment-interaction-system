@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float cameraFollowOffset = 0.5f;
     BackgroundBoundsCalculator bm;
+    Camera mainCamera;
     public static GameManager gm;
 
     public Vector2 XBoundWorld
@@ -79,6 +80,11 @@ public class GameManager : MonoBehaviour
         get { return maxYavailable; }
     }
 
+    public Camera MainCamera
+    {
+        get { return mainCamera; }
+    }
+
     public static GameManager GetInstance
     {
         get { return gm; }
@@ -89,6 +95,7 @@ public class GameManager : MonoBehaviour
         if (gm == null)
         {
             gm = this;
+            mainCamera = Camera.main;
             setMainCameraSize();
 
             InitializeBoundWorld();

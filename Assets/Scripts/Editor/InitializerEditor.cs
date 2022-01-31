@@ -151,16 +151,20 @@ public class InitializerEditor : Editor
 
     void fwmCreator(GameObject targetObject) {
         targetObject.name = "FerrisWheelBase";
+        if(targetObject.GetComponent<SpriteRenderer>() == null)
+            targetObject.AddComponent<SpriteRenderer>();
 
         GameObject sequence = new GameObject();
         sequence.AddComponent<SpriteRenderer>();
         sequence.name = "SequenceBoard";
         sequence.transform.parent = targetObject.transform;
+        sequence.AddComponent<SetBoardInSpace>();
 
         GameObject shadow = new GameObject();
         shadow.AddComponent<SpriteRenderer>();
         shadow.name = "Shadow";
         shadow.transform.parent = targetObject.transform; //with default sprites by Marshmallow Games -> + (0,-0.07,0.1) and pivot bottom centered in (0.486,0)
+        shadow.AddComponent<setShadowDepth>();
 
         GameObject wheelStruct = new GameObject();
         wheelStruct.AddComponent<SpriteRenderer>();

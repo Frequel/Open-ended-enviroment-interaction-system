@@ -650,6 +650,7 @@ GameObject:
   - component: {fileID: 182444140}
   - component: {fileID: 182444142}
   - component: {fileID: 182444147}
+  - component: {fileID: 182444150}
   m_Layer: 0
   m_Name: potion1_honey
   m_TagString: Untagged
@@ -816,12 +817,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182444139}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.03000021, y: 2.0200005, z: 0}
+  m_LocalPosition: {x: 0.146, y: 1.837, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1920664484}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &182444150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182444139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &234627179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,6 +1614,7 @@ GameObject:
   - component: {fileID: 667195651}
   - component: {fileID: 667195650}
   - component: {fileID: 667195652}
+  - component: {fileID: 667195660}
   m_Layer: 0
   m_Name: potion4_oil
   m_TagString: Untagged
@@ -1767,12 +1781,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667195649}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: 1.9499998, z: 0}
+  m_LocalPosition: {x: -1.088, y: 1.639, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1633285055}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &667195660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667195649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &822657347
 GameObject:
   m_ObjectHideFlags: 0
@@ -1791,6 +1817,7 @@ GameObject:
   - component: {fileID: 822657349}
   - component: {fileID: 822657348}
   - component: {fileID: 822657350}
+  - component: {fileID: 822657358}
   m_Layer: 0
   m_Name: potion3_water
   m_TagString: Untagged
@@ -1957,12 +1984,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822657347}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5999994, y: 2.19, z: 0}
+  m_LocalPosition: {x: 0.69, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1633285055}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &822657358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822657347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &867504574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3534,6 +3573,7 @@ GameObject:
   - component: {fileID: 1467348646}
   - component: {fileID: 1467348645}
   - component: {fileID: 1467348647}
+  - component: {fileID: 1467348655}
   m_Layer: 0
   m_Name: potion2_soap
   m_TagString: Untagged
@@ -3700,12 +3740,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467348644}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4299998, y: 1.98, z: 0}
+  m_LocalPosition: {x: -1.418, y: 1.817, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1920664484}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467348655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467348644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1568637639
 GameObject:
   m_ObjectHideFlags: 0

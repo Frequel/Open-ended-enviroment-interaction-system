@@ -10,7 +10,7 @@ public class setPositionOnY : MonoBehaviour
     Vector3 overlapBoxDim; //me ne serve più di uno.
     Vector3 overlapBoxCen;
 
-    bool positioning = false;
+    //bool positioning = false;
     [System.NonSerialized]
     public bool TESTpositioning = false;
 
@@ -51,12 +51,18 @@ public class setPositionOnY : MonoBehaviour
         po = GetComponent<PositionableObject>();
 
         m_LayerMask = ~8;
+
+
+        //if (transform.parent != null)
+        //{
+        //    pt = positionType.childrenPos;
+        //}
     }
 
     public void setPosition()//set position in space based on the kind of position
     //public IEnumerator setPosition()
     {
-        positioning = true;
+        //positioning = true;
         TESTpositioning = true;
         switch (pt)
         {
@@ -81,7 +87,7 @@ public class setPositionOnY : MonoBehaviour
         }
         //if (transform.childCount > 0 && childrenPositioning != null)
         //    childrenPositioning(sprite);
-        positioning = false;
+        //positioning = false;
 
         //StartCoroutine(waitY());
         //  OLTRE ALLA Z DOVREI DISABILITARE IL DRAG FINO AL POSIZIONAMENTO DI Y
@@ -107,6 +113,8 @@ public class setPositionOnY : MonoBehaviour
                     {
                         plSur.passiveInteractor(gameObject);
                         //settare comunque la y alla y max di plSur? -> penso di si, a meno che trovo una maniera nell'interazione di gestire la posizione precisa dell'oggetto
+                        //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                        //await myTween.AsyncWaitForCompletion();
                         TESTpositioning = false;//test
                     }
                     else
@@ -154,7 +162,12 @@ public class setPositionOnY : MonoBehaviour
                     PlaceableSurface plSur = takePlaceableSurfaceBelow(collBelow);
                     if (plSur != null)
                     {
-                        plSur.passiveInteractor(gameObject);
+                        plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        if (transform.position.y > coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                            Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                        }
+                        TESTpositioning = false;//test
                     }
                     else
                     {
@@ -241,7 +254,7 @@ public class setPositionOnY : MonoBehaviour
 
     private GameObject takeCollision()
     {
-        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + transform.position.z); //coll... per far fronte ai cambi di dimensione
+        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
         overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.size.y, Camera.main.farClipPlane); //idem a sopra
         Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
 
@@ -266,7 +279,7 @@ public class setPositionOnY : MonoBehaviour
     private Collider[] checkCollisionBelow()
     {
         //overlapBoxCen = new Vector3(transform.position.x, (transform.position.y - gm.MaxYavailable) / 2, Camera.main.farClipPlane / 2 + transform.position.z); //coll... per far fronte ai cambi di dimensione
-        overlapBoxCen = new Vector3(transform.position.x, (coll.bounds.max.y - gm.MaxYavailable) / 2, Camera.main.farClipPlane / 2 + transform.position.z);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
+        overlapBoxCen = new Vector3(transform.position.x, ((coll.bounds.max.y - gm.MaxYavailable) / 2) + gm.MaxYavailable, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
         //overlapBoxDim = new Vector3(coll.bounds.size.x, transform.position.y - gm.MaxYavailable, Camera.main.farClipPlane); //idem a sopra
         overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.max.y - gm.MaxYavailable, Camera.main.farClipPlane);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
         //idealmente, l'odine non dovrebbe esse sulla pos y, ma sulla bounds.max del collider...

@@ -77,7 +77,7 @@ public class LiquidDensityInteractor : ObjectInteractor
                 int i = 0;
                 foreach (var gobj in sortedContainedLiquid)
                 {
-                    //code here
+                    //forse potrei cambiarlo con bound.size.max.y che mi dà direttamente la y precisa (ovviamente quando non sei il primo)
                     GameObject go = gobj.Value;
                     SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
                     float ySize  = sr.sprite.bounds.size.y;

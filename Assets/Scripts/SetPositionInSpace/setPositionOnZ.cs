@@ -27,6 +27,12 @@ public class setPositionOnZ : MonoBehaviour
         set { pt = value; }
     }
 
+    public SpriteRenderer FatherSprite
+    {
+        get { return fatherSprite; }
+        set { fatherSprite = value; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +46,6 @@ public class setPositionOnZ : MonoBehaviour
         {
             pt = positionType.childrenPos;
         }
-
 
         setPosition(); //default
     }
@@ -73,6 +78,7 @@ public class setPositionOnZ : MonoBehaviour
 
     private void draggingPositioning()
     {
+        fatherSprite = null; //sarebbe uno SParent praticamente
         sprite.sortingOrder = Mathf.CeilToInt(32767);
         //Text
         if (bcText != null)
@@ -81,16 +87,16 @@ public class setPositionOnZ : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z + 1);// is possible to use the half size z of BoxCollider instead of 1
     }
 
-    private void defaultPositioning() 
+    private void defaultPositioning()
     {
-        sprite.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax ) + System.Convert.ToInt32(alwaysInFront)*2), 32765); //signed int on 16bit -> available range value  [-32768, 32767] -> used range value [-32763,32763] ->  to reserve: - (max value -3) for text; - (max value -2) for alwaysInFront; - (max value -1) for (alwaysInFront + text); - (max value) for dragging //reserve another one for children?
+        sprite.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + System.Convert.ToInt32(alwaysInFront) * 2), 32765); //signed int on 16bit -> available range value  [-32768, 32767] -> used range value [-32763,32763] to reserve: - (max value -3) for text; - (max value -2) for alwaysInFront; - (max value -1) for (alwaysInFront + text); - (max value) for dragging //reserve another one for children? and for dragging object with child?
 
 
         var pp = (Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z; //inside the camera frustrum -> range value [zCam,farClippingPlane]
         transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1); //positioning in front of camera (+1)
 
         if (bcText != null)
-            bcText.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + 1 + System.Convert.ToInt32(alwaysInFront)*2), 32766); 
+            bcText.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + 1 + System.Convert.ToInt32(alwaysInFront) * 2), 32766);
     }
 
     private void positionedPositioning()//da cambiare nome
@@ -98,11 +104,20 @@ public class setPositionOnZ : MonoBehaviour
         if (fatherSprite == null && transform.parent != null)
             fatherSprite = transform.parent.GetComponent<SpriteRenderer>();
 
-        sprite.sortingOrder = Mathf.Min(fatherSprite.sortingOrder+1, 32766);
+        //aggiungere check per vedere se ha una sprite, altrimenti vedere se ce l'ha il padre (ricorsivamente?)
+        if (fatherSprite == null && transform.parent != null)
+            fatherSprite = transform.parent.transform.parent.GetComponent<SpriteRenderer>();
+
+        sprite.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1, 32766);
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
 
         //Text
         if (bcText != null)
-            bcText.sortingOrder = Mathf.Min(fatherSprite.sortingOrder+2, 32766);
+            bcText.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 2, 32766);
+    }
+
+    public void clearChildren()
+    {
+        childrenPositioning = null;
     }
 }

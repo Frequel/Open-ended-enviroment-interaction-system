@@ -64,17 +64,18 @@ public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractab
         father_ldi.emptyingContainer += SParent;
 
         father_sPoZ.childrenPositioning += new setPositionOnZ.setChildrenPos(letParentPositioning);
-        //father_sPoY.childrenPositioning += new setPositionOnZ.setChildrenPos(letParentPositioning); //da revisionare
+        //father_sPoY.childrenPositioning += new setPositionOnZ.setChildrenPos(letParentPositioning); //da revisionare -> in teoria non serve perchè a decidere la Y è  il contenitore
     }
 
     void SParent()
     {
-        transform.SetParent(null); //unpartenpassenger from cabin
+        transform.SetParent(null); //unparent liquid from container
         sprite.sprite = potion; //change back sprite 
         //coll = gameObject.AddComponent<BoxCollider>();//-> need to change boxCollider
         coll.enabled = true;
         sPoZ.Pt = positionType.defPos; //set back the position to default
         sPoY.Pt = positionType.defPos; //set back the position to default
+        sPoZ.FatherSprite = null;
 
         transform.localScale = Vector3.one;
         transform.position = startingPosition;

@@ -14,7 +14,7 @@ public class CabinManager : MonoBehaviour
     bool isRotating = false; //block interaction during wheel rotation
 
     //positioning
-    setPositionOnZ father_sPiS;
+    setPositionOnZ father_sPoZ;
     bool positioned = false;
 
     public bool IsRotating
@@ -48,10 +48,10 @@ public class CabinManager : MonoBehaviour
 
         if (transform.parent != null)
         {
-            father_sPiS = GetComponentInParent<setPositionOnZ>();
-            father_sPiS.childrenPositioning += letParentPositioning;
+            father_sPoZ = GetComponentInParent<setPositionOnZ>();
+            father_sPoZ.childrenPositioning += letParentPositioning;
             if (!positioned)
-                letParentPositioning(father_sPiS.GetComponent<SpriteRenderer>());
+                letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
         }
 
         RandomizeCabin();

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -17,6 +18,9 @@ public class interactableChecker : MonoBehaviour
     //    set { overlapBoxDim = value; ; }
     //}
 
+    //test X interazioni con figli
+    Collider[] hitColliders;
+
     LayerMask m_LayerMask;
 
     public LayerMask M_LayerMask
@@ -30,7 +34,7 @@ public class interactableChecker : MonoBehaviour
     PulseEffect pe_old = null;
     PulseEffect pe_new = null;
 
-    IInteractor otherInteractible;//messo qua è da ripulire ogni volta e mi si sporcava con il precedente...(?) //->era altro che sporcava
+    //IInteractor otherInteractible;//messo qua è da ripulire ogni volta e mi si sporcava con il precedente...(?) //->era altro che sporcava //-> tolto perchè rompeva workaround pulse
 
     void Start()
     {
@@ -64,17 +68,67 @@ public class interactableChecker : MonoBehaviour
         overlapBoxCenDito = mousePosWorld + overlapBoxCenDitoOffset; 
     }
 
+    //sorta di workaround per l'animazione che rimane attiva
+    void OnMouseUp()
+    {
+        if (pe_old != null)
+        {
+            pe_old.StopSequence();
+            pe_old = null;
+            pe_new = null;
+        }
+    }
+    //original
+    //public void checkInteraction()
+    //{
+    //    //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+    //    hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+
+    //    if (hitColliders.Length > 0)
+    //    {
+    //        Debug.Log(gameObject.name + " interact with " + hitColliders[0].name);
+
+    //        //commentato per testing, da liberare
+    //        //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
+    //        if (otherInteractible != null)
+    //        {
+    //            //pezzi di test per liquido
+    //            if (myInteractable != null)
+    //            {
+    //                myInteractable.activeInteractor(hitColliders[0].gameObject);
+    //            }
+
+    //            //myInteractable.activeInteractor(hitColliders[0].gameObject);
+
+    //            otherInteractible.passiveInteractor(gameObject);
+
+    //            if (pe_old != null)
+    //            {
+    //                pe_old.StopSequence();
+    //                pe_old = null;
+    //                pe_new = null;
+    //            }
+    //        }
+
+    //    }
+
+    //    hitColliders = null;
+    //}
+
+    //test
     public void checkInteraction()
     {
-        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
-        
+        //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+        hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+
         if (hitColliders.Length > 0)
         {
             Debug.Log(gameObject.name + " interact with " + hitColliders[0].name);
 
             //commentato per testing, da liberare
-            //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
-            
+            IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
             if (otherInteractible != null)
             {
                 //pezzi di test per liquido
@@ -95,35 +149,139 @@ public class interactableChecker : MonoBehaviour
                 }
             }
 
+            else //sort of workaround but if i release on the son withou interactor and i don't want to interact with the father..... this is a problem
+            {
+                //targetObject.TryGetComponent(out T component);
+                //bool hasParent = hitColliders[0].gameObject.transform.parent.TryGetComponent(out otherInteractible);
+                //otherInteractible = hitColliders[0].gameObject.transform.parent.GetComponent<IInteractor>();// otherInteractible.gameObject.GetComponentInParent<IInteractor>();
+                //if (hasParent)
+                if (hitColliders[0].gameObject.transform.parent != null)
+                {
+                    otherInteractible = hitColliders[0].gameObject.transform.parent.GetComponent<IInteractor>();// otherInteractible.gameObject.GetComponentInParent<IInteractor>();
+
+                    if (otherInteractible != null && Array.Exists(hitColliders, element => element == hitColliders[0].gameObject.transform.parent.GetComponent<BoxCollider>()))  //e padre è tra gli hitcollider
+                    {
+                        //pezzi di test per liquido
+                        if (myInteractable != null)
+                        {
+                            myInteractable.activeInteractor(hitColliders[0].gameObject);
+                        }
+
+                        //myInteractable.activeInteractor(hitColliders[0].gameObject);
+
+                        otherInteractible.passiveInteractor(gameObject);
+
+                        if (pe_old != null)
+                        {
+                            pe_old.StopSequence();
+                            pe_old = null;
+                            pe_new = null;
+                        }
+                    }
+                }
+                
+            } 
+
         }
+
+        hitColliders = null;
     }
 
+
+    //original
+    //public void checkPulse()
+    //{
+    //    //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+    //    hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+
+    //    if (hitColliders.Length > 0) 
+    //    {
+    //        Debug.Log(gameObject.name + "wants to interact with " + hitColliders[0].name);
+
+    //        //commentato per testing
+    //        //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
+    //        otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+
+    //        if (otherInteractible != null)
+    //        {
+    //            checkingPulse(hitColliders[0].gameObject, otherInteractible);
+    //        }
+    //        //testando roba per i liquidi, non è detto che sta roba sia universale per tutto //infatti con i posizionabili, mi sfascia tutto. //potrei fare che i posizionabili non figliano ma abbiano una z messa in altro modo...
+    //        //else if (hitColliders[0].transform.parent != null)
+    //        //{
+    //        //    otherInteractible = hitColliders[0].transform.parent.GetComponent<IInteractor>();
+    //        //    if (otherInteractible != null)
+    //        //    {
+    //        //        checkingPulse(hitColliders[0].transform.parent.gameObject, otherInteractible);
+    //        //    }
+    //        //}
+
+    //    }
+    //    else if (pe_old != null)
+    //    {
+    //        pe_old.StopSequence();
+    //        pe_old = null;
+    //        pe_new = null;
+    //    }
+    //}
+
+
+    //testing workaround
     public void checkPulse()
     {
-        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+        //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+        hitColliders = Physics.OverlapBox(overlapBoxCenDito, overlapBoxDimDito / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
 
-        if (hitColliders.Length > 0) 
+        if (hitColliders.Length > 0)
         {
             Debug.Log(gameObject.name + "wants to interact with " + hitColliders[0].name);
 
             //commentato per testing
-            //IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+            IInteractor otherInteractible = hitColliders[0].GetComponent<IInteractor>();
 
-            otherInteractible = hitColliders[0].GetComponent<IInteractor>();
+            //otherInteractible = hitColliders[0].GetComponent<IInteractor>();
 
             if (otherInteractible != null)
             {
                 checkingPulse(hitColliders[0].gameObject, otherInteractible);
             }
             //testando roba per i liquidi, non è detto che sta roba sia universale per tutto //infatti con i posizionabili, mi sfascia tutto. //potrei fare che i posizionabili non figliano ma abbiano una z messa in altro modo...
-            //else if (hitColliders[0].transform.parent != null)
+            else if (hitColliders[0].transform.parent != null)
+            {
+                otherInteractible = hitColliders[0].transform.parent.GetComponent<IInteractor>();
+
+                if (otherInteractible != null && Array.Exists(hitColliders, element => element == hitColliders[0].gameObject.transform.parent.GetComponent<BoxCollider>()))
+                {
+                    checkingPulse(hitColliders[0].transform.parent.gameObject, otherInteractible);
+                }
+            }
+
+            //else //sort of workaround but if i release on the son withou interactor and i don't want to interact with the father..... this is a problem
             //{
-            //    otherInteractible = hitColliders[0].transform.parent.GetComponent<IInteractor>();
-            //    if (otherInteractible != null)
+
+            //    //targetObject.TryGetComponent(out T component);
+            //    //bool hasParent = hitColliders[0].gameObject.transform.parent.TryGetComponent(out otherInteractible);
+            //    //otherInteractible = hitColliders[0].gameObject.transform.parent.GetComponent<IInteractor>();// otherInteractible.gameObject.GetComponentInParent<IInteractor>();
+            //    //if (hasParent)
+            //    if (hitColliders[0].gameObject.transform.parent != null)
             //    {
-            //        checkingPulse(hitColliders[0].transform.parent.gameObject, otherInteractible);
-            //    }
+            //        otherInteractible = hitColliders[0].gameObject.transform.parent.GetComponent<IInteractor>();// otherInteractible.gameObject.GetComponentInParent<IInteractor>();
+
+            //        if (otherInteractible != null && Array.Exists(hitColliders, element => element == hitColliders[0].gameObject.transform.parent.GetComponent<BoxCollider>()))  //e padre è tra gli hitcollider
+            //        {
+            //            //pezzi di test per liquido
+            //            checkingPulse(hitColliders[0].gameObject.transform.parent.gameObject, otherInteractible);
+            //        }
+            //    }                
             //}
+
+            else if (pe_old != null)
+            {
+                pe_old.StopSequence();
+                pe_old = null;
+                pe_new = null;
+            }
 
         }
         else if (pe_old != null)
@@ -133,7 +291,6 @@ public class interactableChecker : MonoBehaviour
             pe_new = null;
         }
     }
-
     private void checkingPulse(GameObject collObj, IInteractor otherInteractible)
     {
         bool first = false;

@@ -20,13 +20,15 @@ public class ObjectInteractor : MonoBehaviour, IInteractor
         ic.getInteractor();
     }
 
-    public virtual void activeInteractor(GameObject a_OtherInteractable)
+    public virtual interactionResult activeInteractor(GameObject a_OtherInteractable)
     {
         Debug.Log("No active Interaction present");
+        return interactionResult.notOccurred;
     }
-    public virtual void passiveInteractor(GameObject a_OtherInteractable)
+    public virtual interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         Debug.Log("No passive Interaction present");
+        return interactionResult.notOccurred;
     }
 
     public virtual bool canActiveInteract(GameObject a_OtherInteractable)

@@ -16,17 +16,19 @@ public class toWeighInteractor : ObjectInteractor
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
     }
 
-    public override void passiveInteractor(GameObject a_OtherInteractable)
+    public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         IWeighable weighable = a_OtherInteractable.GetComponent<IWeighable>();
         if (weighable != null)
         {
             float w = weighable.getWeight();
             bcText.text = string.Format("{0}", w);
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No passive Interaction present for this object");
+            return interactionResult.occurred;
         }
     }
 

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class widthDivisorInteractor : ObjectInteractor
 {
-    public override void passiveInteractor(GameObject a_OtherInteractable)
+    public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         IDivisibleDimensions divisible = a_OtherInteractable.GetComponent<IDivisibleDimensions>();
         if (divisible != null)
         {
             divisible.divideWidth();
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No passive Interaction present for this object");
+            return interactionResult.occurred;
         }
     }
 

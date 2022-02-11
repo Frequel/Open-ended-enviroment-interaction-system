@@ -33,6 +33,8 @@ public class setPositionOnY : MonoBehaviour
 
     PositionableObject po;
 
+    float prova = -3.4f;
+
     GameManager gm;
     void Start()//set position in space based on the kind of position
     {
@@ -46,6 +48,7 @@ public class setPositionOnY : MonoBehaviour
         overlapBoxCen = new Vector3(transform.position.x, transform.position.y + size.y / 2, Camera.main.farClipPlane / 2);// + transform.position.z);
         //
 
+        prova = prova + 5 -3 +1 *2 /4;
         //Debug.Log(Mathf.Min(10f, 2.4f));//test
 
         po = GetComponent<PositionableObject>();
@@ -111,22 +114,41 @@ public class setPositionOnY : MonoBehaviour
                     PlaceableSurface plSur = takePlaceableSurface(gOb);
                     if (plSur != null)
                     {
-                        plSur.passiveInteractor(gameObject);
-                        //settare comunque la y alla y max di plSur? -> penso di si, a meno che trovo una maniera nell'interazione di gestire la posizione precisa dell'oggetto
-                        //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-                        //await myTween.AsyncWaitForCompletion();
+                        float y;
+                        //return false; //cade al lato sinistro
+                        interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        //if (ir == interactionResult.occurred)
+                        //{
+                        //    y = plSur.Coll.bounds.max.y;
+                        //}
+                        //else
+                        //{
+                        //    //y = plSur.transform.position.y - 0.1f;
+                        //    y = gm.MaxYavailable;
+                        //}
+
+                        //if (transform.position.y > plSur.Coll.bounds.max.y)
+                        //{ //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                        //    //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                        //    Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                        //    await myTween.AsyncWaitForCompletion();
+                        //}
                         TESTpositioning = false;//test
                     }
                     else
                     {
                         //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                         checkBehind(gOb);
+                        //se il check non rileva coperture, lascia la y invariata e serve mettere il false apposto
+                        //TESTpositioning = false;//test //credo buggasse, perchè deve esse fatto dentro check behind
                     }
                 }
                 else
                 {
                     //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                     checkBehind(gOb);
+                    //se il check non rileva coperture, lascia la y invariata e serve mettere il false apposto
+                    //TESTpositioning = false;//test //credo buggasse, perchè deve esse fatto dentro check behind
                 }
             }
 
@@ -162,9 +184,36 @@ public class setPositionOnY : MonoBehaviour
                     PlaceableSurface plSur = takePlaceableSurfaceBelow(collBelow);
                     if (plSur != null)
                     {
-                        plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
-                        if (transform.position.y > coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                            Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                        float y;
+                        //return false; //cade al lato sinistro
+                        interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        if(ir == interactionResult.occurred)
+                        {
+                            y = plSur.Coll.bounds.max.y;
+                        }
+                        else
+                        {
+                            //y = plSur.transform.position.y - 0.1f;
+                            y = gm.MaxYavailable;
+
+                            //dovrei fare ricorsione su questa stessa funzione, in realtà
+                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            //non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
+                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            //collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                            collBelow = checkCollisionBelow().ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray(); ;
+                            if (collBelow.Length > 0)
+                            {
+                                checkCompleteCoverage(collBelow[0].gameObject);
+                                return;
+                            }
+                        }
+
+                        if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                            Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
                             await myTween.AsyncWaitForCompletion();
                         }
                         TESTpositioning = false;//test
@@ -173,9 +222,16 @@ public class setPositionOnY : MonoBehaviour
                     {
                         //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                         //checkBehind(collBelow[0].gameObject);
-                        checkCompleteCoverage(collBelow[0].gameObject);
+                        collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                        if (collBelow.Length > 0)
+                            checkCompleteCoverage(collBelow[0].gameObject);
                         ///ci vuole modifica a questo metodo:
                         ///non posso usare il max, che dà la coordinata globale di dove si trova il mio max (utile). ma devo usare Y (=min tra la Ydrag e la Ymax) + sizeY
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                        }
 
                     }
                 }
@@ -187,6 +243,11 @@ public class setPositionOnY : MonoBehaviour
                     collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
                     if(collBelow.Length>0)
                         checkCompleteCoverage(collBelow[0].gameObject);
+                    else
+                    {
+                        Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                        await myTween.AsyncWaitForCompletion();
+                    }
                 }
             }
             else //qui necessario perchè comunque devo cambiargliela la Y
@@ -254,9 +315,16 @@ public class setPositionOnY : MonoBehaviour
 
     private GameObject takeCollision()
     {
+        //OrderByDescending(
+        //forse è meglio se la collisione è tra il collider fermo e la metà inferiore di quello draggato??? -> non c'è però il pulse....
         overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
         overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.size.y, Camera.main.farClipPlane); //idem a sopra
         Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+
+        //collisione è tra il collider fermo e la metà inferiore di quello draggato -> non c'è però il pulse....
+        //overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 4, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
+        //overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.size.y/2, Camera.main.farClipPlane); //idem a sopra
+        //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
 
         return hitColliders.Length > 0 ? hitColliders[0].gameObject : null; //make an fi nulla etc..
     }
@@ -270,21 +338,28 @@ public class setPositionOnY : MonoBehaviour
 
     private void checkBehind(GameObject gOb)
     {
-        if (transform.position.y > gOb.transform.position.y)
+        if (transform.position.y > gOb.transform.position.y) //solo in questo caso perchè se sta sotto dovrebbe avere la z e il sortting layer per essere davanti
         {
             checkCompleteCoverage(gOb);
+        }
+        else
+        {
+            TESTpositioning = false;
         }
     }
 
     private Collider[] checkCollisionBelow()
     {
+        //OrderByDescending(
+
         //overlapBoxCen = new Vector3(transform.position.x, (transform.position.y - gm.MaxYavailable) / 2, Camera.main.farClipPlane / 2 + transform.position.z); //coll... per far fronte ai cambi di dimensione
         overlapBoxCen = new Vector3(transform.position.x, ((coll.bounds.max.y - gm.MaxYavailable) / 2) + gm.MaxYavailable, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
         //overlapBoxDim = new Vector3(coll.bounds.size.x, transform.position.y - gm.MaxYavailable, Camera.main.farClipPlane); //idem a sopra
         overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.max.y - gm.MaxYavailable, Camera.main.farClipPlane);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
         //idealmente, l'odine non dovrebbe esse sulla pos y, ma sulla bounds.max del collider...
         //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
-        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
+        //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
+        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderByDescending(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
         //Where(c => c.transform.position.z > transform.position.z)
 
         return hitColliders.Length > 0 ? hitColliders : null; //make an if null a etc..
@@ -306,7 +381,7 @@ public class setPositionOnY : MonoBehaviour
 
     //private void checkCompleteCoverage(GameObject gOb) //dovrei fare anche un check sulla larghezza... //-> anche degli offset di margine sarebbero adeguati.
     //private IEnumerator checkCompleteCoverage(GameObject gOb)
-    private async void checkCompleteCoverage(GameObject gOb) //test
+    private async void checkCompleteCoverage(GameObject gOb) //add also if is covered on all x size?
     {
         float y = Mathf.Min(transform.position.y, gm.MaxYavailable);
         //should use SpriteRenderer instead of BoxCollider because collider could be smaller than sprite

@@ -27,13 +27,14 @@ public class toColorInteractor : ObjectInteractor
             return false;
         }
     }
-    public override void activeInteractor(GameObject a_OtherInteractable)
+    public override interactionResult activeInteractor(GameObject a_OtherInteractable)
     {
         IColorable colorable = a_OtherInteractable.GetComponent<IColorable>();
         toColorInteractor colorator = a_OtherInteractable.GetComponent<toColorInteractor>(); 
         if (colorable != null)
         {
             colorable.toColor(m_SpriteRenderer.color);
+            return interactionResult.occurred;
         }
         else if (colorator != null)
         {
@@ -41,10 +42,13 @@ public class toColorInteractor : ObjectInteractor
             Color newColor = CombineColors(m_SpriteRenderer.color, a_OtherSpriteRenderer.color);
             m_SpriteRenderer.color = newColor;
             Destroy(a_OtherInteractable);
+
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No active Interaction present for this object");
+            return interactionResult.notOccurred;
         }
     }
 

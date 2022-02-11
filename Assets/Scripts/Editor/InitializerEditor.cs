@@ -32,7 +32,8 @@ public class InitializerEditor : Editor
     private static readonly Type[] specialInteractable = new Type[]
     {
         typeof(TextMeshPro),
-        typeof(FerrisWheelManager)
+        typeof(FerrisWheelManager),
+        typeof(PlaceableSurface)
     };
 
     private void OnEnable()
@@ -42,6 +43,8 @@ public class InitializerEditor : Editor
 
     static FerrisWheelManager fwmRef;
     static TextMeshPro testo = null; //new
+    //int oldTypeIndex; //= -1;
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -129,6 +132,8 @@ public class InitializerEditor : Editor
             fwmCreator(targetObject);
         else if (t == typeof(TextMeshPro))
             textCreator(targetObject);
+        //else if (t == typeof(PlaceableSurface))//to go to popup-interactor
+        //    psCreator(targetObject);
     }
 
     void specialComponentDeletion(GameObject targetObject, Type t)  //add an if to this code and the relative method to delete the component
@@ -137,6 +142,8 @@ public class InitializerEditor : Editor
             fwmDestroyer(targetObject);
         else if (t == typeof(TextMeshPro))
             textDestroyer(targetObject);
+        //else if (t == typeof(PlaceableSurface))//to go to popup-interactor
+        //    psDestroyer(targetObject);
     }
 
     bool specialChecker(GameObject targetObject, Type t) //add an if to this code and the relative method to check if is already present or not
@@ -145,6 +152,8 @@ public class InitializerEditor : Editor
             return fwmChecker(targetObject);
         else if(t == typeof(TextMeshPro))
             return textChecker(targetObject);
+        //else if (t == typeof(PlaceableSurface)) //to go to popup-interactor
+        //    return psChecker(targetObject);
 
         else return false;
     }
@@ -211,7 +220,7 @@ public class InitializerEditor : Editor
 
     void textDestroyer(GameObject targetObject)
     {
-        DestroyImmediate(targetObject.transform.GetChild(0).gameObject);
+        DestroyImmediate(targetObject.transform.GetChild(0).gameObject); //better get child with textObject component.... (?)
         testo = null;
         textColorable tc = targetObject.GetComponent<textColorable>();
 
@@ -226,6 +235,7 @@ public class InitializerEditor : Editor
         TextMeshPro component = targetObject.gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
         return component != null ? true : false;
     }
+
     //ending special components (interactables)
 
     //interactors
@@ -235,15 +245,32 @@ public class InitializerEditor : Editor
         EditorGUI.BeginChangeCheck();
         {
             int oldTypeIndex = GetExistingComponentIndex(targetObject, out Component component, types);
-            
             int typeIndex = EditorGUILayout.Popup(label, oldTypeIndex, options); //because could exist object in scene that doesn't interact, then the default value is empty
             if (EditorGUI.EndChangeCheck())
             {
                 if (oldTypeIndex >= 0)
-                    DestroyImmediate(component,true);
+                    if (specialInteractable.Contains(types[oldTypeIndex]))
+                    {
+                        specialInteractorDeletion(targetObject, types[oldTypeIndex]);
+                    }
+
+                    else
+                        DestroyImmediate(component, true);
+
                 if (typeIndex >= 0)
-                    targetObject.AddComponent(types[typeIndex]); //dovrei aggiungere cabin manager se metto cabin interactor
+                {
+                    //if (types[typeIndex])
+                    if (specialInteractable.Contains(types[typeIndex]))
+                    {
+                        psCreator(targetObject);
+                    }
+
+                    else
+                        targetObject.AddComponent(types[typeIndex]); //dovrei aggiungere cabin manager se metto cabin interactor
+                }
             }
+
+            oldTypeIndex = typeIndex;
         }
     }
 
@@ -251,7 +278,92 @@ public class InitializerEditor : Editor
     {
         Component c = null;
         int index = Array.FindIndex(types, t => targetObject.TryGetComponent(t, out c));
+        if(index < 0)
+            index = Array.FindIndex(types, t => specialInteractorChecker(targetObject,t, out c));
         component = c;
         return index;
     }
+
+
+    //adding special components (Interactor)
+
+    void specialInteractorAddiction(GameObject targetObject, Type t) //add an if to this code and the relative method to add the component
+    {
+        //if (t == typeof(FerrisWheelManager))
+        //    fwmCreator(targetObject);
+        //else if (t == typeof(TextMeshPro))
+        //    textCreator(targetObject);
+        //else
+        if (t == typeof(PlaceableSurface))//to go to popup-interactor
+            psCreator(targetObject);
+    }
+
+    void specialInteractorDeletion(GameObject targetObject, Type t)  //add an if to this code and the relative method to delete the component
+    {
+        //if (t == typeof(FerrisWheelManager))
+        //    fwmDestroyer(targetObject);
+        //else if (t == typeof(TextMeshPro))
+        //    textDestroyer(targetObject);
+        //else
+        if (t == typeof(PlaceableSurface))//to go to popup-interactor
+            psDestroyer(targetObject);
+    }
+
+    //private int GetExistingComponentIndex(GameObject targetObject, out Component component, Type[] types)
+    private bool specialInteractorChecker(GameObject targetObject, Type t, out Component component) //add an if to this code and the relative method to check if is already present or not
+    {
+        component = null;
+        //if (t == typeof(FerrisWheelManager))
+        //    return fwmChecker(targetObject);
+        //else if (t == typeof(TextMeshPro))
+        //    return textChecker(targetObject);
+        //else
+        if (t == typeof(PlaceableSurface)) //to go to popup-interactor
+            return psChecker(targetObject, out component);
+
+        else return false;
+    }
+
+    private void psCreator(GameObject targetObject)
+    {   //add Divert2Camera SomeWhere?
+        targetObject.name = "Placeable Surface";
+        SpriteRenderer tsr = targetObject.GetComponent<SpriteRenderer>();
+        if (tsr == null)
+        {
+            tsr = targetObject.AddComponent<SpriteRenderer>();
+            tsr.sprite = Sprite.Create(new Texture2D(256,256), new Rect(0.0f, 0.0f, 256f, 256f), new Vector2(0.5f, 0), 100f);
+        }
+
+        BoxCollider bc = targetObject.GetComponent<BoxCollider>();
+        if (bc == null)
+             bc = targetObject.AddComponent<BoxCollider>();
+
+        GameObject placeableSection = Instantiate(targetObject);
+        DestroyImmediate(placeableSection.GetComponent<Initializer>(), true);
+        placeableSection.AddComponent<PlaceableSurface>();
+        placeableSection.name = "Placeable Section";
+        placeableSection.transform.parent = targetObject.transform;
+        placeableSection.transform.localPosition = Vector3.forward * (-0.1f);
+        placeableSection.transform.localScale = Vector3.one;
+
+        //additional changes //to be modeled by "Scene Creator"
+
+    }
+
+    private void psDestroyer(GameObject targetObject)
+    {
+        targetObject.name = "DefaultObject";
+        foreach (Transform child in targetObject.transform) //to review to destroy only sections
+        {
+            DestroyImmediate(child.gameObject);
+        }
+    }
+
+    private bool psChecker(GameObject targetObject, out Component component)
+    {
+        component = targetObject.gameObject.GetComponentInChildren<PlaceableSurface>();
+        return component != null ? true : false;
+    }
+
+    //ending special components (interactables)
 }

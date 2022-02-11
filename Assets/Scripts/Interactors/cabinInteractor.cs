@@ -18,7 +18,7 @@ public class cabinInteractor : ObjectInteractor
         ///prendi cabin positionable del figlio e tutte le cose che fai nell'interazione quando figli (da reserved alla fine del suo if)
     }
 
-    public override void passiveInteractor(GameObject a_OtherInteractable)
+    public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         ICabinPositionable cabinPositionable = a_OtherInteractable.GetComponent<ICabinPositionable>();
         if (cabinPositionable != null && reserved == false &&  cm.IsRotating != true)
@@ -33,10 +33,13 @@ public class cabinInteractor : ObjectInteractor
                 dOb = ((CabinPositionable)cabinPositionable).dOb;
                 dOb.DraggingOut += SParent;
             }
+
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No passive Interaction present for this object");
+            return interactionResult.notOccurred;
         }
 
     }

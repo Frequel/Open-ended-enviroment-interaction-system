@@ -15,12 +15,27 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
     setPositionOnZ father_sPoZ;
     bool positioned = false;
 
+    BoxCollider coll;
+
+    public BoxCollider Coll
+    {
+        get { return coll; }
+    }
+
+    public SpriteRenderer M_SpriteRenderer
+    {
+        get { return m_SpriteRenderer; }
+    }
+
     [System.NonSerialized]
     public DragObject dOb;
 
+    Vector3 originalScale;
     // Start is called before the first frame update
     void Start()
     {
+
+        coll = GetComponent<BoxCollider>();
 
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -43,6 +58,9 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
                 //sPoZ.setPosition();
             }
         }
+
+        originalScale = transform.localScale;
+
     }
 
     public void setRelativePos()
@@ -51,7 +69,16 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         sPoY.Pt = positionType.dontMove;
 
         //la position sarebbe da controllare bene, tecnicamente con gli oggetti trimmati, i collider entrano dentro il collider predisposto all'appoggio. (cosa valida con PosY, con interazione diretta... forse no.
-        transform.localScale = Vector3.one;
+        //transform.localScale = Vector3.one; //si riscala da solo....
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        father_sPoZ = transform.parent.transform.parent.GetComponent<setPositionOnZ>();// GetComponentInParent<setPositionOnZ>(); //questo non funziona perchè ritorna se stesso
+        father_sPoZ.childrenPositioning += letParentPositioning;
+        if (!positioned)
+            letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //originalScale = transform.localScale;
         dOb.DraggingOut += SParent;
     }
 
@@ -62,7 +89,12 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         //sprite.sprite = inPiedi; //change back sprite
         sPoZ.Pt = positionType.defPos; //set back the position to default
         sPoY.Pt = positionType.defPos; //set back the position to default
-        transform.localScale = Vector3.one;
+        sPoZ.FatherSprite = null;
+        //transform.localScale = Vector3.one; 
+        transform.localScale = originalScale;
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        father_sPoZ.childrenPositioning -= letParentPositioning;
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         dOb.DraggingOut -= SParent;
     }
 
@@ -71,7 +103,7 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         if (!positioned)
             positioned = true;
 
-        m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1, 32766);
+        m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1, 32767); //7 for dragging
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
     }
 }

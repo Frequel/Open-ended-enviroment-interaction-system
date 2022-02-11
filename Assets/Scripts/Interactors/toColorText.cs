@@ -26,13 +26,14 @@ public class toColorText : ObjectInteractor
             return false;
         }
     }
-    public override void activeInteractor(GameObject a_OtherInteractable)
+    public override interactionResult activeInteractor(GameObject a_OtherInteractable)
     {
         TextMeshPro colorable = a_OtherInteractable.gameObject.GetComponentInChildren<TextMeshPro>();
         toColorText colorator = a_OtherInteractable.GetComponent<toColorText>();
         if (colorable != null)
         {
             colorable.color = m_SpriteRenderer.color;
+            return interactionResult.occurred;
         }
         else if (colorator != null)
         {
@@ -40,10 +41,13 @@ public class toColorText : ObjectInteractor
             Color newColor = CombineColors(m_SpriteRenderer.color, a_OtherSpriteRenderer.color);
             m_SpriteRenderer.color = newColor;
             Destroy(a_OtherInteractable);
+
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No active Interaction present for this object");
+            return interactionResult.notOccurred;
         }
     }
 

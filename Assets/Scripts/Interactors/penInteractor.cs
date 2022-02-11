@@ -25,16 +25,18 @@ public class penInteractor : ObjectInteractor
             return false;
         }
     }
-    public override void activeInteractor(GameObject a_OtherInteractable)
+    public override interactionResult activeInteractor(GameObject a_OtherInteractable)
     {
         IWriteable writable = a_OtherInteractable.GetComponent<IWriteable>();
         if (writable != null)
         {
             writable.write(gameObject);
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No active Interaction present for this object");
+            return interactionResult.notOccurred;
         }
     }
 

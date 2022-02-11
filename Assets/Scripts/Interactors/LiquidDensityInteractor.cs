@@ -48,7 +48,7 @@ public class LiquidDensityInteractor : ObjectInteractor
         sortedContainedLiquid = new SortedList<float, GameObject>(descendingComparer);
     }
 
-    public override void passiveInteractor(GameObject a_OtherInteractable)
+    public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         ILiquidDensityInteractable liquidDensityPositionable = a_OtherInteractable.GetComponent<ILiquidDensityInteractable>();
         if (liquidDensityPositionable != null && freeSlot > 0 )
@@ -90,10 +90,12 @@ public class LiquidDensityInteractor : ObjectInteractor
                     i++;
                 }
             }
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No passive Interaction present for this object");
+            return interactionResult.notOccurred;
         }
     }
 
@@ -113,6 +115,8 @@ public class LiquidDensityInteractor : ObjectInteractor
 
     public void resetContainer()
     {
+        //pulire da eventuali letparent positioning -> qui lo faccio ad hoc, perchè sò che il
+        sPoZ.clearChildren();
         emptyingContainer();
         freeSlot = capacity;
         sortedContainedLiquid.Clear();
@@ -123,6 +127,9 @@ public class LiquidDensityInteractor : ObjectInteractor
             cbm.PowerOff();
             buttonOn = false;
         }
+
+        //having removed all kids, i clear all parameters related to them.
+        emptyingContainer = null;
     }
 
     void OnDrawGizmos()

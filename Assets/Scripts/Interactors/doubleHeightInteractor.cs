@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class doubleHeightInteractor : ObjectInteractor
 {
-    public override void passiveInteractor(GameObject a_OtherInteractable)
+    public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
     {
         IDoubleDimensions doubled = a_OtherInteractable.GetComponent<IDoubleDimensions>();
         if (doubled != null)
         {
             doubled.doubleHeight();
+            return interactionResult.occurred;
         }
         else
         {
             Debug.Log("No passive Interaction present for this object");
+            return interactionResult.occurred;
         }
     }
 

@@ -227,27 +227,30 @@ public class setPositionOnY : MonoBehaviour
                         }
                         else
                         {
-                            //y = plSur.transform.position.y - 0.1f;
-                            y = gm.MaxYavailable;
+                            //y = plSur.transform.position.y - 0.1f; //old
+                            y = gm.MaxYavailable;//new
 
-                            //dovrei fare ricorsione su questa stessa funzione, in realtà
+                            ////dovrei fare ricorsione su questa stessa funzione, in realtà
 
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            //non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
-                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            //collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
-                            collBelow = checkCollisionBelow().ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray(); ;
-                            if (collBelow.Length > 0)
-                            {
-                                checkCompleteCoverage(collBelow[0].gameObject);
-                                return;
-                            }
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                            //collBelow = checkCollisionBelow().ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray(); ;
+                            //if (collBelow.Length > 0)
+                            //{
+                            //    checkCompleteCoverage(collBelow[0].gameObject);
+                            //    return;
+                            //}
+
+                            yDest = gm.MaxYavailable;
+                            defaultPositioning();
                         }
 
                         //if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                        if (yDest > plSur.Coll.bounds.max.y)
+                        if (yDest > plSur.Coll.bounds.max.y) //da inserire nel corpo dell'if (?)
                         {
                             //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce); //old
                             //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);//new-correct

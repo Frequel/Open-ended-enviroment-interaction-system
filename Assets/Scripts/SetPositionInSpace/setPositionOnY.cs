@@ -36,6 +36,8 @@ public class setPositionOnY : MonoBehaviour
     float prova = -3.4f;
 
     GameManager gm;
+
+    float yDest;
     void Start()//set position in space based on the kind of position
     {
         gm = GameManager.GetInstance;
@@ -70,6 +72,7 @@ public class setPositionOnY : MonoBehaviour
         switch (pt)
         {
             case positionType.defPos:
+                yDest = transform.position.y;
                 defaultPositioning();
                 //yield return StartCoroutine(defaultPositioning());
                 break;
@@ -103,8 +106,10 @@ public class setPositionOnY : MonoBehaviour
     //private async IEnumerator defaultPositioning()
     private async void defaultPositioning() //test
     {
-        if (transform.position.y <= gm.MaxYavailable) //obj released on ground
-        {            
+        //if (transform.position.y <= gm.MaxYavailable) //obj released on ground
+        if (yDest <= gm.MaxYavailable) //obj released on ground
+
+        {
             GameObject gOb = takeCollision();
 
             if (gOb != null)
@@ -117,23 +122,43 @@ public class setPositionOnY : MonoBehaviour
                         float y;
                         //return false; //cade al lato sinistro
                         interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
-                        //if (ir == interactionResult.occurred)
-                        //{
-                        //    y = plSur.Coll.bounds.max.y;
-                        //}
-                        //else
-                        //{
-                        //    //y = plSur.transform.position.y - 0.1f;
-                        //    y = gm.MaxYavailable;
-                        //}
+                        if (ir == interactionResult.occurred)
+                        {
+                            y = plSur.Coll.bounds.max.y;
+                        }
+                        else
+                        {
+                            //y = plSur.transform.position.y - 0.1f;
+                            y = gm.MaxYavailable;
+                        }
 
                         //if (transform.position.y > plSur.Coll.bounds.max.y)
-                        //{ //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                        //    //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
-                        //    Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
-                        //    await myTween.AsyncWaitForCompletion();
-                        //}
-                        TESTpositioning = false;//test
+                        if (yDest > plSur.Coll.bounds.max.y)
+                        { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                            //await myTween.AsyncWaitForCompletion();
+
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                            //await myTween.AsyncWaitForCompletion();
+                            ////yield return myTween.WaitForCompletion();
+
+                            //TESTpositioning = false;//test
+
+                            yDest = y;
+                            defaultPositioning();
+                        }
+
+                        //TESTpositioning = false;//test
+
+                        if (transform.position.y == yDest)
+                            TESTpositioning = false;//test
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                            TESTpositioning = false;//test
+                        }
                     }
                     else
                     {
@@ -155,7 +180,16 @@ public class setPositionOnY : MonoBehaviour
             //test
             else
             {
-                TESTpositioning = false;//test
+                //TESTpositioning = false;//test
+
+                if (transform.position.y == yDest)
+                    TESTpositioning = false;//test
+                else
+                {
+                    Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                    await myTween.AsyncWaitForCompletion();
+                    TESTpositioning = false;//test
+                }
             }
 
         }
@@ -197,6 +231,7 @@ public class setPositionOnY : MonoBehaviour
                             y = gm.MaxYavailable;
 
                             //dovrei fare ricorsione su questa stessa funzione, in realtà
+
                             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             //non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
@@ -211,26 +246,50 @@ public class setPositionOnY : MonoBehaviour
                             }
                         }
 
-                        if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
-                            Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
-                            await myTween.AsyncWaitForCompletion();
+                        //if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                        if (yDest > plSur.Coll.bounds.max.y)
+                        {
+                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce); //old
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);//new-correct
+                            //await myTween.AsyncWaitForCompletion();
+                            ////yield return myTween.WaitForCompletion();
+
+                            //TESTpositioning = false;//test
+
+                            yDest = y;
+                            defaultPositioning();
                         }
-                        TESTpositioning = false;//test
+
+                        //TESTpositioning = false;//test
+
+                        if (transform.position.y == yDest)
+                            TESTpositioning = false;//test
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                            TESTpositioning = false;//test
+                        }
                     }
                     else
                     {
                         //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                         //checkBehind(collBelow[0].gameObject);
-                        collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                        collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
                         if (collBelow.Length > 0)
                             checkCompleteCoverage(collBelow[0].gameObject);
                         ///ci vuole modifica a questo metodo:
                         ///non posso usare il max, che dà la coordinata globale di dove si trova il mio max (utile). ma devo usare Y (=min tra la Ydrag e la Ymax) + sizeY
                         else
                         {
-                            Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-                            await myTween.AsyncWaitForCompletion();
+                            //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                            //await myTween.AsyncWaitForCompletion();
+                            ////yield return myTween.WaitForCompletion();
+
+                            //TESTpositioning = false;//test
+
+                            yDest = gm.MaxYavailable;
+                            defaultPositioning();
                         }
 
                     }
@@ -245,8 +304,14 @@ public class setPositionOnY : MonoBehaviour
                         checkCompleteCoverage(collBelow[0].gameObject);
                     else
                     {
-                        Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-                        await myTween.AsyncWaitForCompletion();
+                        //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                        //await myTween.AsyncWaitForCompletion();
+                        ////yield return myTween.WaitForCompletion();
+
+                        //TESTpositioning = false;//test
+
+                        yDest = gm.MaxYavailable;
+                        defaultPositioning();
                     }
                 }
             }
@@ -263,63 +328,67 @@ public class setPositionOnY : MonoBehaviour
 
                 //StartCoroutine(fallObjectAndWait());
 
-                Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-                await myTween.AsyncWaitForCompletion();
-                //yield return myTween.WaitForCompletion();
+                //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                //await myTween.AsyncWaitForCompletion();
+                ////yield return myTween.WaitForCompletion();
 
-                TESTpositioning = false;//test
+                //TESTpositioning = false;//test
+
+                yDest = gm.MaxYavailable;
+                defaultPositioning();
             }
         }
     }
 
-    IEnumerator fallObjectAndWait()
-    {
+    //IEnumerator fallObjectAndWait()
+    //{
 
-        while (true)
-        {
-            while (true)
-            {
-                yield return StartCoroutine(fallObject());
-                break;
-            }
-            break;
-        }
+    //    while (true)
+    //    {
+    //        while (true)
+    //        {
+    //            yield return StartCoroutine(fallObject());
+    //            break;
+    //        }
+    //        break;
+    //    }
 
-        TESTpositioning = false;
-    }
+    //    TESTpositioning = false;
+    //}
 
-    IEnumerator fallObject()
-    {
-        Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-        while (true)
-        {
-            while (true)
-            {
-                yield return myTween.WaitForCompletion();
-                break;
-            }
-            break;
-        }
+    //IEnumerator fallObject()
+    //{
+    //    Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+    //    while (true)
+    //    {
+    //        while (true)
+    //        {
+    //            yield return myTween.WaitForCompletion();
+    //            break;
+    //        }
+    //        break;
+    //    }
 
 
-    }
+    //}
 
-    private IEnumerator waitY()
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => TESTpositioning == false);
-            break;
-        }
-    }
+    //private IEnumerator waitY()
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitUntil(() => TESTpositioning == false);
+    //        break;
+    //    }
+    //}
 
     private GameObject takeCollision()
     {
         //OrderByDescending(
         //forse è meglio se la collisione è tra il collider fermo e la metà inferiore di quello draggato??? -> non c'è però il pulse....
-        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
+        //overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
+        overlapBoxCen = new Vector3(transform.position.x, yDest + coll.bounds.size.y / 2, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);
         overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.size.y, Camera.main.farClipPlane); //idem a sopra
-        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray();
+        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.z).Where(c => c.transform.position.z > transform.position.z).ToArray(); //// !!!newVersion!!!! ///
 
         //collisione è tra il collider fermo e la metà inferiore di quello draggato -> non c'è però il pulse....
         //overlapBoxCen = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 4, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//transform.position.z); //è sbagliato, lo devo traslare della pos della camera, la quale sarebbe meglio salvarla nel GM e non fare sempre così che equivale ad un GetComponent//coll... per far fronte ai cambi di dimensione
@@ -336,30 +405,43 @@ public class setPositionOnY : MonoBehaviour
             
     }
 
-    private void checkBehind(GameObject gOb)
+    private async void checkBehind(GameObject gOb)
     {
-        if (transform.position.y > gOb.transform.position.y) //solo in questo caso perchè se sta sotto dovrebbe avere la z e il sortting layer per essere davanti
+        //if (transform.position.y > gOb.transform.position.y) //solo in questo caso perchè se sta sotto dovrebbe avere la z e il sortting layer per essere davanti
+        if (yDest > gOb.transform.position.y)
         {
             checkCompleteCoverage(gOb);
         }
         else
         {
-            TESTpositioning = false;
+            //TESTpositioning = false;//test
+
+            if (transform.position.y == yDest)
+                TESTpositioning = false;//test
+            else
+            {
+                Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                await myTween.AsyncWaitForCompletion();
+                TESTpositioning = false;//test
+            }
         }
     }
 
-    private Collider[] checkCollisionBelow()
+    private  Collider[] checkCollisionBelow()
     {
         //OrderByDescending(
 
         //overlapBoxCen = new Vector3(transform.position.x, (transform.position.y - gm.MaxYavailable) / 2, Camera.main.farClipPlane / 2 + transform.position.z); //coll... per far fronte ai cambi di dimensione
-        overlapBoxCen = new Vector3(transform.position.x, ((coll.bounds.max.y - gm.MaxYavailable) / 2) + gm.MaxYavailable, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
+        //overlapBoxCen = new Vector3(transform.position.x, ((coll.bounds.max.y - gm.MaxYavailable) / 2) + gm.MaxYavailable, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
+        overlapBoxCen = new Vector3(transform.position.x, ((coll.bounds.size.y + yDest - gm.MaxYavailable) / 2) + gm.MaxYavailable, Camera.main.farClipPlane / 2 + Camera.main.transform.position.z);
         //overlapBoxDim = new Vector3(coll.bounds.size.x, transform.position.y - gm.MaxYavailable, Camera.main.farClipPlane); //idem a sopra
-        overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.max.y - gm.MaxYavailable, Camera.main.farClipPlane);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
+        //overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.max.y - gm.MaxYavailable, Camera.main.farClipPlane);//se rilascio sopra/addosso un oggetto con BoxCollider, che parte però appena sopra la y del draggato
+        overlapBoxDim = new Vector3(coll.bounds.size.x, coll.bounds.size.y + yDest - gm.MaxYavailable, Camera.main.farClipPlane);
         //idealmente, l'odine non dovrebbe esse sulla pos y, ma sulla bounds.max del collider...
         //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.transform.position.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
         //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderBy(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
-        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderByDescending(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
+        //Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderByDescending(c => c.bounds.max.y).Where(c => c.transform.position.y < transform.position.y).ToArray();
+        Collider[] hitColliders = Physics.OverlapBox(overlapBoxCen, overlapBoxDim / 2, Quaternion.identity, m_LayerMask).OrderByDescending(c => c.bounds.max.y).Where(c => c.transform.position.y < yDest).ToArray();
         //Where(c => c.transform.position.z > transform.position.z)
 
         return hitColliders.Length > 0 ? hitColliders : null; //make an if null a etc..
@@ -379,11 +461,12 @@ public class setPositionOnY : MonoBehaviour
         return null;
     }
 
-    //private void checkCompleteCoverage(GameObject gOb) //dovrei fare anche un check sulla larghezza... //-> anche degli offset di margine sarebbero adeguati.
+    private void checkCompleteCoverage(GameObject gOb) //dovrei fare anche un check sulla larghezza... //-> anche degli offset di margine sarebbero adeguati.
     //private IEnumerator checkCompleteCoverage(GameObject gOb)
-    private async void checkCompleteCoverage(GameObject gOb) //add also if is covered on all x size?
+    //private async void checkCompleteCoverage(GameObject gOb) //add also if is covered on all x size?
     {
-        float y = Mathf.Min(transform.position.y, gm.MaxYavailable);
+        //float y = Mathf.Min(transform.position.y, gm.MaxYavailable);
+        float y = Mathf.Min(yDest, gm.MaxYavailable);
         //should use SpriteRenderer instead of BoxCollider because collider could be smaller than sprite
         //if (coll.bounds.max.y < gOb.GetComponent<BoxCollider>().bounds.max.y)//-> different from flowchart because i was not thinking about to get directly the heigher point of each object.//-y+gOb.transform.position.y) //if the height of the released object is completely covered by the height of the other object
         if (coll.bounds.size.y + y < gOb.GetComponent<BoxCollider>().bounds.max.y) //perchè per oggetti che vengono rilasciato sopra l'orizzonte non funzionerebbe mai
@@ -398,11 +481,14 @@ public class setPositionOnY : MonoBehaviour
                  * */
             //StartCoroutine(fallObjectAndWait());
 
-            Tween myTween = transform.DOMoveY(gOb.transform.position.y - 0.1f, 1, false).SetEase(Ease.OutBounce);
-            await myTween.AsyncWaitForCompletion();
-            //yield return myTween.WaitForCompletion();
+            //Tween myTween = transform.DOMoveY(gOb.transform.position.y - 0.1f, 1, false).SetEase(Ease.OutBounce);
+            //await myTween.AsyncWaitForCompletion();
+            ////yield return myTween.WaitForCompletion();
 
-            TESTpositioning = false;//test
+            //TESTpositioning = false;//test
+
+            yDest = gOb.transform.position.y - 0.1f;
+            defaultPositioning();
         }
         else
         {
@@ -417,13 +503,31 @@ public class setPositionOnY : MonoBehaviour
 
             //StartCoroutine(fallObjectAndWait());
 
-            Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
-            await myTween.AsyncWaitForCompletion();
-            //yield return myTween.WaitForCompletion();
+            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+            //await myTween.AsyncWaitForCompletion();
+            ////yield return myTween.WaitForCompletion();
 
-            TESTpositioning = false;//test
+            //TESTpositioning = false;//test
+
+            yDest = y;
+            defaultPositioning();
         }
     }
+
+    /*
+     add this on the following methods?
+
+    //TESTpositioning = false;//test
+
+                        if (transform.position.y == yDest)
+                            TESTpositioning = false;//test
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                        }
+
+     */
     private void positionedPositioning()//da cambiare nome
     {
         TESTpositioning = false;//test

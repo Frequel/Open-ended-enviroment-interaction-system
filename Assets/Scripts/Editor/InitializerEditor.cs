@@ -338,7 +338,7 @@ public class InitializerEditor : Editor
         if (bc == null)
              bc = targetObject.AddComponent<BoxCollider>();
 
-        GameObject placeableSection = Instantiate(targetObject);
+        GameObject placeableSection = Instantiate(targetObject); //should remove also all components from initilizerEditor....
         DestroyImmediate(placeableSection.GetComponent<Initializer>(), true);
         placeableSection.AddComponent<PlaceableSurface>();
         placeableSection.name = "Placeable Section";

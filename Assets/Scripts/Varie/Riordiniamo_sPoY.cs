@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 
-public class setPositionOnY : MonoBehaviour
+public class Riordiniamo_sPoY : MonoBehaviour
 {
     Vector3 overlapBoxDim; //me ne serve più di uno.
     Vector3 overlapBoxCen;
@@ -47,27 +47,19 @@ public class setPositionOnY : MonoBehaviour
 
         //e se cambia per qualche motivo la dimensione? tipo il mio test pre asset?
         overlapBoxDim = new Vector3(size.x, size.y, Camera.main.farClipPlane);
-        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + size.y / 2, Camera.main.farClipPlane / 2);// + transform.position.z);
-        //
+        overlapBoxCen = new Vector3(transform.position.x, transform.position.y + size.y / 2, Camera.main.farClipPlane / 2);
 
-        prova = prova + 5 -3 +1 *2 /4;
-        //Debug.Log(Mathf.Min(10f, 2.4f));//test
+        prova = prova + 5 - 3 + 1 * 2 / 4;
 
         po = GetComponent<PositionableObject>();
 
         m_LayerMask = ~8;
 
-
-        //if (transform.parent != null)
-        //{
-        //    pt = positionType.childrenPos;
-        //}
     }
 
     public void setPosition()//set position in space based on the kind of position
     //public IEnumerator setPosition()
     {
-        //positioning = true;
         TESTpositioning = true;
         switch (pt)
         {
@@ -91,22 +83,12 @@ public class setPositionOnY : MonoBehaviour
                 defaultPositioning();
                 break;
         }
-        //if (transform.childCount > 0 && childrenPositioning != null)
-        //    childrenPositioning(sprite);
-        //positioning = false;
-
-        //StartCoroutine(waitY());
-        //  OLTRE ALLA Z DOVREI DISABILITARE IL DRAG FINO AL POSIZIONAMENTO DI Y
-
-        //while(TESTpositioning == true)
-        //    Debug.Log("waiting Y");
     }
 
     //private void defaultPositioning()
     //private async IEnumerator defaultPositioning()
     private async void defaultPositioning() //test
     {
-        //if (transform.position.y <= gm.MaxYavailable) //obj released on ground
         if (yDest <= gm.MaxYavailable) //obj released on ground
 
         {
@@ -119,44 +101,39 @@ public class setPositionOnY : MonoBehaviour
                     PlaceableSurface plSur = takePlaceableSurface(gOb);
                     if (plSur != null)
                     {
-                        //float y; //non mi serve la y in questo caso, perchè, sotto la Ymax, se ho plSurf, dietro altri oggetti, non viene attivata, se invece è davanti, la Y sarà sicuramente davanti e quindi non serve altro -> mezzo falso, se non occore l'interazione e viene spostato leggermente a sx o dx dovrebbe rifare il check del coverage e iterare...
-                        //return false; //cade al lato sinistro
-                        interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        float y;
+                        interactionResult ir = plSur.passiveInteractor(gameObject); 
+
                         if (ir == interactionResult.occurred)
                         {
-                            //y = plSur.Coll.bounds.max.y; 
-                            yDest = plSur.Coll.bounds.max.y;
+                            y = plSur.Coll.bounds.max.y;
                         }
                         else
                         {
-                            //y = plSur.transform.position.y - 0.1f;//old
-                            //y = gm.MaxYavailable; //new  //sotto la YMax avrai sempre la yDest sotto YMax, quindi non serve
-                            //po.SParent(); //non và qua ma lì dove accade CheckCompleteCoverage...
-                            defaultPositioning();
-
+                            //y = plSur.transform.position.y - 0.1f;
+                            y = gm.MaxYavailable;
+                            po.SParent();
                         }
 
-                        ////if (transform.position.y > plSur.Coll.bounds.max.y)
-                        //if (yDest > plSur.Coll.bounds.max.y)//sotto la YMax per arrivare in questa parte di codice, avrai sempre la yDest sotto il max Coll bounds
-                        //{ //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                        //    //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
-                        //    //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
-                        //    //await myTween.AsyncWaitForCompletion();
+                        //if (transform.position.y > plSur.Coll.bounds.max.y)
+                        if (yDest > plSur.Coll.bounds.max.y)
+                        { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                            //await myTween.AsyncWaitForCompletion();
 
-                        //    //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
-                        //    //await myTween.AsyncWaitForCompletion();
-                        //    ////yield return myTween.WaitForCompletion();
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                            //await myTween.AsyncWaitForCompletion();
+                            ////yield return myTween.WaitForCompletion();
 
-                        //    //TESTpositioning = false;//test
+                            //TESTpositioning = false;//test
 
-                        //    //yDest = y;
-                        //    yDest = Mathf.Max(y, gm.YMin);
-                        //    defaultPositioning();
-                        //}
+                            yDest = y;
+                            defaultPositioning();
+                        }
 
                         //TESTpositioning = false;//test
 
-                        //sotto la YMax non serve l'animazione a meno che la Y non è troppo sotto il pl.Coll.Bounds.min.y...
                         if (transform.position.y == yDest)
                             TESTpositioning = false;//test
                         else
@@ -201,127 +178,97 @@ public class setPositionOnY : MonoBehaviour
         }
         else //obj released above ground
         {
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            /////da aggiustare bene. fare un qualcosa che funzioni bene con la parte sopra
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            GameObject gOb = takeCollision();  
 
-            if (gOb != null)
+            //checkPlaceableSufacebelow(); //overlapBox, itera sui collider fino a trovare placeablesSurface altrimenti ritorna l'ultimo collider
+            //  if(plSur != null){
+            //      //SI RIQUADRO BLU
+            //      figliaConPoggiabile();
+            //  }
+            /// else
+            /// {
+            ///    //RIQUADRO VERDE COMUNE TRA QUESTO IF ENORME E IL PROSSIMO
+            ///     
+            ///
+            /// }
+            /// 
+            //GameObject gOb = takeCollisionBelow();
+            //if (gOb != null)
+            Collider[] collBelow = checkCollisionBelow();
+            if (collBelow != null)
             {
-                //ci manca una parte per plSurf, ma vabbè
-                checkBehind(gOb);
-            }
-            else
-            {
-                Collider[] collBelow = checkCollisionBelow(); //prima di que dovrei fà na cosa simile a sotto la Ymax, cioè, il takeCollision e vedere se non c'è complete Coverage o interazione.
-                if (collBelow != null)
+                if (po != null)
                 {
-                    if (po != null)
+                    PlaceableSurface plSur = takePlaceableSurfaceBelow(collBelow);
+                    if (plSur != null)
                     {
-                        PlaceableSurface plSur = takePlaceableSurfaceBelow(collBelow); //fare un controllo sul fatto che ci sia davanti un qualcosa che copre completamente il draggato
-                        if (plSur != null)
+                        float y;
+                        //return false; //cade al lato sinistro
+                        interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        if (ir == interactionResult.occurred)
                         {
-                            float tmpTest = yDest;
-                            collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
-                            if (collBelow.Length > 0)
-                                checkCompleteCoverage(collBelow[0].gameObject);
-
-                            if (tmpTest==yDest)
-                            {
-                                float y;
-                                //return false; //cade al lato sinistro
-                                interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
-                                if (ir == interactionResult.occurred)
-                                {
-                                    y = plSur.Coll.bounds.max.y;
-                                    //forse in  questo caso non è buono ricorrere, bisogna solo fare check del complete coverage xk sennò alla ricorsione riprendi lo stesso collider plSurf -> se succede bisogna sparentare.
-                                    //la prima ricorsione successiva a questo è a vuoto in questo caso
-                                }
-                                else
-                                {
-                                    //y = plSur.transform.position.y - 0.1f; //old
-                                    y = gm.MaxYavailable;//new
-
-                                    ////dovrei fare ricorsione su questa stessa funzione, in realtà
-
-                                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    ////non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
-                                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                    ////collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
-                                    //collBelow = checkCollisionBelow().ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray(); ;
-                                    //if (collBelow.Length > 0)
-                                    //{
-                                    //    checkCompleteCoverage(collBelow[0].gameObject);
-                                    //    return;
-                                    //}
-
-                                    yDest = gm.MaxYavailable;
-                                    //po.SParent(); //non và qua ma lì dove accade CheckCompleteCoverage...
-                                    defaultPositioning();
-                                }
-
-                                //if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                                if (yDest > plSur.Coll.bounds.max.y) //da inserire nel corpo dell'if (?)
-                                {
-                                    //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce); //old
-                                    //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);//new-correct
-                                    //await myTween.AsyncWaitForCompletion();
-                                    ////yield return myTween.WaitForCompletion();
-
-                                    //TESTpositioning = false;//test
-
-                                    //yDest = y;
-                                    yDest = Mathf.Max(y, gm.YMin);
-                                    defaultPositioning(); //non và proprio bene questo qua, poi inoltre a interazione avvenuta, si dovrebbe tener traccia del Pt di y e z perchè potrebbe essere necesario che devono essere resettati...
-                                }
-
-                                //TESTpositioning = false;//test
-
-                                if (transform.position.y == yDest)
-                                    TESTpositioning = false;//test
-                                else
-                                {
-                                    Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
-                                    await myTween.AsyncWaitForCompletion();
-                                    TESTpositioning = false;//test
-                                }
-                            }
+                            y = plSur.Coll.bounds.max.y;
+                            //forse in  questo caso non è buono ricorrere, bisogna solo fare check del complete coverage xk sennò alla ricorsione riprendi lo stesso collider plSurf
+                            //la prima ricorsione successiva a questo è a vuoto in questo caso
                         }
                         else
                         {
-                            //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
-                            //checkBehind(collBelow[0].gameObject);
-                            collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
-                            if (collBelow.Length > 0)
-                                checkCompleteCoverage(collBelow[0].gameObject);
-                            ///ci vuole modifica a questo metodo:
-                            ///non posso usare il max, che dà la coordinata globale di dove si trova il mio max (utile). ma devo usare Y (=min tra la Ydrag e la Ymax) + sizeY
-                            else
-                            {
-                                //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
-                                //await myTween.AsyncWaitForCompletion();
-                                ////yield return myTween.WaitForCompletion();
+                            //y = plSur.transform.position.y - 0.1f; //old
+                            y = gm.MaxYavailable;//new
 
-                                //TESTpositioning = false;//test
+                            ////dovrei fare ricorsione su questa stessa funzione, in realtà
 
-                                yDest = gm.MaxYavailable;
-                                defaultPositioning();
-                            }
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////non è detto che sia questa la destinazione, dipende se dopo che non c'è stata l'interazione ci sia il coverage (come sotto nell'else)
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                            //collBelow = checkCollisionBelow().ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray(); ;
+                            //if (collBelow.Length > 0)
+                            //{
+                            //    checkCompleteCoverage(collBelow[0].gameObject);
+                            //    return;
+                            //}
 
+                            yDest = gm.MaxYavailable;
+                            po.SParent();
+                            defaultPositioning();
+                        }
+
+                        //if (transform.position.y > plSur.Coll.bounds.max.y) { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                        if (yDest > plSur.Coll.bounds.max.y) //da inserire nel corpo dell'if (?)
+                        {
+                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce); //old
+                            //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);//new-correct
+                            //await myTween.AsyncWaitForCompletion();
+                            ////yield return myTween.WaitForCompletion();
+
+                            //TESTpositioning = false;//test
+
+                            yDest = y;
+                            defaultPositioning(); //non và proprio bene questo qua, poi inoltre a interazione avvenuta, si dovrebbe tener traccia del Pt di y e z perchè potrebbe essere necesario che devono essere resettati...
+                        }
+
+                        //TESTpositioning = false;//test
+
+                        if (transform.position.y == yDest)
+                            TESTpositioning = false;//test
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                            TESTpositioning = false;//test
                         }
                     }
                     else
                     {
                         //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                         //checkBehind(collBelow[0].gameObject);
-                        //checkCompleteCoverage(collBelow[0].gameObject); //se nessuno ha il plSur ma ce ne stanno altri prima della Ymax? devo riordinare collBelow...
-                        collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                        collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
                         if (collBelow.Length > 0)
                             checkCompleteCoverage(collBelow[0].gameObject);
+                        ///ci vuole modifica a questo metodo:
+                        ///non posso usare il max, che dà la coordinata globale di dove si trova il mio max (utile). ma devo usare Y (=min tra la Ydrag e la Ymax) + sizeY
                         else
                         {
                             //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
@@ -333,8 +280,11 @@ public class setPositionOnY : MonoBehaviour
                             yDest = gm.MaxYavailable;
                             defaultPositioning();
                         }
-                    }
 
+                    }
+                }
+                else
+                {
                     //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                     //checkBehind(collBelow[0].gameObject);
                     //checkCompleteCoverage(collBelow[0].gameObject); //se nessuno ha il plSur ma ce ne stanno altri prima della Ymax? devo riordinare collBelow...
@@ -352,21 +302,16 @@ public class setPositionOnY : MonoBehaviour
                         yDest = gm.MaxYavailable;
                         defaultPositioning();
                     }
-
                 }
-                else //qui necessario perchè comunque devo cambiargliela la Y
+
+                //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
+                //checkBehind(collBelow[0].gameObject);
+                //checkCompleteCoverage(collBelow[0].gameObject); //se nessuno ha il plSur ma ce ne stanno altri prima della Ymax? devo riordinare collBelow...
+                collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();
+                if (collBelow.Length > 0)
+                    checkCompleteCoverage(collBelow[0].gameObject);
+                else
                 {
-                    //transform.position = new Vector3(transform.position.x, gm.MaxYavailable, transform.position.z);
-                    /*
-                     * DOMoveX/DOMoveY/DOMoveZ(float to, float duration, bool snapping)
-                        Moves the target's position to the given value, tweening only the chosen axis.
-                        snapping If TRUE the tween will smoothly snap all values to integers.
-
-                    .SetEase(easeOutBounce);//https://easings.net/#
-                     * */
-
-                    //StartCoroutine(fallObjectAndWait());
-
                     //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
                     //await myTween.AsyncWaitForCompletion();
                     ////yield return myTween.WaitForCompletion();
@@ -376,8 +321,30 @@ public class setPositionOnY : MonoBehaviour
                     yDest = gm.MaxYavailable;
                     defaultPositioning();
                 }
+
             }
-            
+            else //qui necessario perchè comunque devo cambiargliela la Y
+            {
+                //transform.position = new Vector3(transform.position.x, gm.MaxYavailable, transform.position.z);
+                /*
+                 * DOMoveX/DOMoveY/DOMoveZ(float to, float duration, bool snapping)
+                    Moves the target's position to the given value, tweening only the chosen axis.
+                    snapping If TRUE the tween will smoothly snap all values to integers.
+
+                .SetEase(easeOutBounce);//https://easings.net/#
+                 * */
+
+                //StartCoroutine(fallObjectAndWait());
+
+                //Tween myTween = transform.DOMoveY(gm.MaxYavailable, 1, false).SetEase(Ease.OutBounce);
+                //await myTween.AsyncWaitForCompletion();
+                ////yield return myTween.WaitForCompletion();
+
+                //TESTpositioning = false;//test
+
+                yDest = gm.MaxYavailable;
+                defaultPositioning();
+            }
         }
 
         //////
@@ -453,7 +420,7 @@ public class setPositionOnY : MonoBehaviour
     {
         PlaceableSurface ps = gOb.GetComponent<PlaceableSurface>();
         return ps;
-            
+
     }
 
     private async void checkBehind(GameObject gOb)
@@ -478,7 +445,7 @@ public class setPositionOnY : MonoBehaviour
         }
     }
 
-    private  Collider[] checkCollisionBelow()
+    private Collider[] checkCollisionBelow()
     {
         //OrderByDescending(
 
@@ -502,7 +469,7 @@ public class setPositionOnY : MonoBehaviour
     {
         //throw new NotImplementedException();
 
-        foreach(Collider cB in collBelow)
+        foreach (Collider cB in collBelow)
         {
             PlaceableSurface ps = cB.GetComponent<PlaceableSurface>();
             if (ps != null)
@@ -538,9 +505,7 @@ public class setPositionOnY : MonoBehaviour
 
             //TESTpositioning = false;//test
 
-            //yDest = gOb.transform.position.y - 0.1f;
-            yDest = Mathf.Max(gOb.transform.position.y - 0.1f, gm.YMin);
-            //po.SParent();
+            yDest = gOb.transform.position.y - 0.1f;
             defaultPositioning();
         }
         else
@@ -591,17 +556,6 @@ public class setPositionOnY : MonoBehaviour
     {
         TESTpositioning = false;//test
     }
-
-    //void OnDrawGizmos()
-    //{
-    //    //Gizmos.color = Color.red;
-    //    //Gizmos.DrawWireCube(overlapBoxCen, overlapBoxDim);
-
-    //    //test dito
-    //    Gizmos.color = Color.blue;
-    //    Gizmos.DrawWireCube(overlapBoxCenDito, overlapBoxDimDito);
-
-    //}
 
 }
 

@@ -141,7 +141,7 @@ public class PlaceableSurface : ObjectInteractor
                     a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.min.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x);
                     //sposto piu`a destra per farlo entrare tutto
                 }
-                else if (a_OtherInteractable.transform.position.x > coll.bounds.max.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
+                else if (a_OtherInteractable.transform.position.x < coll.bounds.max.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
                 {
                     a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.max.x);
                 }

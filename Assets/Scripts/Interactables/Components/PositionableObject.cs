@@ -83,7 +83,7 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
     }
 
 
-    void SParent()
+    public void SParent()
     {
         transform.SetParent(null); //unpartenpassenger from cabin
         //sprite.sprite = inPiedi; //change back sprite

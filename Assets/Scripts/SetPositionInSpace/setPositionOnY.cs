@@ -211,7 +211,76 @@ public class setPositionOnY : MonoBehaviour
             if (gOb != null)
             {
                 //ci manca una parte per plSurf, ma vabbè
-                checkBehind(gOb);
+                //checkBehind(gOb);
+                if (po != null)
+                {
+                    PlaceableSurface plSur = takePlaceableSurface(gOb);
+                    if (plSur != null)
+                    {
+                        //float y; //non mi serve la y in questo caso, perchè, sotto la Ymax, se ho plSurf, dietro altri oggetti, non viene attivata, se invece è davanti, la Y sarà sicuramente davanti e quindi non serve altro -> mezzo falso, se non occore l'interazione e viene spostato leggermente a sx o dx dovrebbe rifare il check del coverage e iterare...
+                        //return false; //cade al lato sinistro
+                        interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
+                        if (ir == interactionResult.occurred)
+                        {
+                            //y = plSur.Coll.bounds.max.y; 
+                            yDest = plSur.Coll.bounds.max.y;
+                        }
+                        else
+                        {
+                            //y = plSur.transform.position.y - 0.1f;//old
+                            //y = gm.MaxYavailable; //new  //sotto la YMax avrai sempre la yDest sotto YMax, quindi non serve
+                            //po.SParent(); //non và qua ma lì dove accade CheckCompleteCoverage...
+                            defaultPositioning();
+
+                        }
+
+                        ////if (transform.position.y > plSur.Coll.bounds.max.y)
+                        //if (yDest > plSur.Coll.bounds.max.y)//sotto la YMax per arrivare in questa parte di codice, avrai sempre la yDest sotto il max Coll bounds
+                        //{ //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
+                        //    //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                        //    //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                        //    //await myTween.AsyncWaitForCompletion();
+
+                        //    //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
+                        //    //await myTween.AsyncWaitForCompletion();
+                        //    ////yield return myTween.WaitForCompletion();
+
+                        //    //TESTpositioning = false;//test
+
+                        //    //yDest = y;
+                        //    yDest = Mathf.Max(y, gm.YMin);
+                        //    defaultPositioning();
+                        //}
+
+                        //TESTpositioning = false;//test
+
+                        //sotto la YMax non serve l'animazione a meno che la Y non è troppo sotto il pl.Coll.Bounds.min.y...
+                        if (transform.position.y == yDest)
+                            TESTpositioning = false;//test
+                        else
+                        {
+                            Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                            await myTween.AsyncWaitForCompletion();
+                            TESTpositioning = false;//test
+                        }
+                    }
+                    else
+                    {
+                        //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
+                        yDest = gm.MaxYavailable;///TEST
+                        checkBehind(gOb);
+                        //se il check non rileva coperture, lascia la y invariata e serve mettere il false apposto
+                        //TESTpositioning = false;//test //credo buggasse, perchè deve esse fatto dentro check behind
+                    }
+                }
+                else
+                {
+                    //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
+                    yDest = gm.MaxYavailable;///TEST
+                    checkBehind(gOb);
+                    //se il check non rileva coperture, lascia la y invariata e serve mettere il false apposto
+                    //TESTpositioning = false;//test //credo buggasse, perchè deve esse fatto dentro check behind
+                }
             }
             else
             {
@@ -223,12 +292,15 @@ public class setPositionOnY : MonoBehaviour
                         PlaceableSurface plSur = takePlaceableSurfaceBelow(collBelow); //fare un controllo sul fatto che ci sia davanti un qualcosa che copre completamente il draggato
                         if (plSur != null)
                         {
+
+                            yDest = plSur.Coll.bounds.max.y;
                             float tmpTest = yDest;
                             collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
                             if (collBelow.Length > 0)
                                 checkCompleteCoverage(collBelow[0].gameObject);
+                            //checkCompleteCoverage(plSur.gameObject); //NO sbagliato
 
-                            if (tmpTest==yDest)
+                            if (tmpTest==yDest) //ma se non venissi completamente coperto con yDest = bounds.max ma poi venissi, sbattuto fuori, che succede? dovrebbe funzionare normale, no?
                             {
                                 float y;
                                 //return false; //cade al lato sinistro
@@ -295,6 +367,7 @@ public class setPositionOnY : MonoBehaviour
                         {
                             //funzione che controlla ydrag e yfermo e chiama il verde o lascia la y invariata
                             //checkBehind(collBelow[0].gameObject);
+                            yDest = gm.MaxYavailable;
                             collBelow = collBelow.ToList().Where(c => c.transform.position.y <= gm.MaxYavailable).OrderBy(c => c.transform.position.y).ToArray();// perchè ordine crescente?
                             if (collBelow.Length > 0)
                                 checkCompleteCoverage(collBelow[0].gameObject);
@@ -517,7 +590,14 @@ public class setPositionOnY : MonoBehaviour
     //private async void checkCompleteCoverage(GameObject gOb) //add also if is covered on all x size? //dovrei considerare anche se gli altri sono draggabili
     {
         //float y = Mathf.Min(transform.position.y, gm.MaxYavailable);
-        float y = Mathf.Min(yDest, gm.MaxYavailable);
+
+        float y;
+        //float y = Mathf.Min(yDest, gm.MaxYavailable);//original
+        if (yDest > gm.MaxYavailable)
+            y = yDest;
+        else
+            y = Mathf.Min(yDest, gm.MaxYavailable);
+
         //should use SpriteRenderer instead of BoxCollider because collider could be smaller than sprite
         //if (coll.bounds.max.y < gOb.GetComponent<BoxCollider>().bounds.max.y)//-> different from flowchart because i was not thinking about to get directly the heigher point of each object.//-y+gOb.transform.position.y) //if the height of the released object is completely covered by the height of the other object
         if (coll.bounds.size.y + y < gOb.GetComponent<BoxCollider>().bounds.max.y) //perchè per oggetti che vengono rilasciato sopra l'orizzonte non funzionerebbe mai

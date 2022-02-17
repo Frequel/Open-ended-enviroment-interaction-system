@@ -10,7 +10,8 @@ using UnityEngine;
 public class LiquidDensityInteractable : MonoBehaviour, ILiquidDensityInteractable
 {
     [SerializeField]
-    float density = 0;
+    //float density = 0; //funzionante
+    public float density = 0;
 
     [SerializeField]
     Sprite liquid;

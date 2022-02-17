@@ -1,7 +1,88 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
+public class DuplicateKeyComparer<TKey>
+                :
+             IComparer<TKey> where TKey : IComparable
+{
+    #region IComparer<TKey> Members
+
+    public int Compare(TKey x, TKey y)
+    {
+        //int result = x.CompareTo(y);
+        int result = y.CompareTo(x); //reverseOrder
+
+        if (result == 0)
+            return 1;   // Handle equality as beeing greater
+        else
+            return result;
+    }
+
+    #endregion
+}
+
+public class SortedMultiValue<TKey, TValue> : IEnumerable<TValue>
+{
+    private SortedDictionary<TKey, List<TValue>> _data;
+
+    public SortedMultiValue()
+    {
+        _data = new SortedDictionary<TKey, System.Collections.Generic.List<TValue>>();
+    }
+
+    public SortedMultiValue(IComparer<TKey> cmp)
+    {
+        _data = new SortedDictionary<TKey, System.Collections.Generic.List<TValue>>(cmp);
+    }
+
+    public void Clear()
+    {
+        _data.Clear();
+    }
+
+    public void Add(TKey key, TValue value)
+    {
+        if (!_data.TryGetValue(key, out List<TValue> items))
+        {
+            items = new List<TValue>();
+            _data.Add(key, items);
+        }
+        items.Add(value);
+    }
+
+    public IEnumerable<TValue> Get(TKey key)
+    {
+        if (_data.TryGetValue(key, out List<TValue> items))
+        {
+            return items;
+        }
+        throw new KeyNotFoundException();
+    }
+
+    public IEnumerator<TValue> GetEnumerator()
+    {
+        return CreateEnumerable().GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return CreateEnumerable().GetEnumerator();
+    }
+
+    IEnumerable<TValue> CreateEnumerable()
+    {
+        foreach (IEnumerable<TValue> values in _data.Values)
+        {
+            foreach (TValue value in values)
+            {
+                yield return value;
+            }
+        }
+    }
+}
 //la densità approssimata a meno di un decimo: miele (1,4), sciroppo (1,3), glicerina (1,2), acqua (1), olio (0,9), alcol etilico (0,8).  
 [RequireComponent(typeof(DivertDrag2Camera))]
 [RequireComponent(typeof(setPositionOnZ))]
@@ -21,7 +102,23 @@ public class LiquidDensityInteractor : ObjectInteractor
     [SerializeField]
     int capacity = 4;
     GameObject[] liquidList;
-    SortedList<float, GameObject> sortedContainedLiquid;
+    //SortedList<float, GameObject> sortedContainedLiquid;
+
+    //not working
+    //List<LiquidDensityInteractable> sortedContainedLiquid;
+    //List<float, GameObject> sortedContainedLiquid;
+    SortedMultiValue<float, GameObject> sortedContainedLiquid;
+
+    //    private List<Curve> Curves;
+    //this.Curves.Sort(new CurveSorter());
+
+    //public class CurveSorter : IComparer<Curve>
+    //    {
+    //        public int Compare(Curve c1, Curve c2)
+    //        {
+    //            return c2.CreationTime.CompareTo(c1.CreationTime);
+    //        }
+    //    }
 
     int freeSlot;
     DragObject dOb;
@@ -44,8 +141,11 @@ public class LiquidDensityInteractor : ObjectInteractor
         if (cbm != null)
             cbm.emptyingContainerButton += resetContainer;
 
-        var descendingComparer = Comparer<float>.Create((x, y) => y.CompareTo(x));
-        sortedContainedLiquid = new SortedList<float, GameObject>(descendingComparer);
+        var descendingComparer = Comparer<float>.Create((x, y) => y.CompareTo(x)); //GESTIRE DOPPIO LIQUIDO UGUALE con un comparer per il secondo tipo...
+        //sortedContainedLiquid = new SortedList<float, GameObject>(descendingComparer);
+        ///
+        sortedContainedLiquid = new SortedMultiValue<float, GameObject>(new DuplicateKeyComparer<float>());
+
     }
 
     public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
@@ -65,8 +165,8 @@ public class LiquidDensityInteractor : ObjectInteractor
                 dOb = ldi.dOb;
 
                 //dOb.DraggingOut += SParent; //not available , could not drag out liquids but only empty the container
-                sortedContainedLiquid.Add(ldi.getDensity(), ldi.gameObject);
-                
+                sortedContainedLiquid.Add(ldi.getDensity(), ldi.gameObject); //GESTIRE DOPPIO LIQUIDO UGUALE
+
                 if (!buttonOn && cbm != null)
                 {
                     cbm.PowerOn();
@@ -75,12 +175,27 @@ public class LiquidDensityInteractor : ObjectInteractor
 
                 //riposizionare i figli //il top sarebbe riposizionare solo i figli sopra
                 int i = 0;
-                foreach (var gobj in sortedContainedLiquid)
+                //foreach (var gobj in sortedContainedLiquid)
+                //{
+                //    //forse potrei cambiarlo con bound.size.max.y che mi dà direttamente la y precisa (ovviamente quando non sei il primo)
+                //    GameObject go = gobj.Value;
+                //    SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                //    float ySize  = sr.sprite.bounds.size.y;
+                //    //float ySize1 = sr.bounds.size.y;
+                //    //float ySize2 = sr.size.y;
+                //    float yVal = bottomPosition + ySize * (float)i;
+                //    Vector3 offset = yVal * Vector3.up + centerPosition * Vector3.right;
+
+                //    go.transform.localPosition = offset;
+                //    i++;
+                //}
+
+                foreach (var liquid in sortedContainedLiquid)
                 {
                     //forse potrei cambiarlo con bound.size.max.y che mi dà direttamente la y precisa (ovviamente quando non sei il primo)
-                    GameObject go = gobj.Value;
+                    GameObject go = liquid;
                     SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                    float ySize  = sr.sprite.bounds.size.y;
+                    float ySize = sr.sprite.bounds.size.y;
                     //float ySize1 = sr.bounds.size.y;
                     //float ySize2 = sr.size.y;
                     float yVal = bottomPosition + ySize * (float)i;

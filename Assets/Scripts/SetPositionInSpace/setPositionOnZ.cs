@@ -37,7 +37,9 @@ public class setPositionOnZ : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance;
-        sprite = GetComponent<SpriteRenderer>();
+
+        if (sprite == null)
+            sprite = GetComponent<SpriteRenderer>();
 
         //To manage Hypotetical Text into object
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
@@ -72,8 +74,17 @@ public class setPositionOnZ : MonoBehaviour
                 defaultPositioning();
                 break;
         }
+        UpdateChildrensPosition();
+    }
+
+    public void UpdateChildrensPosition()
+    {
         if (transform.childCount > 0 && childrenPositioning != null)
+        {
+            if (sprite == null)
+                sprite = GetComponent<SpriteRenderer>();
             childrenPositioning(sprite);
+        }
     }
 
     private void draggingPositioning()
@@ -89,6 +100,12 @@ public class setPositionOnZ : MonoBehaviour
 
     private void defaultPositioning()
     {
+        if (sprite == null)
+            sprite = GetComponent<SpriteRenderer>();
+
+        if(gm==null)
+            gm = GameManager.GetInstance;
+
         sprite.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + System.Convert.ToInt32(alwaysInFront) * 2), 32765); //signed int on 16bit -> available range value  [-32768, 32767] -> used range value [-32763,32763] to reserve: - (max value -3) for text; - (max value -2) for alwaysInFront; - (max value -1) for (alwaysInFront + text); - (max value) for dragging //reserve another one for children? and for dragging object with child?
 
 

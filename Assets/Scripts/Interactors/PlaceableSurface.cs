@@ -31,30 +31,38 @@ public class PlaceableSurface : ObjectInteractor
 
         coll = GetComponent<BoxCollider>();
 
-        if(GetComponentInChildren<PositionableObject>() != null) //sarebbe più tattico vedere se ci sta qualche oggetto con BoxCollider sopra il suo BoxCollider e lanciare praticamente il passive interactor per ognuno di essi
-        {
-            //roba post figliata
-        }
-
         sPoZ = GetComponent<setPositionOnZ>();
         sPoZ.Pt = positionType.childrenPos;
         ////sPoZ.setPosition();
 
         //positioning
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+
+        //if (transform.childCount > 0)
+        //    setChildrenPosition();
+
         if (transform.parent != null)
         {
-            father_sPoZ = GetComponentInParent<setPositionOnZ>();
+            //father_sPoZ = GetComponentInParent<setPositionOnZ>();
+            father_sPoZ = transform.parent.GetComponent<setPositionOnZ>();
             father_sPoZ.childrenPositioning += letParentPositioning;
-            if (!positioned)
+            //if (!positioned)
                 letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
         }
+
+
+        if (transform.childCount > 0)
+            setChildrenPosition();
     }
 
     void letParentPositioning(SpriteRenderer fatherSprite)
     {
-        if (!positioned)
-            positioned = true;
+        //if (!positioned)
+        //    positioned = true;
+
+        //xk qua l'if non và?
+        if (m_SpriteRenderer == null)
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1, 32767);//7 for dragging
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
@@ -62,6 +70,37 @@ public class PlaceableSurface : ObjectInteractor
         sPoZ.Pt = positionType.dontMove;
         sPoZ.setPosition();
         /////////////
+        //sPoZ.childrenPositioning(m_SpriteRenderer);
+        //sPoZ.UpdateChildrensPosition();
+    }
+
+    //not working to personalize
+    //void setChildrenPosition()
+    //{
+    //    PositionableObject pso;
+    //    foreach (Transform child in transform)
+    //    {
+    //        pso = child.GetComponent<PositionableObject>(); //o interfaccia?
+    //        if(pso!=null)
+    //            pso.setRelativePos();
+
+    //    }
+    //}
+
+    //non funziona manco con que
+    void setChildrenPosition()
+    {
+        PositionableObject pso;
+        foreach (Transform child in transform)
+        {
+            pso = child.GetComponent<PositionableObject>(); //o interfaccia?
+            if (pso != null)
+            {
+                //pso.setRelativePos();
+                sPoZ.childrenPositioning += pso.letParentPositioning;
+                pso.letParentPositioning(m_SpriteRenderer);
+            }
+        }
     }
 
     public override interactionResult passiveInteractor(GameObject a_OtherInteractable)
@@ -120,13 +159,13 @@ public class PlaceableSurface : ObjectInteractor
                     //a_OtherInteractable.transform.position += Vector3.left * (coll.bounds.min.x + ((PositionableObject)positionableObject).Coll.size.y/2 - a_OtherInteractable.transform.position.y); //per mette animazione è un po' un delirio
                     //v2
                     //((PositionableObject)positionableObject).Coll.bound.max.x-coll.bounds.min.x
-                    a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.min.x);
+                    a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.min.x + 0.1f);
                     //return false; //cade al lato sinistro
                     return interactionResult.notOccurred;
                 }
                 else if (a_OtherInteractable.transform.position.x > coll.bounds.max.x) //il pivot sta a metà x, quindi teoricamente se sta a destra dal min del collider è sporgente in fuori
                 {
-                    a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.max.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x);
+                    a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.max.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x + 0.1f);
                     //return false; //cade al lato sinistro
                     return interactionResult.notOccurred;
                 }

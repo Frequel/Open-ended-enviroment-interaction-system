@@ -118,7 +118,8 @@ public class Riordiniamo_sPoY : MonoBehaviour
                         //if (transform.position.y > plSur.Coll.bounds.max.y)
                         if (yDest > plSur.Coll.bounds.max.y)
                         { //può esse che siamo sopra l'orizzonte perchè la superficie parte da sotto ma và oltre, quindi potrebbe esse che comunque la base sta sotto il max
-                            //Tween myTween = transform.DOMoveY(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
+                            //Tween myTween =
+                            //(plSur.Coll.bounds.max.y, 1, false).SetEase(Ease.OutBounce);
                             //Tween myTween = transform.DOMoveY(y, 1, false).SetEase(Ease.OutBounce);
                             //await myTween.AsyncWaitForCompletion();
 
@@ -167,6 +168,12 @@ public class Riordiniamo_sPoY : MonoBehaviour
 
                 if (transform.position.y == yDest)
                     TESTpositioning = false;//test
+                //else
+                //{
+                //    Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
+                //    await myTween.AsyncWaitForCompletion();
+                //    TESTpositioning = false;//test
+                //}
                 else
                 {
                     Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);

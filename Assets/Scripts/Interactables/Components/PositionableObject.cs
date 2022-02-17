@@ -37,7 +37,8 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
 
         coll = GetComponent<BoxCollider>();
 
-        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        if(m_SpriteRenderer==null)
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         sPoZ = GetComponent<setPositionOnZ>();
         sPoY = GetComponent<setPositionOnY>();
@@ -49,7 +50,7 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         {
             father_sPoZ = transform.parent.GetComponent<setPositionOnZ>();// GetComponentInParent<setPositionOnZ>(); //questo non funziona perchè ritorna se stesso
             father_sPoZ.childrenPositioning += letParentPositioning;
-            if (!positioned)
+            //if (!positioned)
                 letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
 
             if (GetComponentInParent<PlaceableSurface>() != null)
@@ -59,7 +60,9 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
             }
         }
 
-        originalScale = transform.localScale;
+        //originalScale = transform.localScale;
+        //Vector3 provaScale = transform.lossyScale;
+        originalScale = transform.lossyScale;
 
     }
 
@@ -72,7 +75,8 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         //transform.localScale = Vector3.one; //si riscala da solo....
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        father_sPoZ = transform.parent.transform.parent.GetComponent<setPositionOnZ>();// GetComponentInParent<setPositionOnZ>(); //questo non funziona perchè ritorna se stesso
+        /////parent parent prende il nonno, non il padre, quindi l'oggetto superficie ma non la sezione poggiabile. cosa che è anche utile sotto un certo punto di vista
+        father_sPoZ = transform.parent.GetComponent<setPositionOnZ>(); // transform.parent.transform.parent.GetComponent<setPositionOnZ>();// GetComponentInParent<setPositionOnZ>(); //questo non funziona perchè ritorna se stesso
         father_sPoZ.childrenPositioning += letParentPositioning;
         if (!positioned)
             letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
@@ -94,14 +98,18 @@ public class PositionableObject : MonoBehaviour, IPositionableObject
         transform.localScale = originalScale;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         father_sPoZ.childrenPositioning -= letParentPositioning;
+        positioned = false;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         dOb.DraggingOut -= SParent;
     }
 
-    void letParentPositioning(SpriteRenderer fatherSprite)
+    public void letParentPositioning(SpriteRenderer fatherSprite)
     {
-        if (!positioned)
-            positioned = true;
+        //if (!positioned)
+        //    positioned = true;
+
+        if (m_SpriteRenderer == null)
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1, 32767); //7 for dragging
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);

@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a403171ea175e2c4baa387345a0c5e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceWidth: 2436
   backgroundObject: {fileID: 2051081150621501473, guid: 83eea15b358bd49e1912d0ded443d646, type: 3}
-  objectScrollViewSpeed: 0.2
+  objectScrollViewSpeed: 0.1
   cameraFollowOffset: 0.5

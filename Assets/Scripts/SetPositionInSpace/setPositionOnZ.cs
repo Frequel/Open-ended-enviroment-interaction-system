@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum positionType { defPos, draggingPos, positionedPos, dontMove, childrenPos }; //should add interacdtion position (like a general position of positionedPos) to add a new kind of positioning and build a method specified for the kind of interaction (if possible) 
+public enum positionType { defPos, draggingPos, positionedPos, dontMove, childrenPos, childrenReversePos }; //should add interacdtion position (like a general position of positionedPos) to add a new kind of positioning and build a method specified for the kind of interaction (if possible) 
 
 //set pos.z and sorting layer
 public class setPositionOnZ : MonoBehaviour
@@ -14,7 +14,9 @@ public class setPositionOnZ : MonoBehaviour
     positionType pt = positionType.defPos;
 
     [SerializeField]
-    bool alwaysInFront = false;
+    public bool alwaysInFront = false;
+    [SerializeField]
+    public bool childrenBehind = false;
 
     SpriteRenderer fatherSprite;
 
@@ -46,7 +48,10 @@ public class setPositionOnZ : MonoBehaviour
 
         if (transform.parent != null && alwaysInFront == false)
         {
-            pt = positionType.childrenPos;
+            if(!childrenBehind)
+                pt = positionType.childrenPos;
+            else
+                pt = positionType.childrenReversePos;
         }
 
         setPosition(); //default
@@ -69,6 +74,9 @@ public class setPositionOnZ : MonoBehaviour
                 break;
             case positionType.childrenPos:
                 positionedPositioning();
+                break;
+            case positionType.childrenReversePos:
+                positionedReversePositioning();
                 break;
             default:
                 defaultPositioning();
@@ -118,6 +126,9 @@ public class setPositionOnZ : MonoBehaviour
 
     private void positionedPositioning()//da cambiare nome
     {
+        if (sprite == null)
+            sprite = GetComponent<SpriteRenderer>();
+
         if (fatherSprite == null && transform.parent != null)
             fatherSprite = transform.parent.GetComponent<SpriteRenderer>();
 
@@ -133,6 +144,27 @@ public class setPositionOnZ : MonoBehaviour
             bcText.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 2, 32766);
     }
 
+    private void positionedReversePositioning()//da cambiare nome
+    {
+        if (sprite == null)
+            sprite = GetComponent<SpriteRenderer>();
+
+        if (fatherSprite == null && transform.parent != null)
+            fatherSprite = transform.parent.GetComponent<SpriteRenderer>();
+
+        //aggiungere check per vedere se ha una sprite, altrimenti vedere se ce l'ha il padre (ricorsivamente?)
+        if (fatherSprite == null && transform.parent != null)
+            fatherSprite = transform.parent.transform.parent.GetComponent<SpriteRenderer>();
+
+        sprite.sortingOrder = Mathf.Min(fatherSprite.sortingOrder - 1, 32766);
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z + 0.1f);
+
+        //Text
+        if (bcText != null)
+            bcText.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 2, 32766);
+    }
+
+    
     public void clearChildren()
     {
         childrenPositioning = null;

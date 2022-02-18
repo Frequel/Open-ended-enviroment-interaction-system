@@ -8,13 +8,24 @@ public class ForwardZ2Children : MonoBehaviour
     setPositionOnZ sPoZ;
 
     setPositionOnZ father_sPoZ;
+    
+    [SerializeField]
+    bool behind = false;
+
+    GameManager gm;
 
     void Start()
     {
+        gm = GameManager.GetInstance;
+
         sPoZ = GetComponent<setPositionOnZ>();
         //sPoZ.Pt = positionType.childrenPos;
-        sPoZ.Pt = positionType.defPos;
+        //sPoZ.Pt = positionType.defPos;
 
+        if (!sPoZ.childrenBehind)
+            sPoZ.Pt = positionType.childrenPos;
+        else
+            sPoZ.Pt = positionType.childrenReversePos;
         //positioning
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -52,13 +63,27 @@ public class ForwardZ2Children : MonoBehaviour
         if (m_SpriteRenderer == null)
             m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
-        m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder - 1, 32767); //7 for dragging
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z + 0.1f);
-
         if (sPoZ == null)
             sPoZ = GetComponent<setPositionOnZ>();
 
-        //sPoZ.Pt = positionType.dontMove;
-        sPoZ.setPosition();
+        
+        if (behind)
+        {
+            m_SpriteRenderer.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + System.Convert.ToInt32(sPoZ.alwaysInFront) * 2), fatherSprite.sortingOrder + 1 - System.Convert.ToInt32(sPoZ.childrenBehind) * 2); //signed int on 16bit -> available range value  [-32768, 32767] -> used range value [-32763,32763] to reserve: - (max value -3) for text; - (max value -2) for alwaysInFront; - (max value -1) for (alwaysInFront + text); - (max value) for dragging //reserve another one for children? and for dragging object with child?
+
+
+            var pp = Mathf.Max((Camera.main.farClipPlane * (transform.position.y + gm.YMax) / (gm.YMax * 2)) + Camera.main.transform.position.z, transform.parent.transform.position.z - 0.1f + System.Convert.ToInt32(sPoZ.childrenBehind) * 0.2f); //inside the camera frustrum -> range value [zCam,farClippingPlane]
+            transform.position = new Vector3(transform.position.x, transform.position.y, pp + 1); //positioning in front of camera (+1)
+        }
+        else
+        {
+            m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 1 - System.Convert.ToInt32(sPoZ.childrenBehind) * 2, 32767); //7 for dragging
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f + System.Convert.ToInt32(sPoZ.childrenBehind) * 0.2f);
+        }
+
+
+
+        sPoZ.Pt = positionType.dontMove;
+        sPoZ.setPosition(); //la roba precedente potrei levarla perchè tanto lo rifà nello sPoZ, sarebbe da usare se uso don't move perchè qui metto roba molto diversa da quello presente in sPoZ
     }
 }

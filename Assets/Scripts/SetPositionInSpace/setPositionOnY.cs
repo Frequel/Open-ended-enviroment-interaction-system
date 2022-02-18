@@ -324,9 +324,11 @@ public class setPositionOnY : MonoBehaviour
                                 else
                                 {
                                     //y = plSur.transform.position.y - 0.1f; //old
-                                    y = gm.MaxYavailable;//new
 
-                                    ////dovrei fare ricorsione su questa stessa funzione, in realtà
+                                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                    //y = gm.MaxYavailable;//new
+                                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                 ////dovrei fare ricorsione su questa stessa funzione, in realtà
 
                                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,7 +343,7 @@ public class setPositionOnY : MonoBehaviour
                                     //    return;
                                     //}
 
-                                    yDest = gm.MaxYavailable;
+                                    //yDest = gm.MaxYavailable;///
                                     //po.SParent(); //non và qua ma lì dove accade CheckCompleteCoverage...
                                     defaultPositioning();
                                 }
@@ -395,8 +397,9 @@ public class setPositionOnY : MonoBehaviour
                                 yDest = gm.MaxYavailable;
                                 defaultPositioning();
                             }
+                            //defaultPositioning();
 
-                        }
+                    }
                     //non sò se può servire un altro else
                     }
                     else
@@ -632,7 +635,7 @@ public class setPositionOnY : MonoBehaviour
             //TESTpositioning = false;//test
 
             //yDest = gOb.transform.position.y - 0.1f;
-            yDest = Mathf.Max(gOb.transform.position.y - 0.1f, gm.YMin);
+            yDest = Mathf.Max(gOb.transform.position.y - 0.1f, gm.YMin); //sarebbe meglio bounds.min.y perchè ci saranno 
             //po.SParent();
             ir = interactionResult.notOccurred;
             defaultPositioning();

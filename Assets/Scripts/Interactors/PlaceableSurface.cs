@@ -6,7 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(setPositionOnZ))]
 public class PlaceableSurface : ObjectInteractor
 {
-
+    [SerializeField]
+    bool adjustPositionOnY = true;
+    [SerializeField]
+    bool adjustPositionOnX = true;
     //bool reserved = false; //indicates if the cabin is full or not
     //SpriteRenderer sprite;
     DragObject dOb; //draggingOut CallBack
@@ -152,47 +155,54 @@ public class PlaceableSurface : ObjectInteractor
 
                 //}//teoricamente và qua perchè la x volevo gestirla di là ad oggetto rilasciato in aria.
 
-                //verione con sprite renderer //la migliore dovrebbe esse con boxCollider usando il size e non max e min, così non hai problemi con sprite poco trimmate o simili   
-                if (a_OtherInteractable.transform.position.x < coll.bounds.min.x) //il pivot sta a metà x, quindi teoricamente se sta a sinistra dal min del collider è sporgente in fuori
+                if (adjustPositionOnY)
                 {
-                    //v1
-                    //a_OtherInteractable.transform.position += Vector3.left * (coll.bounds.min.x + ((PositionableObject)positionableObject).Coll.size.y/2 - a_OtherInteractable.transform.position.y); //per mette animazione è un po' un delirio
-                    //v2
-                    //((PositionableObject)positionableObject).Coll.bound.max.x-coll.bounds.min.x
-                    a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.min.x + 0.1f);
-                    //return false; //cade al lato sinistro
-                    return interactionResult.notOccurred;
-                }
-                else if (a_OtherInteractable.transform.position.x > coll.bounds.max.x) //il pivot sta a metà x, quindi teoricamente se sta a destra dal min del collider è sporgente in fuori
-                {
-                    a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.max.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x + 0.1f);
-                    //return false; //cade al lato sinistro
-                    return interactionResult.notOccurred;
-                }
-                //to bigger object
-                else if (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x < coll.bounds.min.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
-                {
-                    //per cose grosse
-                    a_OtherInteractable.transform.position += Vector3.right * (transform.position.x - a_OtherInteractable.transform.position.x);
-                }
-                else if (a_OtherInteractable.transform.position.x > coll.bounds.min.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x < coll.bounds.min.x)
-                {
-                    a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.min.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x);
-                    //sposto piu`a destra per farlo entrare tutto
-                }
-                else if (a_OtherInteractable.transform.position.x < coll.bounds.max.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
-                {
-                    a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.max.x);
-                }
 
+                    //verione con sprite renderer //la migliore dovrebbe esse con boxCollider usando il size e non max e min, così non hai problemi con sprite poco trimmate o simili   
+                    if (a_OtherInteractable.transform.position.x < coll.bounds.min.x) //il pivot sta a metà x, quindi teoricamente se sta a sinistra dal min del collider è sporgente in fuori
+                    {
+                        //v1
+                        //a_OtherInteractable.transform.position += Vector3.left * (coll.bounds.min.x + ((PositionableObject)positionableObject).Coll.size.y/2 - a_OtherInteractable.transform.position.y); //per mette animazione è un po' un delirio
+                        //v2
+                        //((PositionableObject)positionableObject).Coll.bound.max.x-coll.bounds.min.x
+                        a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.min.x + 0.1f);
+                        //return false; //cade al lato sinistro
+                        return interactionResult.notOccurred;
+                    }
+                    else if (a_OtherInteractable.transform.position.x > coll.bounds.max.x) //il pivot sta a metà x, quindi teoricamente se sta a destra dal min del collider è sporgente in fuori
+                    {
+                        a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.max.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x + 0.1f);
+                        //return false; //cade al lato sinistro
+                        return interactionResult.notOccurred;
+                    }
+                    //to bigger object
+                    else if (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x < coll.bounds.min.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
+                    {
+                        //per cose grosse
+                        a_OtherInteractable.transform.position += Vector3.right * (transform.position.x - a_OtherInteractable.transform.position.x);
+                    }
+                    else if (a_OtherInteractable.transform.position.x > coll.bounds.min.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x < coll.bounds.min.x)
+                    {
+                        a_OtherInteractable.transform.position += Vector3.right * (coll.bounds.min.x - ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.min.x);
+                        //sposto piu`a destra per farlo entrare tutto
+                    }
+                    else if (a_OtherInteractable.transform.position.x < coll.bounds.max.x && ((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x > coll.bounds.max.x)
+                    {
+                        a_OtherInteractable.transform.position += Vector3.left * (((PositionableObject)positionableObject).M_SpriteRenderer.bounds.max.x - coll.bounds.max.x);
+                    }
+
+                }
                 //per cose grosse
                 //a_OtherInteractable.transform.position += Vector3.right * (transform.position.x - a_OtherInteractable.transform.position.x);
-
-                if (a_OtherInteractable.transform.position.y < coll.bounds.min.y)
+                if (adjustPositionOnY)
                 {
-                    a_OtherInteractable.transform.position += Vector3.up * (coll.bounds.min.y - a_OtherInteractable.transform.position.y); //per mette animazione è un po' un delirio
+                    if (a_OtherInteractable.transform.position.y < coll.bounds.min.y)
+                    {
+                        a_OtherInteractable.transform.position += Vector3.up * (coll.bounds.min.y - a_OtherInteractable.transform.position.y); //per mette animazione è un po' un delirio
 
-                }//fake
+                    }//fake
+                }
+                
 
                 //capire bene come posizionarli, perchè non è detto che all'interazione l'oggetto posizionato sia poggiato bene (magari lo trascini dal centro ma i piedi finiscono sotto la superficie poggiabile. 
                 //probabilmente dovrei almeno verificare se y dell'oggetto è sopra la min bound del BoxCollider della superfice

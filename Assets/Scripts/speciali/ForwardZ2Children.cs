@@ -22,15 +22,23 @@ public class ForwardZ2Children : MonoBehaviour
         //sPoZ.Pt = positionType.childrenPos;
         //sPoZ.Pt = positionType.defPos;
 
-        if (!sPoZ.childrenBehind)
-            sPoZ.Pt = positionType.childrenPos;
-        else
-            sPoZ.Pt = positionType.childrenReversePos;
+        //if (!sPoZ.childrenBehind)
+        //    sPoZ.Pt = positionType.childrenPos;
+        //else
+        //    sPoZ.Pt = positionType.childrenReversePos;
         //positioning
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         if (transform.parent != null)
         {
+            if (sPoZ.parentRelativePos)
+            {
+                if (!sPoZ.childrenBehind)
+                    sPoZ.Pt = positionType.childrenPos;
+                else
+                    sPoZ.Pt = positionType.childrenReversePos;z
+            }
+            
             father_sPoZ = transform.parent.GetComponent<setPositionOnZ>();
             father_sPoZ.childrenPositioning += letParentPositioning;
             letParentPositioning(father_sPoZ.GetComponent<SpriteRenderer>());
@@ -68,7 +76,7 @@ public class ForwardZ2Children : MonoBehaviour
 
         
         if (behind)
-        {
+        {//default pos
             m_SpriteRenderer.sortingOrder = Mathf.Min((-Mathf.CeilToInt(32763 * transform.position.y / gm.YMax) + System.Convert.ToInt32(sPoZ.alwaysInFront) * 2), fatherSprite.sortingOrder + 1 - System.Convert.ToInt32(sPoZ.childrenBehind) * 2); //signed int on 16bit -> available range value  [-32768, 32767] -> used range value [-32763,32763] to reserve: - (max value -3) for text; - (max value -2) for alwaysInFront; - (max value -1) for (alwaysInFront + text); - (max value) for dragging //reserve another one for children? and for dragging object with child?
 
 

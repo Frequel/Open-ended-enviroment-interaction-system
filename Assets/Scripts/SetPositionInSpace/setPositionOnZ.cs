@@ -17,6 +17,8 @@ public class setPositionOnZ : MonoBehaviour
     public bool alwaysInFront = false;
     [SerializeField]
     public bool childrenBehind = false;
+    [SerializeField]
+    public bool parentRelativePos = true;
 
     SpriteRenderer fatherSprite;
 
@@ -46,7 +48,7 @@ public class setPositionOnZ : MonoBehaviour
         //To manage Hypotetical Text into object
         bcText = gameObject.GetComponentInChildren<TMPro.TextMeshPro>();
 
-        if (transform.parent != null && alwaysInFront == false)
+        if (transform.parent != null && alwaysInFront == false && parentRelativePos)
         {
             if(!childrenBehind)
                 pt = positionType.childrenPos;

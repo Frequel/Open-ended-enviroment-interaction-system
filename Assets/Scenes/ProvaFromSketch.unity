@@ -291,6 +291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!114 &140969563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,6 +668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!1001 &898523639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -839,6 +841,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!65 &898535085
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1041,6 +1044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!1001 &1233160217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1209,6 +1213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!114 &1288927383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1753,6 +1758,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!1 &1888536843 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5862787610019915373, guid: 94b8fa27afbe9ad4d804b0c2e8669602, type: 3}
@@ -2047,6 +2053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!1001 &2140776342
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2163,6 +2170,14 @@ PrefabInstance:
       propertyPath: camera2drag
       value: 
       objectReference: {fileID: 1888536843}
+    - target: {fileID: 1096713715, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720040910, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1798375577, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
       propertyPath: camera2drag
       value: 
@@ -2175,12 +2190,28 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 603404858343693689, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: parentRelativePos
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 674073024683078190, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2577115707954007146, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4301377079038088964, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: parentRelativePos
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5122259759059835711, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: adjustPositionOnY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429227345523175011, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}
+      propertyPath: childrenBehind
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6542772526374455370, guid: a3663bbd2dfb4e94bb01b4e969c2d5f3, type: 3}

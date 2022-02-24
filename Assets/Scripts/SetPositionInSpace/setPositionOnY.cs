@@ -39,6 +39,10 @@ public class setPositionOnY : MonoBehaviour
 
     float yDest;
     interactionResult ir = interactionResult.notOccurred;
+
+    //[System.NonSerialized]
+    //public DragObject dOb; //non sò se mi può servire pubblico
+    DragObject dOb;
     void Start()//set position in space based on the kind of position
     {
         gm = GameManager.GetInstance;
@@ -58,7 +62,7 @@ public class setPositionOnY : MonoBehaviour
 
         m_LayerMask = ~8;
 
-
+        dOb = GetComponent<DragObject>();
         //if (transform.parent != null)
         //{
         //    pt = positionType.childrenPos;
@@ -473,9 +477,13 @@ public class setPositionOnY : MonoBehaviour
             TESTpositioning = false;//test
         else if (transform.position.y > yDest)
         {
+            dOb.dragEnabled = false;
+            coll.enabled = false;
             Tween myTween = transform.DOMoveY(yDest, 1, false).SetEase(Ease.OutBounce);
             await myTween.AsyncWaitForCompletion();
             TESTpositioning = false;//test
+            dOb.dragEnabled = true;
+            coll.enabled = true;
         }
     }
 

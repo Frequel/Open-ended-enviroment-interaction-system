@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8752e10135a61504abbe7a295aa456b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  density: 5
+  density: 1.4
   liquid: {fileID: 21300000, guid: 8fdabcc8d1bcc90408135fad2138cc7d, type: 3}
 --- !u!114 &-4692275130463583551
 MonoBehaviour:

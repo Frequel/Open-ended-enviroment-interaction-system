@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysInFront: 0
+  childrenBehind: 0
 --- !u!114 &1317448834818652403
 MonoBehaviour:
   m_ObjectHideFlags: 0

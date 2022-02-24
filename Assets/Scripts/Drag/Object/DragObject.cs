@@ -26,6 +26,8 @@ public class DragObject : MonoBehaviour
     setPositionOnZ sPoZ;
     setPositionOnY sPoY;
 
+    public bool dragEnabled = true;
+
     public delegate void DragOut();
     public event DragOut DraggingOut;
 
@@ -54,13 +56,15 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDown()
     {
-        //non sò se funziona sto if, ma sopratutto se và bene children pos
-        //if (sPoZ.Pt == (positionType.positionedPos | positionType.childrenPos)) 
-        if (sPoZ.Pt == positionType.positionedPos || sPoZ.Pt == positionType.childrenPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
-            if (DraggingOut != null)
-                DraggingOut(); 
+        if (dragEnabled) { 
+            //non sò se funziona sto if, ma sopratutto se và bene children pos
+            //if (sPoZ.Pt == (positionType.positionedPos | positionType.childrenPos)) 
+            if (sPoZ.Pt == positionType.positionedPos || sPoZ.Pt == positionType.childrenPos) //check which kind of position is active on the object, if is positioned into another, invoke the callback to take out the object
+                if (DraggingOut != null)
+                    DraggingOut(); 
 
-        StartDragObject();
+            StartDragObject();
+        }
     }
 
     private void StartDragObject()
@@ -71,7 +75,8 @@ public class DragObject : MonoBehaviour
 
     void OnMouseDrag()
     {
-        DraggingObject();
+        if (dragEnabled)
+            DraggingObject();
     }
 
     private void DraggingObject()
@@ -95,7 +100,8 @@ public class DragObject : MonoBehaviour
 
     private void OnMouseUp()
     {
-        FinishDragObject();
+        if (dragEnabled)
+            FinishDragObject();
     }
 
     private void FinishDragObject()

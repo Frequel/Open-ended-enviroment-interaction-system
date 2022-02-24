@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
 
+    [Header("Screen width reference")]
+    [Tooltip("The screen width used as reference by the artist to draw the background")]
+    [SerializeField]
+    int referenceHeight = 1125; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
+
     Vector2 xBoundWorld;
     Vector2 yBoundWorld;
     float halfWorldWidth;
@@ -95,6 +100,9 @@ public class GameManager : MonoBehaviour
         if (gm == null)
         {
             gm = this;
+
+            Input.multiTouchEnabled = false;
+
             mainCamera = Camera.main;
             setMainCameraSize();
 
@@ -113,7 +121,36 @@ public class GameManager : MonoBehaviour
         getBackGroundBound();
 
         float bgWidth = xMax - xMin;
-        Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
+        float bgHeight = yMax - yMin;
+        //Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
+        ////Camera.main.orthographicSize = 0.25f * bgWidth * Camera.main.aspect;
+        ////Camera.main.aspect;
+        ////Camera.main.orthographicSize = referenceWidth / Camera.main.aspect;
+
+        //float x = referenceWidth / Screen.width;
+        //float defSize = 0.25f * bgWidth / referenceWidth * referenceHeight;
+        //Camera.main.orthographicSize = defSize * x;
+
+        //if(Screen.width>=referenceWidth)
+        //if (Screen.height >= referenceHeight)
+        //{
+        //    //float bgWidth = xMax - xMin;
+        //    Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
+        //}
+        //else
+        //{
+        //    float x = referenceWidth / Screen.width;
+        //    float defSize = 0.25f * bgWidth / referenceWidth * referenceHeight;
+        //    Camera.main.orthographicSize = defSize * x;
+        //}
+
+        //Camera.main.orthographicSize = Screen.height * bgHeight / (3 * referenceHeight);
+        //float m_height = Camera.main.orthographicSize * 2;
+        //float m_width = m_height * Camera.main.aspect;
+        //Camera.main.aspect = Screen.width / (float)Screen.height;
+        //m_height = Camera.main.orthographicSize * 2;
+        //m_width = m_height * Camera.main.aspect;
+        Camera.main.orthographicSize = bgWidth / (4 * Camera.main.aspect);
     }
 
     void InitializeBoundWorld()

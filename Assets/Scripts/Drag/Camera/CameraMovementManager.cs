@@ -11,7 +11,7 @@ public class CameraMovementManager : MonoBehaviour
 
     [Header("Numeric value of speed factor")]
     [Tooltip("A float using the Range attribute")]
-    [Range(0f, 10f)]
+    [Range(0f, 100f)]
     [SerializeField] public float speedFactor = 5;
 
     GameManager gm;

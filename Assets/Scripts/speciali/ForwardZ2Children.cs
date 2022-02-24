@@ -36,7 +36,7 @@ public class ForwardZ2Children : MonoBehaviour
                 if (!sPoZ.childrenBehind)
                     sPoZ.Pt = positionType.childrenPos;
                 else
-                    sPoZ.Pt = positionType.childrenReversePos;z
+                    sPoZ.Pt = positionType.childrenReversePos;
             }
             
             father_sPoZ = transform.parent.GetComponent<setPositionOnZ>();

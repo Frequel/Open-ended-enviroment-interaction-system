@@ -121,35 +121,7 @@ public class GameManager : MonoBehaviour
         getBackGroundBound();
 
         float bgWidth = xMax - xMin;
-        float bgHeight = yMax - yMin;
-        //Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
-        ////Camera.main.orthographicSize = 0.25f * bgWidth * Camera.main.aspect;
-        ////Camera.main.aspect;
-        ////Camera.main.orthographicSize = referenceWidth / Camera.main.aspect;
-
-        //float x = referenceWidth / Screen.width;
-        //float defSize = 0.25f * bgWidth / referenceWidth * referenceHeight;
-        //Camera.main.orthographicSize = defSize * x;
-
-        //if(Screen.width>=referenceWidth)
-        //if (Screen.height >= referenceHeight)
-        //{
-        //    //float bgWidth = xMax - xMin;
-        //    Camera.main.orthographicSize = 0.25f * bgWidth / referenceWidth * Screen.height; //scaling camera for the actual device resolution
-        //}
-        //else
-        //{
-        //    float x = referenceWidth / Screen.width;
-        //    float defSize = 0.25f * bgWidth / referenceWidth * referenceHeight;
-        //    Camera.main.orthographicSize = defSize * x;
-        //}
-
-        //Camera.main.orthographicSize = Screen.height * bgHeight / (3 * referenceHeight);
-        //float m_height = Camera.main.orthographicSize * 2;
-        //float m_width = m_height * Camera.main.aspect;
-        //Camera.main.aspect = Screen.width / (float)Screen.height;
-        //m_height = Camera.main.orthographicSize * 2;
-        //m_width = m_height * Camera.main.aspect;
+        //float bgHeight = yMax - yMin;
         Camera.main.orthographicSize = bgWidth / (4 * Camera.main.aspect);
     }
 

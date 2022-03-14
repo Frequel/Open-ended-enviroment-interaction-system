@@ -71,6 +71,7 @@ public class DragObject : MonoBehaviour
     {
         objectDragOrigin = GetMouseWorldPos();
         gameObject.layer = 3;
+        gm.IdleState = false;
     }
 
     void OnMouseDrag()
@@ -132,6 +133,8 @@ public class DragObject : MonoBehaviour
         StartCoroutine(waitY());
         
         gameObject.layer = 0;
+
+        gm.IdleState = true;
     }
     private IEnumerator waitY()
     {

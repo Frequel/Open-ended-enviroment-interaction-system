@@ -38,6 +38,14 @@ public class GameManager : MonoBehaviour
     Camera mainCamera;
     public static GameManager gm;
 
+    bool idleState = true;
+
+    public bool IdleState
+    {
+        get { return idleState; }
+        set { idleState = value; }
+    }
+
     public Vector2 XBoundWorld
     {
         get { return xBoundWorld; }

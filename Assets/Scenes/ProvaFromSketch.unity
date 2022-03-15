@@ -375,7 +375,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1254514948969928822, guid: 63d3fd3cd0e15cb4b827097cba0de13d, type: 3}
       propertyPath: idleTime
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1254514948969928822, guid: 63d3fd3cd0e15cb4b827097cba0de13d, type: 3}
       propertyPath: backgroundObject

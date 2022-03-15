@@ -8,8 +8,8 @@ public class PlaceableSurface : ObjectInteractor
 {
     [SerializeField]
     bool adjustPositionOnY = true;
-    [SerializeField]
-    bool adjustPositionOnX = true;
+    //[SerializeField]
+    //bool adjustPositionOnX = true; //da capire xk non lo uso dato che potrebbe esse utile
     //bool reserved = false; //indicates if the cabin is full or not
     //SpriteRenderer sprite;
     DragObject dOb; //draggingOut CallBack

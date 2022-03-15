@@ -9,6 +9,7 @@ using TMPro;
 //[RequireComponent(typeof(BoxCollider))] //testing -> the object could be not draggable sometimes, so i need to destroy BoxCollider.... //-> try disable on drag object also
 [RequireComponent(typeof(interactableChecker))]
 [RequireComponent(typeof(setPositionOnY))]
+[RequireComponent(typeof(Shaking))]
 public class DragObject : MonoBehaviour 
 {
     Vector3 objectDragPos;
@@ -71,7 +72,7 @@ public class DragObject : MonoBehaviour
     {
         objectDragOrigin = GetMouseWorldPos();
         gameObject.layer = 3;
-        gm.IdleState = false;
+        //gm.IdleState = false;
     }
 
     void OnMouseDrag()
@@ -134,7 +135,7 @@ public class DragObject : MonoBehaviour
         
         gameObject.layer = 0;
 
-        gm.IdleState = true;
+        //gm.IdleState = true;
     }
     private IEnumerator waitY()
     {

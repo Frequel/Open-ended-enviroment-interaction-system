@@ -313,7 +313,7 @@ public class setPositionOnY : MonoBehaviour
 
                             //if (tmpTest==yDest) //ma se non venissi completamente coperto con yDest = bounds.max ma poi venissi, sbattuto fuori, che succede? dovrebbe funzionare normale, no?
                             //{
-                                float y;
+                                //float y; //da capire se è giusto commentarla
                         //return false; //cade al lato sinistro
                         //interactionResult ir = plSur.passiveInteractor(gameObject); //oppure movimento fino alla parte superiore del boxCollider poggiabile della superficie e figliamento. cose che comunque potrei mettere nell'interazione
                                 ir = plSur.passiveInteractor(gameObject); //test
@@ -552,7 +552,8 @@ public class setPositionOnY : MonoBehaviour
             
     }
 
-    private async void checkBehind(GameObject gOb)
+    //private async void checkBehind(GameObject gOb)
+    void checkBehind(GameObject gOb)
     {
         //if (transform.position.y > gOb.transform.position.y) //solo in questo caso perchè se sta sotto dovrebbe avere la z e il sortting layer per essere davanti
         if (yDest > gOb.transform.position.y)

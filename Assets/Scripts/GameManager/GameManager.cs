@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Screen width reference")]
-    [Tooltip("The screen width used as reference by the artist to draw the background")]
-    [SerializeField]
-    int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
+    //[Header("Screen width reference")]
+    //[Tooltip("The screen width used as reference by the artist to draw the background")]
+    //[SerializeField]
+    //int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
 
-    [Header("Screen width reference")]
-    [Tooltip("The screen width used as reference by the artist to draw the background")]
-    [SerializeField]
-    int referenceHeight = 1125; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
+    //[Header("Screen width reference")]
+    //[Tooltip("The screen width used as reference by the artist to draw the background")]
+    //[SerializeField]
+    //int referenceHeight = 1125; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
 
     Vector2 xBoundWorld;
     Vector2 yBoundWorld;
@@ -39,6 +39,22 @@ public class GameManager : MonoBehaviour
     public static GameManager gm;
 
     bool idleState = true;
+
+    [SerializeField]
+    float idleTime = 3.0f;
+
+    float idleTimer = 0.0f;
+
+    public float IdleTime
+    {
+        get { return idleTime; }
+        //set { idleTimer = value; }
+    }
+    public float IdleTimer
+    {
+        get { return idleTimer; }
+        set { idleTimer = value; }
+    }
 
     public bool IdleState
     {
@@ -117,6 +133,8 @@ public class GameManager : MonoBehaviour
             InitializeBoundWorld();
 
             maxYavailable = bm.MaxYavailable;
+
+            idleTimer = idleTime;
         }
         else
         {

@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &14948070
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -448,7 +449,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adjustPositionOnY: 1
-  adjustPositionOnX: 1
 --- !u!114 &108143691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &108143695
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -809,6 +810,7 @@ GameObject:
   - component: {fileID: 182444142}
   - component: {fileID: 182444147}
   - component: {fileID: 182444150}
+  - component: {fileID: 182444151}
   m_Layer: 0
   m_Name: potion1_honey
   m_TagString: Untagged
@@ -842,6 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!114 &182444142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -917,6 +920,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &182444148
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -994,6 +998,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &182444151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182444139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &234627179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,6 +1058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &234627182
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1235,6 +1253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &357934448
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1445,6 +1464,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5035d400f1dea1408a1386de1d75f63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &533542608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 533542610}
+  - component: {fileID: 533542609}
+  m_Layer: 0
+  m_Name: ShakingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &533542609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533542608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f68cc124715df644aa7bb9bef91a30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
+--- !u!4 &533542610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533542608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.77736366, y: -0.03961357, z: 0.5880326}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 25
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &568947910 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 666674821447965795, guid: 39a9f0520707b3a4bb10657a664e5de6, type: 3}
@@ -1480,6 +1543,7 @@ GameObject:
   - component: {fileID: 663084738}
   - component: {fileID: 663084737}
   - component: {fileID: 663084746}
+  - component: {fileID: 663084747}
   m_Layer: 0
   m_Name: DefaultObject (2)
   m_TagString: Untagged
@@ -1535,6 +1599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!65 &663084741
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1562,6 +1627,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!114 &663084743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1653,6 +1719,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &663084747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663084736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &667195649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,6 +1752,7 @@ GameObject:
   - component: {fileID: 667195652}
   - component: {fileID: 667195660}
   - component: {fileID: 667195661}
+  - component: {fileID: 667195662}
   m_Layer: 0
   m_Name: potion4_oil
   m_TagString: Untagged
@@ -1706,6 +1786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!114 &667195652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1781,6 +1862,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &667195658
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1870,6 +1952,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d47ef854b617749954399f494a47ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &667195662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667195649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &822657347
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,6 +1984,7 @@ GameObject:
   - component: {fileID: 822657348}
   - component: {fileID: 822657350}
   - component: {fileID: 822657358}
+  - component: {fileID: 822657359}
   m_Layer: 0
   m_Name: potion3_water
   m_TagString: Untagged
@@ -1922,6 +2018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!114 &822657350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1997,6 +2094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &822657356
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2074,6 +2172,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &822657359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822657347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &889479179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,6 +2598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &972734226
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2599,6 +2711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1040407485
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2764,6 +2877,7 @@ GameObject:
   - component: {fileID: 1074685066}
   - component: {fileID: 1074685065}
   - component: {fileID: 1074685074}
+  - component: {fileID: 1074685075}
   m_Layer: 0
   m_Name: DefaultObject (1)
   m_TagString: Untagged
@@ -2819,6 +2933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!65 &1074685069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2846,6 +2961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!114 &1074685071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2937,6 +3053,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a83f0a4fd3df994f92892a049858aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1074685075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074685064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &1087131458
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,6 +3295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1102341538
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3517,6 +3647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1236057282
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3772,6 +3903,7 @@ GameObject:
   - component: {fileID: 1467348645}
   - component: {fileID: 1467348647}
   - component: {fileID: 1467348655}
+  - component: {fileID: 1467348656}
   m_Layer: 0
   m_Name: potion2_soap
   m_TagString: Untagged
@@ -3805,6 +3937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!114 &1467348647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3880,6 +4013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1467348653
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3957,6 +4091,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be03bc248fb26a34e91449197330696d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1467348656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467348644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &1568637639
 GameObject:
   m_ObjectHideFlags: 0
@@ -4003,6 +4150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!65 &1568637642
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4102,6 +4250,7 @@ GameObject:
   - component: {fileID: 1597595863}
   - component: {fileID: 1597595862}
   - component: {fileID: 1597595861}
+  - component: {fileID: 1597595871}
   m_Layer: 0
   m_Name: potion2_soap (1)
   m_TagString: Untagged
@@ -4173,6 +4322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe77fe277a9d542a35d7d675f50113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragEnabled: 1
 --- !u!114 &1597595865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4236,6 +4386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1597595870
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4287,6 +4438,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1597595871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597595859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6480cf5798a3549bfd49f6eaa4b641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 0.1
 --- !u!1 &1670931588
 GameObject:
   m_ObjectHideFlags: 0
@@ -4397,6 +4561,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!4 &1670931593
 Transform:
   m_ObjectHideFlags: 0
@@ -4579,7 +4744,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adjustPositionOnY: 1
-  adjustPositionOnX: 1
 --- !u!114 &1840314574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4682,6 +4846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!1 &1860646090
 GameObject:
   m_ObjectHideFlags: 0
@@ -4834,7 +4999,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adjustPositionOnY: 1
-  adjustPositionOnX: 1
 --- !u!114 &1868215896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4886,6 +5050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1868215900
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5080,6 +5245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1985541205
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5182,7 +5348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   adjustPositionOnY: 1
-  adjustPositionOnX: 1
 --- !u!114 &1997063504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5234,6 +5399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &1997063508
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5358,6 +5524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alwaysInFront: 0
   childrenBehind: 0
+  parentRelativePos: 1
 --- !u!212 &2062058998
 SpriteRenderer:
   m_ObjectHideFlags: 0

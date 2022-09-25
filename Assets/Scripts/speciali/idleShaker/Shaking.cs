@@ -41,6 +41,9 @@ public class Shaking : MonoBehaviour
         gm = GameManager.GetInstance;
         sm = shakingManager.GetInstance;
 
+        if (sm == null)
+            Debug.Log("Shaking Manager is missing. Please add it from the gameobject provided by the framework");
+
         //shakeStrenght = transform.position - Vector3.up;
         //shakeStrenght = shakeStrenght / shakeStrenghtDivisor;
         sm.ShakeAll += IdleBehaviour;

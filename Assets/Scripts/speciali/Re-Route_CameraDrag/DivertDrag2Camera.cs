@@ -11,6 +11,8 @@ public class DivertDrag2Camera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (camera2drag == null)
+            camera2drag = Camera.main.gameObject;
         cMm = camera2drag.GetComponent<CameraMovementManager>(); //da fare bene
     }
 

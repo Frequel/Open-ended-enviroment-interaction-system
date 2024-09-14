@@ -1,0 +1,20 @@
+
+animazione_feedback_fluidi.png
+size: 1119,648
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/cerchio_0000_fx-02
+  rotate: false
+  xy: 653, 182
+  size: 466, 466
+  orig: 466, 466
+  offset: 0, 0
+  index: -1
+images/cerchio_0001_fx-01
+  rotate: false
+  xy: 0, 0
+  size: 648, 648
+  orig: 648, 648
+  offset: 0, 0
+  index: -1

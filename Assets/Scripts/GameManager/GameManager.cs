@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //[Header("Screen width reference")]
-    //[Tooltip("The screen width used as reference by the artist to draw the background")]
-    //[SerializeField]
-    //int referenceWidth = 2436; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
-
-    //[Header("Screen width reference")]
-    //[Tooltip("The screen width used as reference by the artist to draw the background")]
-    //[SerializeField]
-    //int referenceHeight = 1125; //iPhoneX -> usually the back ground has dimension of 2 iPhone X for the width and 1 and a half iPhoneX height
-
     Vector2 xBoundWorld;
     Vector2 yBoundWorld;
     float halfWorldWidth;
@@ -34,9 +24,9 @@ public class GameManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField]
     float cameraFollowOffset = 0.5f;
-    BackgroundBoundsCalculator bm;
+    BackgroundBoundsCalculator backgroundBoundsCalculator;
     Camera mainCamera;
-    public static GameManager gm;
+    public static GameManager instance;
 
     bool idleState = true;
 
@@ -48,7 +38,6 @@ public class GameManager : MonoBehaviour
     public float IdleTime
     {
         get { return idleTime; }
-        //set { idleTimer = value; }
     }
     public float IdleTimer
     {
@@ -114,16 +103,16 @@ public class GameManager : MonoBehaviour
         get { return mainCamera; }
     }
 
-    public static GameManager GetInstance
+    public static GameManager Instance
     {
-        get { return gm; }
+        get { return instance; }
     }
 
     void Awake()
     {
-        if (gm == null)
+        if (instance == null)
         {
-            gm = this;
+            instance = this;
 
             Input.multiTouchEnabled = false;
 
@@ -132,7 +121,7 @@ public class GameManager : MonoBehaviour
 
             InitializeBoundWorld();
 
-            maxYavailable = bm.MaxYavailable;
+            maxYavailable = backgroundBoundsCalculator.MaxYavailable;
 
             idleTimer = idleTime;
         }
@@ -147,7 +136,6 @@ public class GameManager : MonoBehaviour
         getBackGroundBound();
 
         float bgWidth = xMax - xMin;
-        //float bgHeight = yMax - yMin;
         Camera.main.orthographicSize = bgWidth / (4 * Camera.main.aspect);
     }
 
@@ -160,13 +148,12 @@ public class GameManager : MonoBehaviour
         yBoundWorld = new Vector2(yMin + halfWorldHeight, yMax - halfWorldHeight);
     }
 
-    //private void getBackGroundBound(out Vector2 xBound, out Vector2 yBound)
     private void getBackGroundBound()
     {
         Vector2 xBound, yBound;
-        bm = backgroundObject.GetComponent<BackgroundBoundsCalculator>();
+        backgroundBoundsCalculator = backgroundObject.GetComponent<BackgroundBoundsCalculator>();
 
-        Vector2[] sceneBounds = bm.CalculateBoundWorlds();
+        Vector2[] sceneBounds = backgroundBoundsCalculator.CalculateBoundWorlds();
 
         xBound = sceneBounds[0];
         yBound = sceneBounds[1];
@@ -176,7 +163,7 @@ public class GameManager : MonoBehaviour
         xMin = xBound.x;
     }
 
-    public Vector3 Limit2Bound(Vector3 distanceView)
+    public Vector3 LimitToBound(Vector3 distanceView)
     {
         if (distanceView.x < 0) // Check left limit
         {

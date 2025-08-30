@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-//using System;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 
 public class FerrisWheelManager : MonoBehaviour
 {
-    [Tooltip("Indicare le Sprite nell'ordine della sequenza voluta")] //Add english Version
+    [Tooltip("Indicate the Sprites in the desired sequence order")]
     [HideInInspector]
     [SerializeField]
     int[] seqSpriteIndex;
 
-
-    [Tooltip("Indicare il numero di cabine presenti nella ruota panoramica")] //Add english Version
+    [Tooltip("Indicate the number of cabins on the ferris wheel")]
     [HideInInspector]
     [SerializeField]
     int cabNum;
 
-    [Tooltip("Indicare la lunghezza della sequenza da indovinare")] //Add english Version
+    [Tooltip("Indicate the length of the sequence to guess")]
     [HideInInspector]
     [SerializeField]
     int seqLenght = 1;
@@ -31,14 +29,13 @@ public class FerrisWheelManager : MonoBehaviour
     bool positioned = false;
 
     //CabinSpawner
-    [Tooltip("Seleziona Il prefab base delle cabine, la Sprite corretta verr? associata in Play")] //Add english Version
+    [Tooltip("Select the base prefab for the cabins, the correct Sprite will be associated in Play")]
     [SerializeField]
     GameObject cabinePrefab;
 
-    [Tooltip("Il raggio della Ruota Panoramica, è \x00E8 la distanza dal centro in cui verrà \x00E0 posizionata ciascuna Cabina")]  //Add english Version
+    [Tooltip("The radius of the Ferris Wheel, it is the distance from the center where each Cabin will be positioned")]
     [SerializeField]
     [Range(3, 20)]
-
     float ferrisWheelRadius;
 
     public float FerrisWheelRadius
@@ -47,6 +44,8 @@ public class FerrisWheelManager : MonoBehaviour
     }
 
     //reset sequence
+    [Tooltip("The prefabs for the sequences")]
+    [SerializeField]
     GameObject[] sequencesPrefabs;
     int flagCoroutine = 0;
 
@@ -57,11 +56,13 @@ public class FerrisWheelManager : MonoBehaviour
     }
 
     //cabin rotation
-    [Tooltip("Inserire la durata in secondi per fare un giro completo della ruota panoramica")] //Add english Version
+    [Tooltip("Enter the duration in seconds for a full rotation of the ferris wheel")]
     [HideInInspector]
     [SerializeField]
     int rotationDuration = 15;
 
+    [Tooltip("The array of sprites for the cabins")]
+    [SerializeField]
     Sprite[] spriteArray; //needed to reset the wheel
 
     public int RotationDuration
@@ -87,16 +88,11 @@ public class FerrisWheelManager : MonoBehaviour
 
         spriteSequence = new Sprite[seqLenght];
 
-        spriteArray = Resources.LoadAll<Sprite>("Sprites/FerrisWheel/Cabine/Cabine_fruit/");
-
         for (int i = 0; i < seqLenght; i++)
             spriteSequence[i] = spriteArray[seqSpriteIndex[i]];
 
         if (transform.childCount == 0)
             InstantiateCabin();
-
-        sequencesPrefabs = Resources.LoadAll<GameObject>("Prefab/FerrisWheelSequences/" + cabNum);
-
     }
 
     public void InstantiateCabin()
@@ -106,18 +102,15 @@ public class FerrisWheelManager : MonoBehaviour
         for (int i = 0; i < cabNum; i++)
         {
             float angle = Mathf.PI * i / ((float)cabNum / 2);
-            
+
             var myNewCab = Instantiate(cabinePrefab, transform, true);
             myNewCab.transform.localPosition = new Vector3(ferrisWheelRadius * Mathf.Cos(angle), ferrisWheelRadius * Mathf.Sin(angle), -1);
 
             BoxCollider coll = myNewCab.GetComponent<BoxCollider>();
             float childAngle = Mathf.PI / 180 * myNewCab.transform.eulerAngles.z;
-            
+
             //moving the cab to have as attachment point to the wheel its center
             myNewCab.transform.localPosition -= new Vector3(Mathf.Sin(childAngle) * coll.size.y / 2, Mathf.Cos(childAngle) * coll.size.y / 2, 0);
-
-            //setPositionOnZ sPoZ = myNewCab.GetComponent<setPositionOnZ>();
-            //sPoZ.Pt = positionType.dontMove; //a ferris wheel should be an object not draggable during play
 
             myNewCab.name = "Cabina" + (i + 1);
             myNewCab.GetComponent<CabinManager>().OrderInWheel = i;
@@ -132,7 +125,6 @@ public class FerrisWheelManager : MonoBehaviour
             positioned = true;
 
         m_SpriteRenderer.sortingOrder = Mathf.Min(fatherSprite.sortingOrder + 0, 32766);
-        //transform.position = new Vector3(transform.position.x, transform.position.y, transform.parent.transform.position.z - 0.1f);
     }
 
     //check sequence part 1
@@ -151,7 +143,7 @@ public class FerrisWheelManager : MonoBehaviour
             if (ok)
                 break;
 
-            ok = ok | checkSequenceInner(ok, check, childrens_reverse); //serve per fare il check anche in senso orario
+            ok = ok | checkSequenceInner(ok, check, childrens_reverse); //used to check in a clockwise direction as well
 
             if (ok)
                 break;
@@ -164,19 +156,18 @@ public class FerrisWheelManager : MonoBehaviour
         if (ok)
         {
             StartCoroutine(startStructureRotation());
-            StartCoroutine(waitRotation()); 
         }
     }
 
     //check sequence part 2
-    bool checkSequenceInner(bool ok, int check, LinkedList<SpriteRenderer> childrens) //check sequence part 2
+    bool checkSequenceInner(bool ok, int check, LinkedList<SpriteRenderer> childrens)
     {
-        int i = 0, j = 0;//, k = 0;
+        int i = 0, j = 0;
         for (i = 0; i < seqLenght; i++)
         {
             if (childrens.ElementAt(i).sprite == spriteSequence[i])
             {
-                for (j = 1; j <= check - 1; j++) 
+                for (j = 1; j <= check - 1; j++)
                 {
                     if (childrens.ElementAt(i).sprite != childrens.ElementAt(i + j * seqLenght).sprite)
                         return false;
@@ -191,76 +182,38 @@ public class FerrisWheelManager : MonoBehaviour
 
     private IEnumerator startStructureRotation()
     {
-        Quaternion startRot = transform.localRotation;
-        Vector3 startPos = transform.localPosition;
-        float rotationSpeed = 360 / RotationDuration;
-        float countDown = RotationDuration;
-
-        Vector3[] startingPositions = new Vector3[transform.childCount];
-        int j = 0;
-
         foreach (Transform child in transform)
         {
-            startingPositions[j] = child.transform.position;
             child.GetComponent<CabinManager>().IsRotating = true;
-            j++;
         }
 
-        Vector3 rotationAxis = transform.position;
-        var rot = transform.rotation;
-        float z = 0;
-        for (int i = 0; i < 10000; i++)
-        {
-            while (countDown >= 0)
+        // Rotate the wheel 360 degrees in RotationDuration seconds
+        // Using DOTween for a smooth and efficient animation
+        transform.DORotate(new Vector3(0, 0, 360), RotationDuration, RotateMode.LocalAxisAdd)
+            .SetEase(Ease.Linear)
+            .OnUpdate(() =>
             {
-                transform.RotateAround(rotationAxis, Vector3.forward, rotationSpeed * Time.smoothDeltaTime);
-
-                z += Time.deltaTime * rotationSpeed;
-                transform.localRotation = Quaternion.Euler(0, 0, z);
-
-                countDown -= Time.smoothDeltaTime; 
-
+                // Keep the cabins upright during the rotation
                 foreach (Transform child in transform)
                 {
-                    //pivot in basso e traslazione in alto
-                    float angle = Mathf.PI / 180 * child.transform.eulerAngles.z; 
-                    BoxCollider coll = child.GetComponent<BoxCollider>();
-                    //moving the cab around the attachment point to the wheel at its center
-                    Vector3 childRotationAxis = child.transform.position + new Vector3(0, coll.size.y / 2, 0); 
-                    child.transform.RotateAround(childRotationAxis, Vector3.forward, -child.transform.eulerAngles.z);
+                    child.rotation = Quaternion.identity;
                 }
+            })
+            .OnComplete(() =>
+            {
+                foreach (Transform child in transform)
+                {
+                    child.GetComponent<CabinManager>().IsRotating = false;
+                }
+                ResetSequence();
+            });
 
-                yield return null;
-            }
-        }
-
-        transform.localRotation = startRot;
-        transform.localPosition = startPos;
-
-        j = 0;
-        foreach (Transform child in transform)
-        {
-            child.transform.position = startingPositions[j];
-            child.GetComponent<CabinManager>().IsRotating = false;
-            child.transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
-            j++;
-        }
-
-        flagCoroutine = cabNum;
-    }
-    private IEnumerator waitRotation()
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => flagCoroutine == cabNum);
-            break;
-        }
-        ResetSequence();
+        yield return null;
     }
 
     void ResetSequence()
     {
-        Debug.Log(" è \x00E8 arrivato il momento di resettare");
+        Debug.Log("It's time to reset");
         flagCoroutine = 0;
         int i = 0;
 
@@ -273,21 +226,16 @@ public class FerrisWheelManager : MonoBehaviour
         ChangeWheel(i);
     }
 
-   
     private void ChangeWheel(int i)
     {
         //full wheel version
-
         transform.parent.GetComponent<SpriteRenderer>().sprite = sequencesPrefabs[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
 
-        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject; 
+        GameObject wheelStruct = sequencesPrefabs[i].transform.GetChild(0).transform.GetChild(0).gameObject;
         FerrisWheelManager fwm = wheelStruct.GetComponent<FerrisWheelManager>();
 
         //Updating rotation time
         rotationDuration = fwm.rotationDuration;
-
-        //Updating Cabin Number -> no needed for game design decisions
-        //Hypotetical code
 
         //Updating Sequence Length
         if (seqLenght != fwm.seqLenght)
@@ -318,7 +266,6 @@ public class FerrisWheelManager : MonoBehaviour
                 child.GetComponent<CabinManager>().RandomizeCabin(); //done only once here or in the else
             }
         }
-
         else
         //Updating Sprite
         {
@@ -338,7 +285,6 @@ public class FerrisWheelManager : MonoBehaviour
         for (int j = 0; j < seqLenght; j++)
             spriteSequence[j] = spriteArray[fwm.seqSpriteIndex[j]];
 
-        //transform.parent.name = sequencesPrefabs[i].name; //sequence board and wheel structure brother
         transform.parent.transform.parent.name = sequencesPrefabs[i].name; //sequence board and wheel structure father and son
     }
 }
